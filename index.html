@@ -290,79 +290,73 @@
                         </label>
                         <!-- Uploaded Files Preview List -->
                         <div id="uploadedFilesList" class="mt-2 space-y-1.5 hidden"></div>
+                        <!-- Quick Extract Metadata Button (Visible when files are uploaded) -->
+                        <button type="button" id="extractMetadataBtn" onclick="extractMetadataFromFiles()" class="hidden mt-2 w-full py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                            <span>🔍</span>
+                            <span>ស្កេន & ស្រង់មុខវិជ្ជា ចំណងជើងមេរៀនចេញពីឯកសារ</span>
+                        </button>
                     </div>
 
-                    <!-- NEW: Auto-Analyze Method Checkbox -->
-                    <label class="flex items-start gap-2 p-2.5 rounded-xl bg-white/90 border border-indigo-200/80 cursor-pointer select-none">
-                        <input type="checkbox" id="autoSelectMethodCheckbox" checked class="mt-0.5 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
-                        <span class="text-[11px] sm:text-xs text-slate-800 leading-snug">
-                            <strong class="text-indigo-950">ឱ្យ AI វិភាគខ្លឹមសារមេរៀន និងជ្រើសរើសវិធីសាស្ត្របង្រៀនសមស្របបំផុត</strong> (ព្រមទាំងបង្ហាញមូលហេតុគរុកោសល្យ)
-                        </span>
-                    </label>
-
-                    <button id="aiGenerateBtn" onclick="generateLessonWithAI()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-600 hover:to-blue-600 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                        <svg id="aiBtnIcon" class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <span id="aiBtnText">វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI</span>
-                    </button>
-
-                    <!-- NEW: AI Method Recommendation Explanation Card -->
-                    <div id="aiRecommendationCard" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1 shadow-2xs">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="font-bold text-emerald-900 flex items-center gap-1.5">
-                                <span>🧠</span>
-                                <span>ការវិភាគ និងណែនាំវិធីសាស្ត្របង្រៀនដោយ AI</span>
-                            </span>
-                            <span id="aiRecConfidenceBadge" class="px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-950 text-[10px] font-bold">សមស្របបំផុត</span>
+                    <!-- Teaching Method Selection & AI Auto-Analyze -->
+                    <div class="pt-1 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-semibold text-slate-700">គោលវិធី / វិធីសាស្ត្របង្រៀន</label>
+                            <button type="button" id="analyzeMethodBtn" onclick="analyzeMethodOnly()" class="text-[11px] font-bold text-indigo-700 hover:text-indigo-950 flex items-center gap-1 cursor-pointer">
+                                <span>🔍 ឱ្យ AI វិភាគរើសវិធីសាស្ត្រ</span>
+                            </button>
                         </div>
-                        <div class="font-bold text-indigo-950" id="aiRecMethodTitle"></div>
-                        <p class="text-[11px] text-emerald-900 leading-relaxed" id="aiRecReasonText"></p>
+
+                        <label class="flex items-center gap-2 p-2 rounded-xl bg-white/90 border border-indigo-200 cursor-pointer select-none">
+                            <input type="checkbox" id="autoSelectMethodCheckbox" checked class="w-4 h-4 accent-indigo-600 rounded">
+                            <span class="text-xs font-semibold text-indigo-950">ឱ្យ AI វិភាគមេរៀន និងជ្រើសរើសវិធីសាស្ត្រសមស្របដោយស្វ័យប្រវត្តិ</span>
+                        </label>
+
+                        <select id="teachingMethod" onchange="onMethodChange()" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-indigo-200 bg-indigo-50/40 text-indigo-950 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (Pedagogical Methods)">
+                                <option value="jigsaw">បែបសហការ (Cooperative Learning - Jigsaw)</option>
+                                <option value="polya">បែបដោះស្រាយបញ្ហា (Problem Solving - Polya)</option>
+                                <option value="ibl" selected>បែបរិះរក (Inquiry-Based Learning - IBL)</option>
+                                <option value="5es">លំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate)</option>
+                                <option value="active">បែបសិស្សមជ្ឈមណ្ឌល / សកម្ម (Active Learning)</option>
+                                <option value="pbl">បែបគម្រោង (Project-Based Learning - PBL)</option>
+                            </optgroup>
+                            <optgroup label="យុទ្ធវិធី និងបច្ចេកទេសបង្រៀន (Teaching Strategies & Techniques)">
+                                <option value="tps">យុទ្ធវិធី គិត-ពិភាក្សាជាដៃគូ-ចែករំលែក (Think-Pair-Share)</option>
+                                <option value="gradual">លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)</option>
+                                <option value="flipped">ថ្នាក់រៀនត្រឡប់ (Flipped Classroom)</option>
+                                <option value="kwl">យុទ្ធវិធី K-W-L (ដឹងស្រាប់ - ចង់ដឹង - បានរៀន)</option>
+                                <option value="conceptmap">យុទ្ធវិធីផែនទីគំនិត (Concept Mapping & Graphic Organizers)</option>
+                                <option value="gallerywalk">យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)</option>
+                            </optgroup>
+                        </select>
+
+                        <!-- Dynamic Method Description Badge -->
+                        <div id="methodHintBox" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-950 leading-relaxed">
+                            <span class="font-bold">លំនាំ៖</span> លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង។
+                        </div>
+
+                        <!-- AI Pedagogical Recommendation Card -->
+                        <div id="aiRecommendationCard" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-900 flex items-center gap-1.5">
+                                <span>💡</span>
+                                <span id="aiRecommendationTitle">វិធីសាស្ត្រណែនាំ៖</span>
+                            </div>
+                            <p id="aiRecommendationReason" class="text-[11px] leading-relaxed text-emerald-800"></p>
+                        </div>
+
+                        <!-- Main AI Generate Button -->
+                        <button type="button" id="aiGenerateBtn" onclick="generateLessonWithAI()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-700 via-blue-700 to-indigo-800 hover:from-indigo-600 hover:to-blue-600 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                            <span>✨</span>
+                            <span>វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Form Body Scrollable -->
-            <div class="p-4 sm:p-5 space-y-5 max-h-[calc(100vh-260px)] overflow-y-auto">
+            <!-- Scrollable Form Sections -->
+            <div class="p-4 sm:p-5 space-y-5 overflow-y-auto max-h-[calc(100vh-220px)]">
                 
-                <!-- 1. Pedagogical Methods & Strategies Selection (12 Curated Items) -->
-                <div class="space-y-2.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <label for="teachingMethod" class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
-                            <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 text-xs flex items-center justify-center font-bold">★</span>
-                            ជម្រើសវិធីសាស្រ្ដ និងយុទ្ធវិធីបង្រៀន (១២ បែប)
-                        </label>
-                        <button type="button" onclick="analyzeAndRecommendMethodOnly()" class="px-2.5 py-1 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-900 text-[11px] font-bold transition cursor-pointer shrink-0">
-                            🔍 ឱ្យ AI វិភាគរើសវិធីសាស្ត្រ
-                        </button>
-                    </div>
-                    <select id="teachingMethod" onchange="onMethodChange()" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-indigo-200 bg-indigo-50/40 text-indigo-950 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (Pedagogical Methods)">
-                            <option value="jigsaw">បែបសហការ (Cooperative Learning - Jigsaw)</option>
-                            <option value="polya">បែបដោះស្រាយបញ្ហា (Problem Solving - Polya)</option>
-                            <option value="ibl" selected>បែបរិះរក (Inquiry-Based Learning - IBL)</option>
-                            <option value="5es">លំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate)</option>
-                            <option value="active">បែបសិស្សមជ្ឈមណ្ឌល / សកម្ម (Active Learning)</option>
-                            <option value="pbl">បែបគម្រោង (Project-Based Learning - PBL)</option>
-                        </optgroup>
-                        <optgroup label="យុទ្ធវិធី និងបច្ចេកទេសបង្រៀន (Teaching Strategies & Techniques)">
-                            <option value="tps">យុទ្ធវិធី គិត-ពិភាក្សាជាដៃគូ-ចែករំលែក (Think-Pair-Share)</option>
-                            <option value="gradual">លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)</option>
-                            <option value="flipped">ថ្នាក់រៀនត្រឡប់ (Flipped Classroom)</option>
-                            <option value="kwl">យុទ្ធវិធី K-W-L (ដឹងស្រាប់ - ចង់ដឹង - បានរៀន)</option>
-                            <option value="conceptmap">យុទ្ធវិធីផែនទីគំនិត (Concept Mapping & Graphic Organizers)</option>
-                            <option value="gallerywalk">យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)</option>
-                        </optgroup>
-                    </select>
-                    <!-- Dynamic Method Description Badge -->
-                    <div id="methodHintBox" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200/80 text-[11px] text-amber-950 leading-relaxed">
-                        <span class="font-bold">លំនាំ៖</span> លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង។
-                    </div>
-                </div>
-
-                <hr class="border-slate-200">
-
-                <!-- 2. Administrative Info & Khmer Lunar Date -->
+                <!-- 1. Administrative Info & Khmer Lunar Date -->
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
                         <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 text-xs flex items-center justify-center">១</span>
@@ -1029,88 +1023,57 @@
         function renderUploadedFilesList() {
             const listEl = document.getElementById('uploadedFilesList');
             const clearBtn = document.getElementById('clearFilesBtn');
+            const extractBtn = document.getElementById('extractMetadataBtn');
             if (!listEl || !clearBtn) return;
 
             if (uploadedLessonFiles.length === 0) {
                 listEl.classList.add('hidden');
                 listEl.innerHTML = '';
                 clearBtn.classList.add('hidden');
+                if (extractBtn) extractBtn.classList.add('hidden');
                 return;
             }
 
             listEl.classList.remove('hidden');
             clearBtn.classList.remove('hidden');
+            if (extractBtn) extractBtn.classList.remove('hidden');
             listEl.innerHTML = uploadedLessonFiles.map(f => {
                 const isPdf = f.mimeType === 'application/pdf';
+                const icon = isPdf ? '📕' : '🖼️';
                 return `
-                    <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs">
+                    <div class="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-white border border-indigo-200 text-xs">
                         <div class="flex items-center gap-2 min-w-0">
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isPdf ? 'bg-rose-100 text-rose-800' : 'bg-sky-100 text-sky-800'}">
-                                ${isPdf ? 'PDF' : 'IMG'}
-                            </span>
-                            <span class="truncate font-medium text-slate-800">${f.name}</span>
+                            <span>${icon}</span>
+                            <span class="font-medium text-slate-800 truncate">${escapeHtml(f.name)}</span>
                             <span class="text-[10px] text-slate-400 shrink-0">(${f.sizeText})</span>
                         </div>
-                        <button type="button" onclick="removeUploadedFile('${f.id}')" class="text-slate-400 hover:text-rose-600 px-1 cursor-pointer" title="លុបឯកសារនេះ">✕</button>
+                        <button type="button" onclick="removeUploadedFile('${f.id}')" class="text-rose-500 hover:text-rose-700 font-bold px-1.5 cursor-pointer" title="លុប">✕</button>
                     </div>
                 `;
             }).join('');
         }
 
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const bgColors = {
-                success: 'bg-emerald-900 text-white border-emerald-700',
-                info: 'bg-indigo-900 text-white border-indigo-700',
-                error: 'bg-rose-900 text-white border-rose-700'
-            };
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg border text-xs sm:text-sm font-medium flex items-center gap-2 transition-all duration-300 ${bgColors[type] || bgColors.info}`;
-            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️'}</span><span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(10px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3200);
-        }
-
-        function switchMobileTab(tab) {
-            const editorPanel = document.getElementById('editorPanel');
-            const previewPanel = document.getElementById('previewPanel');
-            const tabEditorBtn = document.getElementById('tabEditorBtn');
-            const tabPreviewBtn = document.getElementById('tabPreviewBtn');
-
-            if (tab === 'editor') {
-                editorPanel.classList.remove('hidden');
-                previewPanel.classList.add('hidden');
-                previewPanel.classList.remove('lg:flex');
-                tabEditorBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-indigo-900 text-white transition';
-                tabPreviewBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition';
-            } else {
-                editorPanel.classList.add('hidden');
-                previewPanel.classList.remove('hidden');
-                previewPanel.classList.add('flex');
-                tabPreviewBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-indigo-900 text-white transition';
-                tabEditorBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition';
-            }
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
         }
 
         function onMethodChange() {
-            const methodKey = document.getElementById('teachingMethod').value;
-            const method = PEDAGOGICAL_METHODS[methodKey];
-            if (method) {
-                document.getElementById('methodHintBox').innerHTML = `<span class="font-bold">លំនាំ៖</span> ${method.description}`;
-                document.getElementById('s3Content').value = method.step3Template.content;
-                document.getElementById('s3Teacher').value = method.step3Template.teacher;
-                document.getElementById('s3Student').value = method.step3Template.student;
-                syncPreview();
+            const key = document.getElementById('teachingMethod')?.value || 'ibl';
+            const method = PEDAGOGICAL_METHODS[key];
+            const hintBox = document.getElementById('methodHintBox');
+            if (method && hintBox) {
+                hintBox.innerHTML = `<span class="font-bold">លំនាំ៖</span> ${method.description}`;
             }
+            syncPreview();
         }
 
         function onDurationChange() {
-            const durationVal = document.getElementById('durationInput').value;
-            if (durationVal.startsWith('៥០')) {
+            const dur = document.getElementById('durationInput')?.value || '';
+            if (dur.startsWith('៥០')) {
                 document.getElementById('s1Time').value = '៣ នាទី';
                 document.getElementById('s2Time').value = '៥ នាទី';
                 document.getElementById('s3Time').value = '៣០ នាទី';
@@ -1127,51 +1090,71 @@
         }
 
         function syncPreview() {
-            const getVal = (id, fallback = '') => document.getElementById(id)?.value ?? fallback;
             const setText = (id, val) => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = val;
             };
+            const getVal = (id, fallback = '') => {
+                const el = document.getElementById(id);
+                return el ? el.value : fallback;
+            };
 
             const methodKey = getVal('teachingMethod', 'ibl');
             const methodLabel = PEDAGOGICAL_METHODS[methodKey]?.label || '';
+            const teacherName = getVal('teacherInput');
 
             setText('prevSchool', getVal('schoolInput'));
             setText('prevHeaderDate', getVal('headerDateInput'));
-            setText('prevDuration', getVal('durationInput'));
-            setText('prevHeaderTeacher', getVal('teacherInput'));
-            setText('prevGrade', getVal('gradeInput'));
             setText('prevSubject', getVal('subjectInput'));
+            setText('prevGrade', getVal('gradeInput'));
             setText('prevChapter', getVal('chapterInput'));
             setText('prevLessonTitle', getVal('lessonTitleInput'));
             setText('prevSubLessons', getVal('subLessonsInput'));
             setText('prevMethod', methodLabel);
+            setText('prevHeaderTeacher', teacherName);
+            setText('prevDuration', getVal('durationInput'));
 
             setText('prevObjKnowledge', getVal('objKnowledge'));
             setText('prevObjSkill', getVal('objSkill'));
             setText('prevObjAttitude', getVal('objAttitude'));
             setText('prevMaterials', getVal('materialsInput'));
 
-            for (let i = 1; i <= 5; i++) {
-                const timeVal = getVal(`s${i}Time`);
-                setText(`prevS${i}Time`, timeVal);
-                setText(`prevS${i}HeaderTime`, timeVal);
-                setText(`prevS${i}Content`, getVal(`s${i}Content`));
-                setText(`prevS${i}Teacher`, getVal(`s${i}Teacher`));
-                setText(`prevS${i}Student`, getVal(`s${i}Student`));
-            }
+            setText('prevS1HeaderTime', getVal('s1Time'));
+            setText('prevS1Teacher', getVal('s1Teacher'));
+            setText('prevS1Content', getVal('s1Content'));
+            setText('prevS1Student', getVal('s1Student'));
 
+            setText('prevS2HeaderTime', getVal('s2Time'));
+            setText('prevS2Teacher', getVal('s2Teacher'));
+            setText('prevS2Content', getVal('s2Content'));
+            setText('prevS2Student', getVal('s2Student'));
+
+            setText('prevS3HeaderTime', getVal('s3Time'));
+            setText('prevS3Teacher', getVal('s3Teacher'));
+            setText('prevS3Content', getVal('s3Content'));
+            setText('prevS3Student', getVal('s3Student'));
+
+            setText('prevS4HeaderTime', getVal('s4Time'));
+            setText('prevS4Teacher', getVal('s4Teacher'));
+            setText('prevS4Content', getVal('s4Content'));
+            setText('prevS4Student', getVal('s4Student'));
+
+            setText('prevS5HeaderTime', getVal('s5Time'));
+            setText('prevS5Teacher', getVal('s5Teacher'));
+            setText('prevS5Content', getVal('s5Content'));
+            setText('prevS5Student', getVal('s5Student'));
+
+            setText('prevPrincipal', getVal('principalInput'));
             setText('prevLunarDate', getVal('lunarDateInput'));
             setText('prevSolarDateText', getVal('solarDateTextInput'));
-            setText('prevTeacher', getVal('teacherInput'));
-            setText('prevPrincipal', getVal('principalInput'));
+            setText('prevTeacher', teacherName);
         }
 
         // =========================================================================
-        // 4. GEMINI 4 HYDROGEN AI GENERATION WITH EXPONENTIAL BACKOFF & FALLBACK
+        // 4. GEMINI 4 HYDROGEN AI INTEGRATION (FILE SCAN + METHOD ANALYSIS + GENERATION)
         // =========================================================================
-        async function fetchWithBackoff(url, payload, maxRetries = 3) {
-            let delay = 1000;
+        async function fetchWithBackoff(url, payload, maxRetries = 2) {
+            let delay = 800;
             for (let attempt = 0; attempt <= maxRetries; attempt++) {
                 try {
                     const response = await fetch(url, {
@@ -1180,80 +1163,78 @@
                         body: JSON.stringify(payload)
                     });
                     if (!response.ok) {
-                        if (response.status === 429 || response.status >= 500) {
-                            throw new Error(`HTTP ${response.status}`);
-                        }
-                        const errData = await response.json().catch(() => ({}));
-                        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+                        throw new Error(`HTTP ${response.status}`);
                     }
                     return await response.json();
                 } catch (err) {
                     if (attempt === maxRetries) throw err;
-                    await new Promise(res => setTimeout(res, delay));
+                    await new Promise(r => setTimeout(r, delay));
                     delay *= 2;
                 }
             }
+        }
+
+        function inferRecommendedMethodLocally(subject, title, subLessons) {
+            const text = `${subject} ${title} ${subLessons}`.toLowerCase();
+            if (text.includes('លំហាត់') || text.includes('គណនា') || text.includes('សមីការ') || subject === 'គណិតវិទ្យា') {
+                return {
+                    key: 'polya',
+                    reason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} ផ្តោតលើការគណនា និងដោះស្រាយចំណោទ ដូច្នេះវិធីសាស្ត្រដោះស្រាយបញ្ហាតាមលំនាំ Polya (យល់បញ្ហា រៀបចំផែនការ អនុវត្ត ពិនិត្យឡើងវិញ) ជួយឱ្យសិស្សចេះគិតជាប្រព័ន្ធ។`
+                };
+            }
+            if (text.includes('ពិសោធន៍') || subject === 'រូបវិទ្យា' || subject === 'គីមីវិទ្យា' || subject === 'ជីវវិទ្យា') {
+                return {
+                    key: '5es',
+                    reason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} មានលក្ខណៈវិទ្យាសាស្ត្រ និងការសង្កេតបាតុភូត ដូច្នេះលំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate) សមស្របបំផុតដើម្បីឱ្យសិស្សរុករក និងបង្កើតចំណេះដឹងដោយខ្លួនឯង។`
+                };
+            }
+            if (subject === 'អក្សរសាស្ត្រខ្មែរ' || subject === 'ប្រវត្តិវិទ្យា' || subject === 'ភូមិវិទ្យា' || subject === 'សីលធម៌-ពលរដ្ឋវិជ្ជា') {
+                return {
+                    key: 'jigsaw',
+                    reason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} មានខ្លឹមសារអត្ថបទ និងចំណុចវិភាគច្រើនផ្នែក ដូច្នេះវិធីសាស្ត្របែបសហការ (Jigsaw) ជួយបែងចែកការស្រាវជ្រាវជាក្រុមអ្នកជំនាញ និងបង្រៀនត្រឡប់គ្នាបានយ៉ាងមានប្រសិទ្ធភាព។`
+                };
+            }
+            return {
+                key: 'ibl',
+                reason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} សមស្របនឹងវិធីសាស្ត្របែបរិះរក (IBL) ដើម្បីជំរុញឱ្យសិស្សចេះចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយសកម្ម។`
+            };
         }
 
         function buildLocalFallbackLesson(grade, subject, title, methodObj) {
             return {
                 recommendedMethodKey: document.getElementById('teachingMethod').value || 'ibl',
                 recommendationReason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} មានលក្ខណៈជំរុញឱ្យសិស្សចេះគិតពិចារណា ស្រាវជ្រាវ និងផ្សារភ្ជាប់ទ្រឹស្តីទៅនឹងការអនុវត្តជាក់ស្តែង។`,
+                detectedGrade: grade,
+                detectedSubject: subject,
                 detectedChapter: document.getElementById('chapterInput').value || '',
                 detectedLessonTitle: title,
                 detectedSubLessons: document.getElementById('subLessonsInput').value || '',
                 objKnowledge: `ពន្យល់ពីនិយមន័យ គោលការណ៍គ្រឹះ និងរូបមន្តសំខាន់ៗនៃ "${title}" ក្នុងមុខវិជ្ជា${subject} ថ្នាក់${grade} បានត្រឹមត្រូវ។`,
-                objSkill: `វិភាគ បកស្រាយ និងអនុវត្តចំណេះដឹងអំពី "${title}" ទៅដោះស្រាយលំហាត់ និងបញ្ហាជាក់ស្តែងបានច្បាស់លាស់។`,
-                objAttitude: `មានស្មារតីសហការក្នុងក្រុម ហ៊ានចោទសួរ ពិភាក្សា និងស្រឡាញ់ការសិក្សាស្រាវជ្រាវមុខវិជ្ជា${subject}។`,
-                materials: `- សៀវភៅសិក្សាគោលមុខវិជ្ជា${subject} ថ្នាក់${grade} របស់ក្រសួងអប់រំ យុវជន និងកីឡា\n- ផ្ទាំងរូបភាព សន្លឹកកិច្ចការក្រុម ក្រដាសផ្ទាំងធំ និងហ្វឺត។`,
+                objSkill: `វិភាគ បកស្រាយ និងអនុវត្តចំណេះដឹងនៃ "${title}" ទៅដោះស្រាយលំហាត់ ឬស្ថានភាពជាក់ស្តែងបានច្បាស់លាស់។`,
+                objAttitude: `មានស្មារតីសហការក្នុងក្រុម ហ៊ានបញ្ចេញមតិ និងឱ្យតម្លៃលើការសិក្សាស្រាវជ្រាវមុខវិជ្ជា${subject}។`,
+                materials: `- សៀវភៅសិក្សាគោលមុខវិជ្ជា${subject} ថ្នាក់${grade} របស់ក្រសួងអប់រំ យុវជន និងកីឡា\n- ផ្ទាំងរូបភាព សន្លឹកកិច្ចការក្រុម និងសម្ភារឧបទេសពាក់ព័ន្ធនឹង "${title}"។`,
                 s1Content: `- ពិនិត្យអវត្តមាន អនាម័យ និងសណ្តាប់ធ្នាប់ក្នុងថ្នាក់`,
                 s1Teacher: `- ពិនិត្យវត្តមានសិស្ស ឯកសណ្ឋាន និងណែនាំឱ្យរក្សាភាពស្ងៀមស្ងាត់។`,
                 s1Student: `- ប្រធានថ្នាក់រាយការណ៍អវត្តមាន និងរៀបចំខ្លួនចូលរៀន។`,
-                s2Content: `- រំលឹកមេរៀនចាស់ និងកែលំហាត់កិច្ចការផ្ទះដែលពាក់ព័ន្ធនឹង "${title}"។`,
-                s2Teacher: `- ហៅសិស្សឡើងកែកិច្ចការផ្ទះ និងសួរសំណួរបំផុសភ្ជាប់ទៅមេរៀនថ្មី។`,
+                s2Content: `- រំលឹកចំណេះដឹងមេរៀនចាស់ និងកែលំហាត់កិច្ចការផ្ទះ`,
+                s2Teacher: `- ហៅសិស្សឡើងកែកិច្ចការផ្ទះ និងសួរសំណួរបំផុសភ្ជាប់ទៅមេរៀន "${title}"។`,
                 s2Student: `- ឡើងកែកិច្ចការផ្ទះលើក្តារខៀន និងឆ្លើយសំណួររំលឹក។`,
-                s3Content: `ខ្លឹមសារសំខាន់ៗនៃ "${title}"៖\n១. និយមន័យ និងគោលគំនិតគោល\n២. លក្ខណៈសំខាន់ៗ ឬរូបមន្តពាក់ព័ន្ធ\n៣. ឧទាហរណ៍គំរូ និងការអនុវត្តជាក់ស្តែង។`,
+                s3Content: methodObj.step3Template.content,
                 s3Teacher: methodObj.step3Template.teacher,
                 s3Student: methodObj.step3Template.student,
-                s4Content: `- សំណួរ៖ ចូរសង្ខេបខ្លឹមសារគន្លឹះនៃ "${title}" និងដោះស្រាយលំហាត់អនុវត្ត។`,
-                s4Teacher: `- ចោទសំណួរវាយតម្លៃតាមកម្រិតពុទ្ធិ និងដាក់លំហាត់ខ្លីៗដើម្បីវាស់ស្ទង់ការយល់ដឹង។`,
-                s4Student: `- គិត និងឆ្លើយសំណួរដោយឯករាជ្យ ព្រមទាំងឡើងដោះស្រាយលំហាត់លើក្តារខៀន។`,
-                s5Content: `- ធ្វើលំហាត់អនុវត្តក្នុងសៀវភៅពុម្ព និងអានមេរៀនបន្ទាប់ទុកជាមុន។`,
+                s4Content: `- សំណួរពង្រឹងពុទ្ធិ៖ ចូរសង្ខេបគោលគំនិតសំខាន់ៗនៃមេរៀន "${title}" និងដោះស្រាយលំហាត់អនុវត្តខ្លី។`,
+                s4Teacher: `- ចោទសំណួរវាយតម្លៃ និងដាក់លំហាត់អនុវត្តខ្លីៗដើម្បីវាស់ស្ទង់ការយល់ដឹងរបស់សិស្ស។`,
+                s4Student: `- គិត និងឆ្លើយសំណួរដោយឯករាជ្យ ព្រមទាំងដោះស្រាយលំហាត់លើក្តារខៀន។`,
+                s5Content: `- ធ្វើលំហាត់អនុវត្តក្នុងសៀវភៅពុម្ព និងអានខ្លឹមសារមេរៀនបន្ទាប់។`,
                 s5Teacher: `- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំលឹកមេរៀនឡើងវិញនៅផ្ទះ។`,
                 s5Student: `- កត់ត្រាកិច្ចការផ្ទះ និងស្តាប់ការណែនាំរបស់គ្រូ។`
             };
         }
 
-        function recommendMethodHeuristically(subject, title, subLessons) {
-            const text = `${subject} ${title} ${subLessons}`.toLowerCase();
-            if (text.includes('ពិសោធន៍') || text.includes('បាតុភូត') || text.includes('ដែន') || text.includes('កម្លាំង') || text.includes('ប្រតិកម្ម')) {
-                return {
-                    key: 'ibl',
-                    reason: 'មេរៀននេះពាក់ព័ន្ធនឹងបាតុភូតវិទ្យាសាស្ត្រ និងការពិសោធន៍ ដែលសមស្របបំផុតជាមួយ «បែបរិះរក (IBL)» ដើម្បីឱ្យសិស្សចោទសួរ បង្កើតសម្មតិកម្ម និងសង្កេតរកការពិតដោយខ្លួនឯង។'
-                };
-            }
-            if (text.includes('សមីការ') || text.includes('គណនា') || text.includes('អនុគមន៍') || text.includes('លីមីត') || text.includes('ដេរីវេ') || text.includes('អាំងតេក្រាល') || text.includes('ចំណោទ')) {
-                return {
-                    key: 'gradual',
-                    reason: 'មេរៀននេះមានលក្ខណៈជារូបមន្ត និងលំហាត់គណនា ដែលសមស្របបំផុតជាមួយ «លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)» ឬ «Polya» ដើម្បីឱ្យសិស្សយល់ជំហានដោះស្រាយច្បាស់មុនអនុវត្តដោយខ្លួនឯង។'
-                };
-            }
-            if (text.includes('ប្រវត្តិ') || text.includes('អក្សរសាស្ត្រ') || text.includes('រឿង') || text.includes('ភូមិវិទ្យា') || text.includes('សីលធម៌')) {
-                return {
-                    key: 'jigsaw',
-                    reason: 'មេរៀននេះមានខ្លឹមសារអាន និងវិភាគច្រើនផ្នែក ដែលសមស្របបំផុតជាមួយ «បែបសហការ (Jigsaw)» ដើម្បីបែងចែកឱ្យសិស្សស្រាវជ្រាវតាមក្រុមអ្នកជំនាញ និងបង្រៀនត្រឡប់គ្នាវិញ។'
-                };
-            }
-            return {
-                key: '5es',
-                reason: 'មេរៀននេះមានទាំងទ្រឹស្តី និងការអនុវត្ត ដែលសមស្របជាមួយ «លំនាំបង្រៀន 5Es» ដើម្បីទាក់ទាញចំណាប់អារម្មណ៍ រុករក ពន្យល់ និងពង្រីកចំណេះដឹងសិស្សជាជំហានៗ។'
-            };
-        }
-
-        function displayMethodRecommendation(methodKey, reason) {
+        function showAiRecommendation(methodKey, reason) {
             const card = document.getElementById('aiRecommendationCard');
-            const titleEl = document.getElementById('aiRecMethodTitle');
-            const reasonEl = document.getElementById('aiRecReasonText');
+            const titleEl = document.getElementById('aiRecommendationTitle');
+            const reasonEl = document.getElementById('aiRecommendationReason');
             const methodObj = PEDAGOGICAL_METHODS[methodKey];
             if (!card || !titleEl || !reasonEl || !methodObj) return;
 
@@ -1262,33 +1243,73 @@
             card.classList.remove('hidden');
         }
 
-        async function analyzeAndRecommendMethodOnly() {
-            const grade = document.getElementById('gradeInput').value;
-            const subject = document.getElementById('subjectInput').value;
-            const title = document.getElementById('lessonTitleInput').value.trim();
-            const subLessons = document.getElementById('subLessonsInput').value.trim();
+        function applyDetectedLessonMetadata(data) {
+            if (!data) return;
 
-            if (!title && uploadedLessonFiles.length === 0) {
-                showToast('សូមបញ្ចូលចំណងជើងមេរៀន ឬ Upload ឯកសារមេរៀនជាមុនសិន!', 'error');
+            if (data.detectedGrade) {
+                const gradeSelect = document.getElementById('gradeInput');
+                const matchedGrade = Array.from(gradeSelect.options).find(opt =>
+                    opt.value === data.detectedGrade ||
+                    opt.value.includes(data.detectedGrade) ||
+                    data.detectedGrade.includes(opt.value.split(' ')[0])
+                );
+                if (matchedGrade) {
+                    gradeSelect.value = matchedGrade.value;
+                }
+            }
+
+            if (data.detectedSubject) {
+                const subjectSelect = document.getElementById('subjectInput');
+                const matchedSubject = Array.from(subjectSelect.options).find(opt =>
+                    opt.value === data.detectedSubject ||
+                    opt.value.includes(data.detectedSubject) ||
+                    data.detectedSubject.includes(opt.value)
+                );
+                if (matchedSubject) {
+                    subjectSelect.value = matchedSubject.value;
+                } else {
+                    const customOpt = document.createElement('option');
+                    customOpt.value = data.detectedSubject;
+                    customOpt.textContent = data.detectedSubject;
+                    subjectSelect.appendChild(customOpt);
+                    subjectSelect.value = data.detectedSubject;
+                }
+            }
+
+            if (data.detectedChapter) {
+                document.getElementById('chapterInput').value = data.detectedChapter;
+            }
+            if (data.detectedLessonTitle) {
+                document.getElementById('lessonTitleInput').value = data.detectedLessonTitle;
+            }
+            if (data.detectedSubLessons) {
+                document.getElementById('subLessonsInput').value = data.detectedSubLessons;
+            }
+            syncPreview();
+        }
+
+        async function extractMetadataFromFiles() {
+            if (uploadedLessonFiles.length === 0) {
+                showToast('សូមបញ្ចូលឯកសាររូបភាព ឬ PDF មេរៀនជាមុនសិន!', 'error');
                 return;
             }
 
-            showToast('AI កំពុងវិភាគមេរៀនដើម្បីជ្រើសរើសវិធីសាស្ត្រសមស្រប...', 'info');
+            const btn = document.getElementById('extractMetadataBtn');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-spin-fast inline-block">⏳</span> <span>កំពុងអានឯកសារ និងស្រង់មុខវិជ្ជា ចំណងជើងមេរៀន...</span>`;
 
-            const methodListDescription = Object.entries(PEDAGOGICAL_METHODS)
-                .map(([k, v]) => `- "${k}": ${v.label} (${v.description})`)
-                .join('\n');
+            const subjectOptions = Array.from(document.getElementById('subjectInput').options).map(o => o.value).join(', ');
+            const gradeOptions = Array.from(document.getElementById('gradeInput').options).map(o => o.value).join(', ');
 
             const userParts = [
                 {
-                    text: `ចូរវិភាគខ្លឹមសារមេរៀនវិទ្យាល័យខាងក្រោម (រួមទាំងរូបភាព ឬ PDF ដែលបានភ្ជាប់ប្រសិនបើមាន) ហើយជ្រើសរើសវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនតែ ១ គត់ដែលសមស្របបំផុតក្នុងចំណោមបញ្ជីខាងក្រោម៖
-${methodListDescription}
-
-ព័ត៌មានមេរៀន៖
-- កម្រិតថ្នាក់៖ ${grade}
-- មុខវិជ្ជា៖ ${subject}
-- ចំណងជើងមេរៀន៖ ${title || '(ទាញចេញពីឯកសារភ្ជាប់)'}
-- ចំណងជើងរង៖ ${subLessons || '(ទាញចេញពីឯកសារភ្ជាប់)'}`
+                    text: `ចូរពិនិត្យមើលឯកសារមេរៀន (រូបភាពទំព័រសៀវភៅ ឬ PDF) ដែលបានភ្ជាប់ រួចវិភាគ និងស្រង់ព័ត៌មានខាងក្រោមជាភាសាខ្មែរឱ្យបានត្រឹមត្រូវបំផុត៖
+១. detectedSubject: ឈ្មោះមុខវិជ្ជា (គួរត្រូវនឹងបញ្ជីនេះប្រសិនបើអាច៖ ${subjectOptions})
+២. detectedGrade: កម្រិតថ្នាក់ (គួរត្រូវនឹងបញ្ជីនេះប្រសិនបើអាច៖ ${gradeOptions})
+៣. detectedChapter: ជំពូកទី (ឧ. ទី២៖ អគ្គិសនី និងម៉ាញេទិច)
+៤. detectedLessonTitle: ចំណងជើងមេរៀនទី (ឧ. ទី១៖ ដែនម៉ាញេទិច)
+៥. detectedSubLessons: ចំណងជើងរងទាំងអស់ដែលមានក្នុងមេរៀន (រៀបតាមលេខរៀង ១. ... ២. ...)`
                 }
             ];
 
@@ -1308,10 +1329,93 @@ ${methodListDescription}
                     responseSchema: {
                         type: "OBJECT",
                         properties: {
-                            recommendedMethodKey: {
-                                type: "STRING",
-                                enum: Object.keys(PEDAGOGICAL_METHODS)
-                            },
+                            detectedSubject: { type: "STRING" },
+                            detectedGrade: { type: "STRING" },
+                            detectedChapter: { type: "STRING" },
+                            detectedLessonTitle: { type: "STRING" },
+                            detectedSubLessons: { type: "STRING" }
+                        },
+                        required: ["detectedSubject", "detectedGrade", "detectedChapter", "detectedLessonTitle", "detectedSubLessons"]
+                    }
+                }
+            };
+
+            const apiKey = "";
+            const endpoints = [
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
+            ];
+
+            let extracted = null;
+            for (const url of endpoints) {
+                try {
+                    const result = await fetchWithBackoff(url, payload, 1);
+                    const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (rawText) {
+                        extracted = JSON.parse(rawText);
+                        break;
+                    }
+                } catch (_) {}
+            }
+
+            if (extracted) {
+                applyDetectedLessonMetadata(extracted);
+                showToast(`បានស្រង់មុខវិជ្ជា «${extracted.detectedSubject}» និងមេរៀន «${extracted.detectedLessonTitle}» រួចរាល់!`, 'success');
+            } else {
+                const firstFileName = uploadedLessonFiles[0]?.name?.replace(/\.[^/.]+$/, '') || '';
+                if (firstFileName) {
+                    document.getElementById('lessonTitleInput').value = firstFileName;
+                    syncPreview();
+                }
+                showToast('បានទាញឈ្មោះមេរៀនបឋមពីឈ្មោះឯកសារ (សូមពិនិត្យបន្ថែម)!', 'info');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        }
+
+        async function analyzeMethodOnly() {
+            const btn = document.getElementById('analyzeMethodBtn');
+            const origText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span>⏳ កំពុងវិភាគ...</span>`;
+
+            const subject = document.getElementById('subjectInput').value;
+            const grade = document.getElementById('gradeInput').value;
+            const title = document.getElementById('lessonTitleInput').value;
+            const subLessons = document.getElementById('subLessonsInput').value;
+
+            const methodListDesc = Object.entries(PEDAGOGICAL_METHODS)
+                .map(([k, v]) => `- "${k}": ${v.label} (${v.description})`)
+                .join('\n');
+
+            const userParts = [
+                {
+                    text: `ចូរវិភាគមេរៀនកម្រិតវិទ្យាល័យខាងក្រោម (និងឯកសារភ្ជាប់ប្រសិនបើមាន) ហើយជ្រើសរើសកូដវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនតែមួយគត់ដែលសមស្របបំផុត ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យជាភាសាខ្មែរ៖
+- កម្រិតថ្នាក់៖ ${grade}
+- មុខវិជ្ជា៖ ${subject}
+- ចំណងជើងមេរៀន៖ ${title}
+- ចំណងជើងរង៖ ${subLessons}
+
+បញ្ជីកូដវិធីសាស្ត្រ៖
+${methodListDesc}`
+                }
+            ];
+
+            for (const f of uploadedLessonFiles) {
+                userParts.push({
+                    inlineData: { mimeType: f.mimeType, data: f.base64Data }
+                });
+            }
+
+            const payload = {
+                contents: [{ role: 'user', parts: userParts }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            recommendedMethodKey: { type: "STRING", enum: Object.keys(PEDAGOGICAL_METHODS) },
                             recommendationReason: { type: "STRING" }
                         },
                         required: ["recommendedMethodKey", "recommendationReason"]
@@ -1325,56 +1429,48 @@ ${methodListDescription}
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
             ];
 
-            let recData = null;
+            let analysis = null;
             for (const url of endpoints) {
                 try {
-                    const result = await fetchWithBackoff(url, payload, 1);
-                    const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (rawText) {
-                        recData = JSON.parse(rawText);
+                    const res = await fetchWithBackoff(url, payload, 1);
+                    const text = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        analysis = JSON.parse(text);
                         break;
                     }
                 } catch (_) {}
             }
 
-            if (!recData || !PEDAGOGICAL_METHODS[recData.recommendedMethodKey]) {
-                const fallback = recommendMethodHeuristically(subject, title, subLessons);
-                recData = { recommendedMethodKey: fallback.key, recommendationReason: fallback.reason };
+            if (!analysis) {
+                const local = inferRecommendedMethodLocally(subject, title, subLessons);
+                analysis = { recommendedMethodKey: local.key, recommendationReason: local.reason };
             }
 
-            document.getElementById('teachingMethod').value = recData.recommendedMethodKey;
-            onMethodChange();
-            displayMethodRecommendation(recData.recommendedMethodKey, recData.recommendationReason);
-            showToast('AI បានជ្រើសរើសវិធីសាស្ត្របង្រៀនសមស្របរួចរាល់!', 'success');
+            if (PEDAGOGICAL_METHODS[analysis.recommendedMethodKey]) {
+                document.getElementById('teachingMethod').value = analysis.recommendedMethodKey;
+                onMethodChange();
+                showAiRecommendation(analysis.recommendedMethodKey, analysis.recommendationReason);
+                showToast('AI បានវិភាគ និងជ្រើសរើសវិធីសាស្ត្របង្រៀនសមស្របរួចរាល់!', 'success');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = origText;
         }
 
         async function generateLessonWithAI() {
+            const btn = document.getElementById('aiGenerateBtn');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-spin-fast inline-block">⏳</span> <span>Gemini 4 Hydrogen កំពុងវិភាគមេរៀន និងបង្កើតកិច្ចតែងការ...</span>`;
+
             const grade = document.getElementById('gradeInput').value;
             const subject = document.getElementById('subjectInput').value;
-            const chapter = document.getElementById('chapterInput').value.trim();
-            const title = document.getElementById('lessonTitleInput').value.trim();
-            const subLessons = document.getElementById('subLessonsInput').value.trim();
-            const headerDate = document.getElementById('headerDateInput').value;
+            const chapter = document.getElementById('chapterInput').value;
+            const title = document.getElementById('lessonTitleInput').value;
+            const subLessons = document.getElementById('subLessonsInput').value;
             const duration = document.getElementById('durationInput').value;
-            const autoSelectMethod = document.getElementById('autoSelectMethodCheckbox')?.checked ?? true;
-            const currentMethodKey = document.getElementById('teachingMethod').value;
-            const currentMethodObj = PEDAGOGICAL_METHODS[currentMethodKey];
-
-            if (!title && uploadedLessonFiles.length === 0) {
-                showToast('សូមបញ្ចូលចំណងជើងមេរៀន ឬ Upload រូបភាព/PDF មេរៀនជាមុនសិន!', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('aiGenerateBtn');
-            const btnText = document.getElementById('aiBtnText');
-            const btnIcon = document.getElementById('aiBtnIcon');
-
-            btn.disabled = true;
-            btn.classList.add('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = uploadedLessonFiles.length > 0
-                ? 'AI កំពុងអានឯកសារ វិភាគវិធីសាស្ត្រ និងបង្កើតកិច្ចតែងការ...'
-                : 'AI កំពុងវិភាគមេរៀន និងបង្កើតកិច្ចតែងការ...';
-            btnIcon.classList.add('animate-spin-fast');
+            const autoSelectMethod = document.getElementById('autoSelectMethodCheckbox')?.checked;
+            const currentMethodKey = document.getElementById('teachingMethod').value || 'ibl';
 
             const methodListDescription = Object.entries(PEDAGOGICAL_METHODS)
                 .map(([k, v]) => `- "${k}": ${v.label} -> ${v.description}`)
@@ -1382,40 +1478,36 @@ ${methodListDescription}
 
             const systemPrompt = `អ្នកគឺជាគ្រូឧទ្ទេស និងអ្នកជំនាញគរុកោសល្យកម្រិតវិទ្យាល័យ (ថ្នាក់ទី១០ ទី១១ ទី១២) នៃក្រសួងអប់រំ យុវជន និងកីឡា កម្ពុជា។
 ភារកិច្ចរបស់អ្នកមាន ៣ ដំណាក់កាលសំខាន់ៗ៖
-១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីឯកសារភ្ជាប់ (រូបភាពទំព័រសៀវភៅ ឬ PDF ប្រសិនបើមាន) ដើម្បីកំណត់ ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
+១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីឯកសារភ្ជាប់ (រូបភាពទំព័រសៀវភៅ ឬ PDF ប្រសិនបើមាន) ដើម្បីវិភាគ និងកំណត់ កម្រិតថ្នាក់ (detectedGrade) ឈ្មោះមុខវិជ្ជា (detectedSubject) ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
 ២. វិភាគលក្ខណៈមេរៀន និងកំណត់វិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនសមស្របបំផុត (recommendedMethodKey) ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យយ៉ាងច្បាស់ (recommendationReason) ជាភាសាខ្មែរ។
 បញ្ជីកូដវិធីសាស្ត្រទាំង ១២ ដែលអាចជ្រើសរើសបាន៖
 ${methodListDescription}
-(ចំណាំ៖ ប្រសិនបើអ្នកប្រើប្រាស់បានកំណត់វិធីសាស្ត្រជាក់លាក់រួចហើយ ត្រូវប្រើកូដ "${currentMethodKey}" ក្នុងការសរសេរជំហានទី៣ ប៉ុន្តែនៅតែផ្តល់ការវិភាគក្នុង recommendationReason)។
+(ចំណាំ៖ ប្រសិនបើអ្នកប្រើប្រាស់មិនបានបើកការជ្រើសរើសស្វ័យប្រវត្តិទេ ត្រូវប្រើកូដ "${currentMethodKey}" ក្នុងការសរសេរជំហានទី៣ ប៉ុន្តែនៅតែផ្តល់ការវិភាគក្នុង recommendationReason)។
 ៣. សរសេរកិច្ចតែងការបង្រៀនវិទ្យាល័យ ៥ ជំហានពេញលេញ ដោយក្នុង "ជំហានទី៣" ត្រូវបែងចែកសកម្មភាពគ្រូ (s3Teacher) និងសកម្មភាពសិស្ស (s3Student) ឱ្យត្រូវតាមដំណាក់កាលនៃវិធីសាស្ត្របង្រៀនដែលបានជ្រើសរើសយ៉ាងត្រឹមត្រូវ។`;
 
-            const methodInstruction = autoSelectMethod
-                ? `សូម AI វិភាគខ្លឹមសារមេរៀន (រួមទាំងឯកសាររូបភាព/PDF បើមាន) រួចជ្រើសរើសវិធីសាស្ត្របង្រៀន ១ ដែលសមស្របបំផុតដោយស្វ័យប្រវត្តិ ហើយបង្កើតកិច្ចតែងការតាមវិធីសាស្ត្រនោះ។`
-                : `សូមប្រើវិធីសាស្ត្របង្រៀន "${currentMethodKey}" (${currentMethodObj.label}) ដែលអ្នកប្រើប្រាស់បានជ្រើសរើស ហើយពន្យល់ពីភាពសមស្របរបស់វាជាមួយមេរៀននេះ។`;
-
-            const userQuery = `សូមវិភាគ និងបង្កើតកិច្ចតែងការបង្រៀនវិទ្យាល័យសម្រាប់៖
+            const userParts = [
+                {
+                    text: `សូមបង្កើតកិច្ចតែងការបង្រៀនកម្រិតវិទ្យាល័យជាភាសាខ្មែរតាមព័ត៌មានខាងក្រោម៖
 - កម្រិតថ្នាក់៖ ${grade}
 - មុខវិជ្ជា៖ ${subject}
-- ជំពូកទី៖ ${chapter || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
-- មេរៀនទី៖ ${title || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
-- ចំណងជើងរង៖ ${subLessons || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
-- កាលបរិច្ឆេទ៖ ${headerDate}
-- រយៈពេល៖ ${duration}
-- ការណែនាំអំពីវិធីសាស្ត្របង្រៀន៖ ${methodInstruction}`;
+- ជំពូកទី៖ ${chapter}
+- មេរៀនទី៖ ${title}
+- ចំណងជើងរង៖ ${subLessons}
+- រយៈពេលបង្រៀន៖ ${duration}
+- ការកំណត់វិធីសាស្ត្រ៖ ${autoSelectMethod ? 'ឱ្យ AI វិភាគ និងជ្រើសរើសវិធីសាស្ត្រសមស្របបំផុតដោយស្វ័យប្រវត្តិ' : `ប្រើវិធីសាស្ត្រ "${currentMethodKey}" (${PEDAGOGICAL_METHODS[currentMethodKey]?.label})`}
+${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯកសារមេរៀនភ្ជាប់មកជាមួយ សូមស្រង់ឈ្មោះមុខវិជ្ជា ចំណងជើងមេរៀន ចំណងជើងរង និងខ្លឹមសារពិតប្រាកដពីឯកសារទាំងនោះ!' : ''}`
+                }
+            ];
 
-            const userParts = [{ text: userQuery }];
             for (const f of uploadedLessonFiles) {
                 userParts.push({
-                    inlineData: {
-                        mimeType: f.mimeType,
-                        data: f.base64Data
-                    }
+                    inlineData: { mimeType: f.mimeType, data: f.base64Data }
                 });
             }
 
             const payload = {
-                contents: [{ role: 'user', parts: userParts }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
+                contents: [{ role: 'user', parts: userParts }],
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
@@ -1426,6 +1518,8 @@ ${methodListDescription}
                                 enum: Object.keys(PEDAGOGICAL_METHODS)
                             },
                             recommendationReason: { type: "STRING" },
+                            detectedGrade: { type: "STRING" },
+                            detectedSubject: { type: "STRING" },
                             detectedChapter: { type: "STRING" },
                             detectedLessonTitle: { type: "STRING" },
                             detectedSubLessons: { type: "STRING" },
@@ -1451,6 +1545,7 @@ ${methodListDescription}
                         },
                         required: [
                             "recommendedMethodKey", "recommendationReason",
+                            "detectedGrade", "detectedSubject",
                             "detectedChapter", "detectedLessonTitle", "detectedSubLessons",
                             "objKnowledge", "objSkill", "objAttitude", "materials",
                             "s1Content", "s1Teacher", "s1Student",
@@ -1470,7 +1565,6 @@ ${methodListDescription}
             ];
 
             let generatedData = null;
-
             for (const url of endpoints) {
                 try {
                     const result = await fetchWithBackoff(url, payload, 1);
@@ -1479,287 +1573,157 @@ ${methodListDescription}
                         generatedData = JSON.parse(rawText);
                         break;
                     }
-                } catch (_) {
-                    // Try next endpoint or local fallback silently
-                }
+                } catch (_) {}
             }
 
             if (!generatedData) {
-                const heuristic = recommendMethodHeuristically(subject, title, subLessons);
-                const chosenKey = autoSelectMethod ? heuristic.key : currentMethodKey;
-                const chosenObj = PEDAGOGICAL_METHODS[chosenKey] || currentMethodObj;
-                generatedData = buildLocalFallbackLesson(grade, subject, title || 'មេរៀនពីឯកសារ', chosenObj);
-                generatedData.recommendedMethodKey = chosenKey;
-                generatedData.recommendationReason = heuristic.reason;
-                showToast('បានវិភាគ និងបង្កើតគំរូកិច្ចតែងការតាមវិធីសាស្ត្រសមស្រប!', 'info');
-            } else {
-                showToast('AI បានវិភាគឯកសារ និងបង្កើតកិច្ចតែងការរួចរាល់!', 'success');
+                const localRec = autoSelectMethod
+                    ? inferRecommendedMethodLocally(subject, title, subLessons)
+                    : { key: currentMethodKey, reason: PEDAGOGICAL_METHODS[currentMethodKey]?.description };
+                const chosenMethod = PEDAGOGICAL_METHODS[localRec.key] || PEDAGOGICAL_METHODS[currentMethodKey];
+                generatedData = buildLocalFallbackLesson(grade, subject, title, chosenMethod);
+                generatedData.recommendedMethodKey = localRec.key;
+                generatedData.recommendationReason = localRec.reason;
             }
 
-            // Apply AI-recommended method if autoSelectMethod is enabled
+            // Apply recommended pedagogical method if auto-select is enabled
             const finalMethodKey = (autoSelectMethod && PEDAGOGICAL_METHODS[generatedData.recommendedMethodKey])
                 ? generatedData.recommendedMethodKey
                 : currentMethodKey;
 
             document.getElementById('teachingMethod').value = finalMethodKey;
-            const finalMethodObj = PEDAGOGICAL_METHODS[finalMethodKey];
-            if (finalMethodObj) {
-                document.getElementById('methodHintBox').innerHTML = `<span class="font-bold">លំនាំ៖</span> ${finalMethodObj.description}`;
-            }
-            displayMethodRecommendation(finalMethodKey, generatedData.recommendationReason);
+            onMethodChange();
+            showAiRecommendation(
+                generatedData.recommendedMethodKey || finalMethodKey,
+                generatedData.recommendationReason
+            );
 
-            // Auto-fill detected chapter/title/sublessons if extracted from uploaded files or empty
-            if (generatedData.detectedChapter && (!chapter || uploadedLessonFiles.length > 0)) {
-                document.getElementById('chapterInput').value = generatedData.detectedChapter;
-            }
-            if (generatedData.detectedLessonTitle && (!title || uploadedLessonFiles.length > 0)) {
-                document.getElementById('lessonTitleInput').value = generatedData.detectedLessonTitle;
-            }
-            if (generatedData.detectedSubLessons && (!subLessons || uploadedLessonFiles.length > 0)) {
-                document.getElementById('subLessonsInput').value = generatedData.detectedSubLessons;
+            // Auto-fill detected grade/subject/chapter/title/sublessons if extracted from uploaded files
+            if (uploadedLessonFiles.length > 0) {
+                applyDetectedLessonMetadata(generatedData);
+            } else {
+                if (generatedData.detectedChapter && !chapter) {
+                    document.getElementById('chapterInput').value = generatedData.detectedChapter;
+                }
+                if (generatedData.detectedLessonTitle && !title) {
+                    document.getElementById('lessonTitleInput').value = generatedData.detectedLessonTitle;
+                }
+                if (generatedData.detectedSubLessons && !subLessons) {
+                    document.getElementById('subLessonsInput').value = generatedData.detectedSubLessons;
+                }
             }
 
             // Populate form fields
-            document.getElementById('objKnowledge').value = generatedData.objKnowledge || '';
-            document.getElementById('objSkill').value = generatedData.objSkill || '';
-            document.getElementById('objAttitude').value = generatedData.objAttitude || '';
-            document.getElementById('materialsInput').value = generatedData.materials || '';
-
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`s${i}Content`).value = generatedData[`s${i}Content`] || '';
-                document.getElementById(`s${i}Teacher`).value = generatedData[`s${i}Teacher`] || '';
-                document.getElementById(`s${i}Student`).value = generatedData[`s${i}Student`] || '';
+            const fieldMap = [
+                'objKnowledge', 'objSkill', 'objAttitude', 'materials',
+                's1Content', 's1Teacher', 's1Student',
+                's2Content', 's2Teacher', 's2Student',
+                's3Content', 's3Teacher', 's3Student',
+                's4Content', 's4Teacher', 's4Student',
+                's5Content', 's5Teacher', 's5Student'
+            ];
+            for (const id of fieldMap) {
+                if (generatedData[id] !== undefined && document.getElementById(id)) {
+                    document.getElementById(id).value = generatedData[id];
+                }
             }
 
             syncPreview();
+            showToast('បានវិភាគ និងបង្កើតកិច្ចតែងការបង្រៀនដោយ AI រួចរាល់!', 'success');
 
             btn.disabled = false;
-            btn.classList.remove('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = 'វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI';
-            btnIcon.classList.remove('animate-spin-fast');
+            btn.innerHTML = origHtml;
         }
 
         // =========================================================================
-        // 5. WORD (.DOC) EXPORT WITH KHMER OS MOUL LIGHT & SIEMREAP
-        // =========================================================================
-        function exportToWord() {
-            syncPreview();
-            const docElement = document.getElementById('a4Document');
-            const title = document.getElementById('lessonTitleInput').value.trim() || 'កិច្ចតែងការបង្រៀន';
-            const cleanFilename = title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 60);
-
-            const wordHtml = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office'
-                      xmlns:w='urn:schemas-microsoft-com:office:word'
-                      xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <meta charset='utf-8'>
-                    <title>${title}</title>
-                    <style>
-                        @page Section1 {
-                            size: 210mm 297mm;
-                            margin: 12.7mm 15mm 12.7mm 15mm;
-                        }
-                        div.Section1 { page: Section1; }
-                        body {
-                            font-family: 'Khmer OS Siemreap', 'Siemreap', sans-serif;
-                            font-size: 11pt;
-                            line-height: 1.6;
-                            color: #000000;
-                        }
-                        .font-moul {
-                            font-family: 'Khmer OS Moul Light', 'Khmer OS Moul', 'Moul', serif;
-                            font-weight: normal;
-                        }
-                        table.moeys-table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            font-family: 'Khmer OS Siemreap', 'Siemreap', sans-serif;
-                            font-size: 10.5pt;
-                        }
-                        table.moeys-table th, table.moeys-table td {
-                            border: 1pt solid #000000;
-                            padding: 5pt 6pt;
-                            vertical-align: top;
-                        }
-                        table.moeys-table th {
-                            background-color: #f1f5f9;
-                            font-weight: bold;
-                            text-align: center;
-                        }
-                        tr.step-header-row td {
-                            background-color: #eef2ff;
-                            font-weight: bold;
-                            text-align: center;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="Section1">
-                        ${docElement.innerHTML}
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff', wordHtml], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${cleanFilename}.doc`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('បានទាញយកឯកសារ Word (.doc) ដោយជោគជ័យ!', 'success');
-        }
-
-        // =========================================================================
-        // 6. SAVE, LOAD, DELETE & NEW LESSON MANAGEMENT
+        // 5. SAVE / LOAD / WORD EXPORT / MOBILE TABS / TOASTS
         // =========================================================================
         function getSavedLessons() {
             try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             } catch (_) {
                 return [];
             }
         }
 
-        function updateSavedCount() {
-            const list = getSavedLessons();
-            document.getElementById('savedCountBadge').textContent = toKhmerNumerals(list.length);
+        function setSavedLessons(list) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            updateSavedCountBadge();
         }
 
-        function collectFormData() {
-            return {
-                id: currentLessonId || 'lesson_' + Date.now(),
-                updatedAt: new Date().toLocaleDateString('km-KH'),
-                grade: document.getElementById('gradeInput').value,
-                subject: document.getElementById('subjectInput').value,
-                chapter: document.getElementById('chapterInput').value,
-                lessonTitle: document.getElementById('lessonTitleInput').value,
-                subLessons: document.getElementById('subLessonsInput').value,
-                method: document.getElementById('teachingMethod').value,
-                dept: document.getElementById('deptInput').value,
-                school: document.getElementById('schoolInput').value,
-                gregorianDate: document.getElementById('gregorianDatePicker').value,
-                headerDate: document.getElementById('headerDateInput').value,
-                duration: document.getElementById('durationInput').value,
-                lunarDate: document.getElementById('lunarDateInput').value,
-                solarDateText: document.getElementById('solarDateTextInput').value,
-                teacher: document.getElementById('teacherInput').value,
-                principal: document.getElementById('principalInput').value,
-                objKnowledge: document.getElementById('objKnowledge').value,
-                objSkill: document.getElementById('objSkill').value,
-                objAttitude: document.getElementById('objAttitude').value,
-                materials: document.getElementById('materialsInput').value,
-                s1Time: document.getElementById('s1Time').value,
-                s1Content: document.getElementById('s1Content').value,
-                s1Teacher: document.getElementById('s1Teacher').value,
-                s1Student: document.getElementById('s1Student').value,
-                s2Time: document.getElementById('s2Time').value,
-                s2Content: document.getElementById('s2Content').value,
-                s2Teacher: document.getElementById('s2Teacher').value,
-                s2Student: document.getElementById('s2Student').value,
-                s3Time: document.getElementById('s3Time').value,
-                s3Content: document.getElementById('s3Content').value,
-                s3Teacher: document.getElementById('s3Teacher').value,
-                s3Student: document.getElementById('s3Student').value,
-                s4Time: document.getElementById('s4Time').value,
-                s4Content: document.getElementById('s4Content').value,
-                s4Teacher: document.getElementById('s4Teacher').value,
-                s4Student: document.getElementById('s4Student').value,
-                s5Time: document.getElementById('s5Time').value,
-                s5Content: document.getElementById('s5Content').value,
-                s5Teacher: document.getElementById('s5Teacher').value,
-                s5Student: document.getElementById('s5Student').value
-            };
+        function updateSavedCountBadge() {
+            const badge = document.getElementById('savedCountBadge');
+            if (badge) badge.textContent = toKhmerNumerals(getSavedLessons().length);
+        }
+
+        function collectFormState() {
+            const ids = [
+                'gradeInput', 'subjectInput', 'chapterInput', 'lessonTitleInput', 'subLessonsInput',
+                'teachingMethod', 'schoolInput', 'headerDateInput', 'durationInput',
+                'gregorianDatePicker', 'deptInput', 'lunarDateInput', 'solarDateTextInput',
+                'teacherInput', 'principalInput', 'objKnowledge', 'objSkill', 'objAttitude',
+                'materialsInput',
+                's1Time', 's1Content', 's1Teacher', 's1Student',
+                's2Time', 's2Content', 's2Teacher', 's2Student',
+                's3Time', 's3Content', 's3Teacher', 's3Student',
+                's4Time', 's4Content', 's4Teacher', 's4Student',
+                's5Time', 's5Content', 's5Teacher', 's5Student'
+            ];
+            const state = {};
+            for (const id of ids) {
+                const el = document.getElementById(id);
+                if (el) state[id] = el.value;
+            }
+            return state;
+        }
+
+        function applyFormState(state) {
+            if (!state) return;
+            for (const [id, val] of Object.entries(state)) {
+                const el = document.getElementById(id);
+                if (el) el.value = val;
+            }
+            onMethodChange();
+            syncPreview();
         }
 
         function saveCurrentLesson() {
-            const data = collectFormData();
-            currentLessonId = data.id;
             const list = getSavedLessons();
-            const existingIdx = list.findIndex(item => item.id === data.id);
-            if (existingIdx >= 0) {
-                list[existingIdx] = data;
-            } else {
-                list.unshift(data);
-            }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-            updateSavedCount();
-            showToast('បានរក្សាទុកកិច្ចតែងការបង្រៀនដោយជោគជ័យ!', 'success');
-        }
+            const state = collectFormState();
+            const now = new Date();
+            const timestamp = `${toKhmerNumerals(now.getDate())}/${toKhmerNumerals(now.getMonth() + 1)}/${toKhmerNumerals(now.getFullYear())}`;
 
-        function loadLessonById(id) {
-            const list = getSavedLessons();
-            const item = list.find(l => l.id === id);
-            if (!item) return;
-
-            currentLessonId = item.id;
-            document.getElementById('gradeInput').value = item.grade || 'ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)';
-            document.getElementById('subjectInput').value = item.subject || 'រូបវិទ្យា';
-            document.getElementById('chapterInput').value = item.chapter || '';
-            document.getElementById('lessonTitleInput').value = item.lessonTitle || '';
-            document.getElementById('subLessonsInput').value = item.subLessons || '';
-            document.getElementById('teachingMethod').value = item.method || 'ibl';
-            document.getElementById('deptInput').value = item.dept || '';
-            document.getElementById('schoolInput').value = item.school || '';
-            if (item.gregorianDate) document.getElementById('gregorianDatePicker').value = item.gregorianDate;
-            document.getElementById('headerDateInput').value = item.headerDate || '';
-            document.getElementById('durationInput').value = item.duration || '១០០ នាទី (២ ម៉ោងសិក្សា)';
-            document.getElementById('lunarDateInput').value = item.lunarDate || '';
-            document.getElementById('solarDateTextInput').value = item.solarDateText || '';
-            document.getElementById('teacherInput').value = item.teacher || '';
-            document.getElementById('principalInput').value = item.principal || '';
-
-            document.getElementById('objKnowledge').value = item.objKnowledge || '';
-            document.getElementById('objSkill').value = item.objSkill || '';
-            document.getElementById('objAttitude').value = item.objAttitude || '';
-            document.getElementById('materialsInput').value = item.materials || '';
-
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`s${i}Time`).value = item[`s${i}Time`] || '';
-                document.getElementById(`s${i}Content`).value = item[`s${i}Content`] || '';
-                document.getElementById(`s${i}Teacher`).value = item[`s${i}Teacher`] || '';
-                document.getElementById(`s${i}Student`).value = item[`s${i}Student`] || '';
+            if (currentLessonId) {
+                const idx = list.findIndex(item => item.id === currentLessonId);
+                if (idx !== -1) {
+                    list[idx] = { ...list[idx], updatedAt: timestamp, data: state };
+                    setSavedLessons(list);
+                    showToast('បានធ្វើបច្ចុប្បន្នភាពកិច្ចតែងការរួចរាល់!', 'success');
+                    return;
+                }
             }
 
-            const methodObj = PEDAGOGICAL_METHODS[item.method || 'ibl'];
-            if (methodObj) {
-                document.getElementById('methodHintBox').innerHTML = `<span class="font-bold">លំនាំ៖</span> ${methodObj.description}`;
-            }
-
-            syncPreview();
-            closeSavedDrawer();
-            showToast('បានបើកកិច្ចតែងការសម្រាប់កែសម្រួល!', 'info');
-        }
-
-        function deleteLessonById(id, event) {
-            event.stopPropagation();
-            const list = getSavedLessons().filter(item => item.id !== id);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-            if (currentLessonId === id) currentLessonId = null;
-            updateSavedCount();
-            renderSavedList();
-            showToast('បានលុបកិច្ចតែងការចេញពីបញ្ជី!', 'info');
+            const newItem = {
+                id: 'lp_' + Date.now(),
+                updatedAt: timestamp,
+                data: state
+            };
+            currentLessonId = newItem.id;
+            list.unshift(newItem);
+            setSavedLessons(list);
+            showToast('បានរក្សាទុកកិច្ចតែងការថ្មីរួចរាល់!', 'success');
         }
 
         function createNewLesson() {
             currentLessonId = null;
+            uploadedLessonFiles = [];
+            renderUploadedFilesList();
             document.getElementById('chapterInput').value = '';
             document.getElementById('lessonTitleInput').value = '';
-            document.getElementById('subLessonsInput').value = '១. \n២. ';
-            document.getElementById('objKnowledge').value = '';
-            document.getElementById('objSkill').value = '';
-            document.getElementById('objAttitude').value = '';
-            document.getElementById('s2Content').value = '';
-            document.getElementById('s3Content').value = '';
-            document.getElementById('s4Content').value = '';
-            document.getElementById('s5Content').value = '';
-            onMethodChange();
+            document.getElementById('subLessonsInput').value = '';
+            document.getElementById('aiRecommendationCard').classList.add('hidden');
             syncPreview();
-            showToast('បានបង្កើតទម្រង់កិច្ចតែងការថ្មី!', 'info');
+            showToast('បានបើកទម្រង់កិច្ចតែងការថ្មី!', 'info');
         }
 
         function openSavedDrawer() {
@@ -1773,78 +1737,161 @@ ${methodListDescription}
 
         function renderSavedList() {
             const container = document.getElementById('savedLessonsList');
-            const query = document.getElementById('searchSavedInput').value.toLowerCase().trim();
-            const list = getSavedLessons().filter(item =>
-                (item.lessonTitle || '').toLowerCase().includes(query) ||
-                (item.subject || '').toLowerCase().includes(query) ||
-                (item.grade || '').toLowerCase().includes(query)
-            );
+            const query = (document.getElementById('searchSavedInput')?.value || '').toLowerCase();
+            const list = getSavedLessons().filter(item => {
+                const d = item.data || {};
+                const hay = `${d.subjectInput || ''} ${d.lessonTitleInput || ''} ${d.gradeInput || ''}`.toLowerCase();
+                return hay.includes(query);
+            });
 
             if (list.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 px-4 text-slate-400">
-                        <div class="text-3xl mb-2">📂</div>
-                        <p class="text-xs sm:text-sm font-medium text-slate-600">មិនទាន់មានកិច្ចតែងការរក្សាទុកនៅឡើយទេ</p>
-                        <p class="text-[11px] mt-1">ចុចប៊ូតុង «រក្សាទុក» ខាងលើដើម្បីទុកប្រើប្រាស់ពេលក្រោយ</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="text-center text-xs text-slate-400 py-10">មិនទាន់មានកិច្ចតែងការរក្សាទុកនៅឡើយទេ</div>`;
                 return;
             }
 
-            container.innerHTML = list.map(item => `
-                <div onclick="loadLessonById('${item.id}')" class="p-3 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition cursor-pointer group flex items-start justify-between gap-2">
-                    <div class="space-y-1 min-w-0">
-                        <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800 text-[10px] font-bold">${item.subject}</span>
-                            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">${item.grade}</span>
+            container.innerHTML = list.map(item => {
+                const d = item.data || {};
+                return `
+                    <div class="p-3 rounded-xl border border-slate-200 hover:border-indigo-300 bg-slate-50/70 transition flex items-start justify-between gap-2">
+                        <div onclick="loadSavedLesson('${item.id}')" class="flex-1 cursor-pointer">
+                            <div class="text-xs font-bold text-indigo-950">${escapeHtml(d.lessonTitleInput || 'គ្មានចំណងជើង')}</div>
+                            <div class="text-[11px] text-slate-600 mt-0.5">${escapeHtml(d.subjectInput || '')} • ${escapeHtml(d.gradeInput || '')}</div>
+                            <div class="text-[10px] text-slate-400 mt-1">រក្សាទុក៖ ${escapeHtml(item.updatedAt || '')}</div>
                         </div>
-                        <div class="font-bold text-slate-900 text-xs sm:text-sm truncate">${item.lessonTitle || 'គ្មានចំណងជើង'}</div>
-                        <div class="text-[11px] text-slate-500">រក្សាទុក៖ ${item.updatedAt || ''}</div>
+                        <button onclick="deleteSavedLesson('${item.id}')" class="text-xs text-rose-500 hover:text-rose-700 px-2 py-1 rounded-lg hover:bg-rose-50 cursor-pointer" title="លុប">
+                            🗑️
+                        </button>
                     </div>
-                    <button onclick="deleteLessonById('${item.id}', event)" title="លុប" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                    </button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        function loadSavedLesson(id) {
+            const found = getSavedLessons().find(item => item.id === id);
+            if (!found) return;
+            currentLessonId = found.id;
+            applyFormState(found.data);
+            closeSavedDrawer();
+            showToast('បានបើកកិច្ចតែងការរួចរាល់!', 'success');
+        }
+
+        function deleteSavedLesson(id) {
+            const list = getSavedLessons().filter(item => item.id !== id);
+            if (currentLessonId === id) currentLessonId = null;
+            setSavedLessons(list);
+            renderSavedList();
+            showToast('បានលុបកិច្ចតែងការចេញពីបញ្ជី!', 'info');
+        }
+
+        function exportToWord() {
+            const docEl = document.getElementById('a4Document');
+            if (!docEl) return;
+            const title = document.getElementById('lessonTitleInput')?.value || 'Lesson_Plan';
+            const htmlContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office'
+                      xmlns:w='urn:schemas-microsoft-com:office:word'
+                      xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>${escapeHtml(title)}</title>
+                    <style>
+                        @page { size: A4 portrait; margin: 1.5cm; }
+                        body { font-family: 'Khmer OS Siemreap', 'Siemreap', sans-serif; font-size: 11pt; line-height: 1.6; color: #000; }
+                        .font-moul { font-family: 'Khmer OS Moul Light', 'Moul', serif; font-weight: normal; }
+                        .text-center { text-align: center; }
+                        .text-left { text-align: left; }
+                        .font-bold { font-weight: bold; }
+                        .moeys-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+                        .moeys-table th, .moeys-table td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
+                        .moeys-table th { background-color: #f1f5f9; text-align: center; }
+                        .step-header-row td { background-color: #eef2ff; font-weight: bold; text-align: center; }
+                        .grid-cols-2 { display: table; width: 100%; margin-top: 18px; }
+                        .grid-cols-2 > div { display: table-cell; width: 50%; vertical-align: top; text-align: center; }
+                    </style>
+                </head>
+                <body>
+                    ${docEl.innerHTML}
+                </body>
+                </html>
+            `;
+            const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `កិច្ចតែងការ_${title.replace(/[\\/:*?"<>|]/g, '_')}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('បានទាញយកឯកសារ Word (.doc) រួចរាល់!', 'success');
+        }
+
+        function switchMobileTab(tab) {
+            const editor = document.getElementById('editorPanel');
+            const preview = document.getElementById('previewPanel');
+            const tabEditorBtn = document.getElementById('tabEditorBtn');
+            const tabPreviewBtn = document.getElementById('tabPreviewBtn');
+            if (tab === 'editor') {
+                editor.classList.remove('hidden');
+                preview.classList.add('hidden', 'lg:flex');
+                tabEditorBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-indigo-900 text-white transition';
+                tabPreviewBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition';
+            } else {
+                editor.classList.add('hidden', 'lg:flex');
+                preview.classList.remove('hidden');
+                tabPreviewBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-indigo-900 text-white transition';
+                tabEditorBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 transition';
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const colors = {
+                success: 'bg-emerald-700 text-white border-emerald-500',
+                error: 'bg-rose-700 text-white border-rose-500',
+                info: 'bg-indigo-900 text-white border-indigo-700'
+            };
+            const toast = document.createElement('div');
+            toast.className = `px-4 py-2.5 rounded-xl shadow-lg border text-xs font-semibold transition-all duration-300 ${colors[type] || colors.info}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
         }
 
         // =========================================================================
-        // 7. INITIALIZATION
-        // =========================================================================
-        // 7. INITIALIZATION & DRAG-AND-DROP SUPPORT
+        // 6. INITIALIZATION & DRAG-AND-DROP SETUP
         // =========================================================================
         window.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('gregorianDatePicker').value = `${yyyy}-${mm}-${dd}`;
+            const picker = document.getElementById('gregorianDatePicker');
+            if (picker && !picker.value) {
+                picker.value = '2026-11-15';
+            }
             updateKhmerLunarDate();
-            updateSavedCount();
+            onMethodChange();
+            updateSavedCountBadge();
             syncPreview();
 
-            // Enable Drag-and-Drop on fileDropZone
             const dropZone = document.getElementById('fileDropZone');
             if (dropZone) {
                 ['dragenter', 'dragover'].forEach(evtName => {
-                    dropZone.addEventListener(evtName, (e) => {
+                    dropZone.addEventListener(evtName, e => {
                         e.preventDefault();
-                        e.stopPropagation();
-                        dropZone.classList.add('bg-indigo-100', 'border-indigo-500');
+                        dropZone.classList.add('bg-indigo-100/80', 'border-indigo-500');
                     });
                 });
                 ['dragleave', 'drop'].forEach(evtName => {
-                    dropZone.addEventListener(evtName, (e) => {
+                    dropZone.addEventListener(evtName, e => {
                         e.preventDefault();
-                        e.stopPropagation();
-                        dropZone.classList.remove('bg-indigo-100', 'border-indigo-500');
+                        dropZone.classList.remove('bg-indigo-100/80', 'border-indigo-500');
                     });
                 });
-                dropZone.addEventListener('drop', async (e) => {
+                dropZone.addEventListener('drop', e => {
                     if (e.dataTransfer?.files?.length) {
-                        await processSelectedFiles(e.dataTransfer.files);
+                        processSelectedFiles(e.dataTransfer.files);
                     }
                 });
             }
