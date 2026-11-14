@@ -270,12 +270,55 @@
 ២. វ៉ិចទ័រដែនម៉ាញេទិច និងអាំងឌុចស្យុងម៉ាញេទិច</textarea>
                     </div>
 
+                    <!-- NEW: Upload Image or PDF Lesson Source -->
+                    <div class="pt-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-700">បញ្ចូលឯកសារមេរៀន (រូបភាព ឬ PDF - ជាជម្រើស)</label>
+                            <button type="button" id="clearFilesBtn" onclick="clearUploadedFiles()" class="hidden text-[11px] font-semibold text-rose-600 hover:text-rose-800 cursor-pointer">
+                                លុបឯកសារទាំងអស់
+                            </button>
+                        </div>
+                        <label id="fileDropZone" for="lessonFileInput" class="flex flex-col items-center justify-center w-full px-3 py-3 border-2 border-dashed border-indigo-300 rounded-xl bg-white/80 hover:bg-indigo-50/70 transition cursor-pointer text-center">
+                            <div class="flex items-center gap-2 text-indigo-800 text-xs font-semibold">
+                                <svg class="w-5 h-5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                </svg>
+                                <span>ចុចជ្រើសរើស ឬអូសទម្លាក់ រូបភាពទំព័រសៀវភៅ / PDF មេរៀន</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 mt-0.5">គាំទ្រ JPG, PNG, WebP, PDF (អាចបញ្ចូលបានច្រើនទំព័រ)</span>
+                            <input id="lessonFileInput" type="file" accept="image/*,application/pdf" multiple onchange="handleLessonFilesUpload(event)" class="hidden">
+                        </label>
+                        <!-- Uploaded Files Preview List -->
+                        <div id="uploadedFilesList" class="mt-2 space-y-1.5 hidden"></div>
+                    </div>
+
+                    <!-- NEW: Auto-Analyze Method Checkbox -->
+                    <label class="flex items-start gap-2 p-2.5 rounded-xl bg-white/90 border border-indigo-200/80 cursor-pointer select-none">
+                        <input type="checkbox" id="autoSelectMethodCheckbox" checked class="mt-0.5 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                        <span class="text-[11px] sm:text-xs text-slate-800 leading-snug">
+                            <strong class="text-indigo-950">ឱ្យ AI វិភាគខ្លឹមសារមេរៀន និងជ្រើសរើសវិធីសាស្ត្របង្រៀនសមស្របបំផុត</strong> (ព្រមទាំងបង្ហាញមូលហេតុគរុកោសល្យ)
+                        </span>
+                    </label>
+
                     <button id="aiGenerateBtn" onclick="generateLessonWithAI()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-600 hover:to-blue-600 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                         <svg id="aiBtnIcon" class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        <span id="aiBtnText">បង្កើតកិច្ចតែងការដោយ Gemini 4 Hydrogen</span>
+                        <span id="aiBtnText">វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI</span>
                     </button>
+
+                    <!-- NEW: AI Method Recommendation Explanation Card -->
+                    <div id="aiRecommendationCard" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1 shadow-2xs">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="font-bold text-emerald-900 flex items-center gap-1.5">
+                                <span>🧠</span>
+                                <span>ការវិភាគ និងណែនាំវិធីសាស្ត្របង្រៀនដោយ AI</span>
+                            </span>
+                            <span id="aiRecConfidenceBadge" class="px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-950 text-[10px] font-bold">សមស្របបំផុត</span>
+                        </div>
+                        <div class="font-bold text-indigo-950" id="aiRecMethodTitle"></div>
+                        <p class="text-[11px] text-emerald-900 leading-relaxed" id="aiRecReasonText"></p>
+                    </div>
                 </div>
             </div>
 
@@ -284,11 +327,14 @@
                 
                 <!-- 1. Pedagogical Methods & Strategies Selection (12 Curated Items) -->
                 <div class="space-y-2.5">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-2">
                         <label for="teachingMethod" class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 text-xs flex items-center justify-center font-bold">★</span>
                             ជម្រើសវិធីសាស្រ្ដ និងយុទ្ធវិធីបង្រៀន (១២ បែប)
                         </label>
+                        <button type="button" onclick="analyzeAndRecommendMethodOnly()" class="px-2.5 py-1 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-900 text-[11px] font-bold transition cursor-pointer shrink-0">
+                            🔍 ឱ្យ AI វិភាគរើសវិធីសាស្ត្រ
+                        </button>
                     </div>
                     <select id="teachingMethod" onchange="onMethodChange()" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-indigo-200 bg-indigo-50/40 text-indigo-950 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (Pedagogical Methods)">
@@ -697,7 +743,7 @@
 
     <script>
         // =========================================================================
-        // 1. KHMER LUNAR CALENDAR & KHMER NUMERALS CONVERTER
+        // 1. KHMER LUNAR CALENDAR ENGINE & NUMERALS CONVERTER
         // =========================================================================
         const KHMER_DIGITS = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
         const KHMER_WEEKDAYS = ['អាទិត្យ', 'ចន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'];
@@ -709,195 +755,304 @@
             'មិគសិរ', 'បុស្ស', 'មាឃ', 'ផល្គុន', 'ចេត្រ', 'ពិសាខ',
             'ជេស្ឋ', 'អាសាឍ', 'ស្រាពណ៍', 'ភទ្របទ', 'អស្សុជ', 'កត្តិក'
         ];
-        const KHMER_ZODIAC = ['ជូត', 'ឆ្លូវ', 'ខាល', 'ថោះ', 'រោង', 'ម្សាញ់', 'មមី', 'មមែ', 'វក', 'រកា', 'ច', 'កុរ'];
-        const KHMER_SAK = ['ឯកស័ក', 'ទោស័ក', 'ត្រីស័ក', 'ចត្វាស័ក', 'បញ្ចស័ក', 'ឆស័ក', 'សប្តស័ក', 'អដ្ឋស័ក', 'នព្វស័ក', 'សំរឹទ្ធិស័ក'];
+        const KHMER_ANIMAL_YEARS = [
+            'ជូត', 'ឆ្លូវ', 'ខាល', 'ថោះ', 'រោង', 'ម្សាញ់',
+            'មមី', 'មមែ', 'វក', 'រកា', 'ច', 'កុរ'
+        ];
+        const KHMER_SAK = [
+            'សំរឹទ្ធិស័ក', 'ឯកស័ក', 'ទោស័ក', 'ត្រីស័ក', 'ចត្វាស័ក',
+            'បញ្ចស័ក', 'ឆស័ក', 'សប្តស័ក', 'អដ្ឋស័ក', 'នព្វស័ក'
+        ];
 
         function toKhmerNumerals(num) {
-            return String(num).replace(/\d/g, d => KHMER_DIGITS[parseInt(d, 10)]);
+            return String(num).replace(/\d/g, d => KHMER_DIGITS[Number(d)]);
         }
 
-        function computeKhmerCalendarStrings(dateObj) {
-            const weekday = KHMER_WEEKDAYS[dateObj.getDay()];
-            const day = dateObj.getDate();
-            const monthIdx = dateObj.getMonth();
-            const year = dateObj.getFullYear();
+        function computeKhmerLunarDate(dateObj) {
+            // Reference epoch: Nov 15, 2026 -> Sunday 6th waxing moon of Kadeuk, Year of Horse (មមី), អដ្ឋស័ក, B.E. 2570
+            const refUtc = Date.UTC(2026, 10, 15);
+            const targetUtc = Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+            const diffDays = Math.round((targetUtc - refUtc) / 86400000);
 
-            // Solar Date String
-            const dept = document.getElementById('deptInput')?.value?.trim() || 'រាជធានីភ្នំពេញ';
-            const placePrefix = dept.includes('រាជធានី') ? dept : `ខេត្ត${dept}`;
-            const dateOnlyKhmer = `ថ្ងៃទី${toKhmerNumerals(day)} ខែ${KHMER_SOLAR_MONTHS[monthIdx]} ឆ្នាំ${toKhmerNumerals(year)}`;
-            const solarStr = `ធ្វើនៅ${placePrefix} ${dateOnlyKhmer}`;
-
-            // Buddhist Era (B.E.) switches around mid-April (Khmer New Year)
-            const isAfterKhmerNewYear = (monthIdx > 3) || (monthIdx === 3 && day >= 14);
-            const beYear = year + (isAfterKhmerNewYear ? 544 : 543);
-
-            // Zodiac & Sak calculation based on B.E. year
-            // Reference: B.E. 2568 (2024-2025) = ឆ្នាំរោង ឆស័ក (zodiac index 4, sak index 5)
-            const zodiacIndex = ((beYear - 2568 + 4) % 12 + 12) % 12;
-            const sakIndex = ((beYear - 2568 + 5) % 10 + 10) % 10;
-
-            // Synodic Lunar Phase approximation anchored to known New Moon (Nov 1, 2024 = 1 កើត ខែកត្តិក)
-            const anchorUTC = Date.UTC(2024, 10, 1); // Nov 1, 2024
-            const targetUTC = Date.UTC(year, monthIdx, day);
-            const diffDays = Math.floor((targetUTC - anchorUTC) / 86400000);
             const synodicMonth = 29.530588853;
+            const refLunarDayIndex = 5; // 6 កើត (0-based index)
+            const refMonthIndex = 11;   // កត្តិក (0-based in KHMER_LUNAR_MONTHS)
 
-            const totalLunations = diffDays / synodicMonth;
-            const lunationCount = Math.floor(totalLunations);
-            let lunarDay = Math.floor((totalLunations - lunationCount) * synodicMonth) + 1;
-            if (lunarDay < 1) lunarDay = 1;
-            if (lunarDay > 30) lunarDay = 30;
+            let totalLunarDays = refLunarDayIndex + diffDays;
+            let monthOffset = Math.floor(totalLunarDays / synodicMonth);
+            let dayInMonth = Math.round(totalLunarDays - monthOffset * synodicMonth);
 
-            const phaseStr = lunarDay <= 15
-                ? `${toKhmerNumerals(lunarDay)}កើត`
-                : `${toKhmerNumerals(lunarDay - 15)}រោច`;
+            if (dayInMonth < 0) {
+                monthOffset -= 1;
+                dayInMonth = Math.round(totalLunarDays - monthOffset * synodicMonth);
+            }
+            if (dayInMonth >= 30) {
+                dayInMonth = 29;
+            }
 
-            // Lunar month index anchored at ខែកត្តិក (index 11) on Nov 1, 2024
-            const lunarMonthIdx = ((11 + lunationCount) % 12 + 12) % 12;
+            const lunarMonthIdx = (((refMonthIndex + monthOffset) % 12) + 12) % 12;
             const lunarMonthName = KHMER_LUNAR_MONTHS[lunarMonthIdx];
 
-            const lunarStr = `ថ្ងៃ${weekday} ${phaseStr} ខែ${lunarMonthName} ឆ្នាំ${KHMER_ZODIAC[zodiacIndex]} ${KHMER_SAK[sakIndex]} ព.ស. ${toKhmerNumerals(beYear)}`;
+            const isWaxing = dayInMonth < 15;
+            const lunarDayNum = isWaxing ? (dayInMonth + 1) : (dayInMonth - 14);
+            const phaseText = isWaxing ? 'កើត' : 'រោច';
 
-            return { lunarStr, solarStr, dateOnlyKhmer };
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth() + 1;
+            const day = dateObj.getDate();
+            const isAfterKhmerNewYear = (month > 4) || (month === 4 && day >= 14);
+            const beYear = isAfterKhmerNewYear ? year + 544 : year + 543;
+
+            const animalIdx = (((beYear - 2564) % 12) + 12) % 12;
+            const sakIdx = (((beYear - 2562) % 10) + 10) % 10;
+
+            const weekday = KHMER_WEEKDAYS[dateObj.getDay()];
+            const solarMonth = KHMER_SOLAR_MONTHS[dateObj.getMonth()];
+            const dept = document.getElementById('deptInput')?.value?.trim() || 'រាជធានីភ្នំពេញ';
+
+            return {
+                lunarString: `ថ្ងៃ${weekday} ${toKhmerNumerals(lunarDayNum)}${phaseText} ខែ${lunarMonthName} ឆ្នាំ${KHMER_ANIMAL_YEARS[animalIdx]} ${KHMER_SAK[sakIdx]} ព.ស. ${toKhmerNumerals(beYear)}`,
+                solarString: `ធ្វើនៅ${dept} ថ្ងៃទី${toKhmerNumerals(day)} ខែ${solarMonth} ឆ្នាំ${toKhmerNumerals(year)}`,
+                headerDateString: `ថ្ងៃទី${toKhmerNumerals(day)} ខែ${solarMonth} ឆ្នាំ${toKhmerNumerals(year)}`
+            };
         }
 
         function updateKhmerLunarDate() {
             const picker = document.getElementById('gregorianDatePicker');
-            let dateObj = new Date();
-            if (picker && picker.value) {
-                const parts = picker.value.split('-');
-                dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-            }
-            const { lunarStr, solarStr, dateOnlyKhmer } = computeKhmerCalendarStrings(dateObj);
-            document.getElementById('lunarDateInput').value = lunarStr;
-            document.getElementById('solarDateTextInput').value = solarStr;
-            const headerDateEl = document.getElementById('headerDateInput');
-            if (headerDateEl) {
-                headerDateEl.value = dateOnlyKhmer;
-            }
+            if (!picker || !picker.value) return;
+            const [y, m, d] = picker.value.split('-').map(Number);
+            const dateObj = new Date(y, m - 1, d);
+            const res = computeKhmerLunarDate(dateObj);
+
+            const lunarEl = document.getElementById('lunarDateInput');
+            const solarEl = document.getElementById('solarDateTextInput');
+            const headerEl = document.getElementById('headerDateInput');
+            if (lunarEl) lunarEl.value = res.lunarString;
+            if (solarEl) solarEl.value = res.solarString;
+            if (headerEl) headerEl.value = res.headerDateString;
             syncPreview();
         }
 
         // =========================================================================
-        // 2. CURATED 12 PEDAGOGICAL METHODS & TEACHING STRATEGIES
+        // 2. CURATED PEDAGOGICAL METHODS & STRATEGIES (12 HIGH SCHOOL METHODS)
         // =========================================================================
         const PEDAGOGICAL_METHODS = {
             jigsaw: {
                 label: 'បែបសហការ (Cooperative Learning - Jigsaw)',
-                description: '១. ក្រុមដើម (Home Group) -> ២. ក្រុមអ្នកជំនាញ (Expert Group) -> ៣. បង្រៀនត្រឡប់ក្រុមដើម (Teach Back)',
+                description: 'ក្រុមដើម (Home Group) ➔ ក្រុមអ្នកជំនាញ (Expert Group) ➔ ត្រឡប់មកបង្រៀនសមាជិកក្រុមដើមវិញ។',
                 step3Template: {
-                    content: 'ខ្លឹមសារមេរៀនបែងចែកជា ៣ ផ្នែកសំខាន់ៗសម្រាប់ក្រុមអ្នកជំនាញនីមួយៗស្រាវជ្រាវ និងផ្ទេរចំណេះដឹង។',
-                    teacher: '១. បង្កើតក្រុមដើម (Home Group)៖ បែងចែកសិស្សជាក្រុមតូចៗ (៤-៥ នាក់) និងផ្តល់ប្រធានបទរងផ្សេងគ្នាដល់សមាជិកម្នាក់ៗ។\n២. ពិភាក្សាក្នុងក្រុមអ្នកជំនាញ (Expert Group)៖ ឱ្យសិស្សដែលមានប្រធានបទដូចគ្នាមកជុំគ្នាស្រាវជ្រាវ វិភាគ និងរៀបចំចម្លើយឱ្យច្បាស់លាស់។\n៣. បង្រៀនត្រឡប់ក្រុមដើម (Teach Back)៖ ឱ្យសមាជិកត្រឡប់ទៅក្រុមដើមវិញ ដើម្បីពន្យល់មិត្តរួមក្រុម រួចគ្រូបូកសរុបខ្លឹមសាររួម។',
-                    student: '១. ក្រុមដើម៖ ទទួលប្រធានបទរងរៀងៗខ្លួន និងស្តាប់ការណែនាំរបស់គ្រូ។\n២. ក្រុមអ្នកជំនាញ៖ សហការស្រាវជ្រាវក្នុងសៀវភៅពុម្ព ពិភាក្សាស៊ីជម្រៅ និងកត់ត្រាចំណុចសំខាន់ៗ។\n៣. បង្រៀនត្រឡប់ក្រុមដើម៖ ប្តូរវេនគ្នាពន្យល់ចំណុចជំនាញរបស់ខ្លួនដល់សមាជិកក្រុមដើម និងកត់ត្រាមេរៀនពេញលេញ។'
+                    content: 'ខ្លឹមសារមេរៀនបែងចែកជា ៣ ផ្នែកសម្រាប់ក្រុមអ្នកជំនាញ៖\n- ផ្នែកទី១៖ និយមន័យ និងគោលគំនិតគ្រឹះ\n- ផ្នែកទី២៖ រូបមន្ត ឬលក្ខណៈសំខាន់ៗ\n- ផ្នែកទី៣៖ ការអនុវត្ត និងឧទាហរណ៍ជាក់ស្តែង',
+                    teacher: '១. រៀបចំក្រុមដើម (Home Groups)៖ បែងចែកសិស្សជាក្រុម ៣-៤ នាក់ និងផ្តល់ប្រធានបទរងផ្សេងៗគ្នា។\n២. បង្កើតក្រុមអ្នកជំនាញ (Expert Groups)៖ ឱ្យសិស្សដែលទទួលបានប្រធានបទដូចគ្នាមកពិភាក្សាស្រាវជ្រាវរួមគ្នា។\n៣. បង្រៀនត្រឡប់ក្រុមដើម៖ ឱ្យអ្នកជំនាញត្រឡប់ទៅពន្យល់មិត្តរួមក្រុមដើមវិញ រួចគ្រូសង្ខេបខ្លឹមសាររួម។',
+                    student: '១. ទទួលប្រធានបទរងរៀងៗខ្លួននៅក្នុងក្រុមដើម។\n២. ចូលរួមក្នុងក្រុមអ្នកជំនាញ ពិភាក្សា ស្រាវជ្រាវ និងកត់ត្រាចំណុចសំខាន់ៗ។\n៣. ត្រឡប់ទៅក្រុមដើម ប្តូរវេនគ្នាពន្យល់ និងសួរ-ឆ្លើយដើម្បីយល់មេរៀនទាំងមូល។'
                 }
             },
             polya: {
                 label: 'បែបដោះស្រាយបញ្ហា (Problem Solving - Polya)',
-                description: '១. ស្វែងយល់ពីបញ្ហា -> ២. រៀបចំផែនការ -> ៣. អនុវត្តផែនការ -> ៤. ពិនិត្យផ្ទៀងផ្ទាត់ឡើងវិញ',
+                description: 'ដំណាក់កាលទាំង ៤ របស់ Polya៖ យល់បញ្ហា ➔ រៀបចំផែនការ ➔ អនុវត្តផែនការ ➔ ពិនិត្យឡើងវិញ។',
                 step3Template: {
-                    content: 'ស្ថានភាពបញ្ហា រូបមន្តគន្លឹះ និងដំណោះស្រាយលម្អិតតាមជំហាន Polya។',
-                    teacher: '១. ស្វែងយល់ពីបញ្ហា (Understand)៖ បង្ហាញចំណោទបញ្ហា ឱ្យសិស្សកំណត់បម្រាប់ និងសំណួរដែលត្រូវរក។\n២. រៀបចំផែនការ (Devise a Plan)៖ សម្របសម្រួលសិស្សឱ្យជ្រើសរើសរូបមន្ត ទ្រឹស្តី ឬវិធីសាស្ត្រដោះស្រាយសមស្រប។\n៣. អនុវត្តផែនការ (Carry out)៖ ឱ្យសិស្សធ្វើការងារក្រុមគណនា និងបកស្រាយដំណោះស្រាយតាមលំដាប់។\n៤. ពិនិត្យផ្ទៀងផ្ទាត់ (Look Back)៖ ដឹកនាំការផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃលទ្ធផល និងបូកសរុបមេរៀន។',
-                    student: '១. ស្វែងយល់ពីបញ្ហា៖ អានប្រធានបញ្ហា ស្រង់ទិន្នន័យ និងកំណត់អ្វីដែលត្រូវរក។\n២. រៀបចំផែនការ៖ ពិភាក្សាក្រុមជ្រើសរើសរូបមន្ត និងរៀបចំជំហានដោះស្រាយ។\n៣. អនុវត្តផែនការ៖ អនុវត្តការគណនា និងសរសេរដំណោះស្រាយលើក្រដាសផ្ទាំងធំ។\n៤. ពិនិត្យផ្ទៀងផ្ទាត់៖ ឡើងបង្ហាញលទ្ធផល ផ្ទៀងផ្ទាត់ខ្នាត និងកត់ត្រាខ្លឹមសារមេរៀន។'
+                    content: 'ស្ថានភាពបញ្ហា / ចំណោទគំរូ និងដំណោះស្រាយតាម ៤ ជំហានរបស់ Polya។',
+                    teacher: '១. យល់ពីបញ្ហា៖ លើកស្ថានភាពបញ្ហា ឬចំណោទ រួចសួរសិស្សឱ្យកំណត់បម្រាប់ និងសំណួរ។\n២. រៀបចំផែនការ៖ ណែនាំសិស្សឱ្យស្វែងរករូបមន្ត ឬទ្រឹស្តីដែលពាក់ព័ន្ធដើម្បីដោះស្រាយ។\n៣. អនុវត្តផែនការ៖ សម្របសម្រួលសិស្សគណនា និងដោះស្រាយតាមជំហាន។\n៤. ពិនិត្យឡើងវិញ៖ ផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃចម្លើយ និងបូកសរុបខ្លឹមសារមេរៀន។',
+                    student: '១. អាន និងវិភាគបញ្ហា កំណត់អ្វីដែលស្គាល់ និងអ្វីដែលត្រូវរក។\n២. ពិភាក្សាជ្រើសរើសរូបមន្ត ឬវិធីសាស្ត្រដោះស្រាយ។\n៣. អនុវត្តការគណនា និងសរសេរដំណោះស្រាយលម្អិត។\n៤. ផ្ទៀងផ្ទាត់លទ្ធផល ខ្នាត និងឡើងបង្ហាញលើក្តារខៀន។'
                 }
             },
             ibl: {
                 label: 'បែបរិះរក (Inquiry-Based Learning - IBL)',
-                description: 'លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង',
+                description: 'លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង។',
                 step3Template: {
-                    content: 'សំណួរគន្លឹះ សម្មតិកម្ម លទ្ធផលស្រាវជ្រាវ/ពិសោធន៍ និងសេចក្តីសន្និដ្ឋាននៃមេរៀន។',
-                    teacher: '១. ចោទសំណួរបំផុស៖ បង្ហាញបាតុភូត ឬទិន្នន័យជាក់ស្តែង និងជំរុញឱ្យសិស្សបង្កើតសំណួរគន្លឹះ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកក្រុមឱ្យសិស្សទស្សន៍ទាយចម្លើយ រួចធ្វើពិសោធន៍ ឬអានឯកសារដើម្បីប្រមូលភស្តុតាង។\n៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលសិស្សឱ្យប្រៀបធៀបលទ្ធផលជាមួយសម្មតិកម្ម និងបូកសរុបខ្លឹមសារផ្លូវការ។',
-                    student: '១. ចោទសំណួរ៖ សង្កេតបាតុភូត និងចោទសួរចម្ងល់ពាក់ព័ន្ធនឹងប្រធានបទ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ ផ្តល់ចម្លើយបណ្តោះអាសន្ន សហការពិសោធន៍ ឬស្រាវជ្រាវឯកសារ។\n៣. វិភាគ និងសន្និដ្ឋាន៖ បកស្រាយលទ្ធផលស្រាវជ្រាវ ទាញសេចក្តីសន្និដ្ឋាន និងកត់ត្រាមេរៀន។'
+                    content: '១. និយមន័យដែនម៉ាញេទិច៖ គឺជាមជ្ឈដ្ឋានជុំវិញមេដែក ឬចរន្តអគ្គិសនីដែលមានអំពើលើម្ជុលមេដែក។\n២. ខ្សែដែនម៉ាញេទិច៖ មានទិសដៅចេញពីប៉ូលជើង (N) ទៅប៉ូលត្បូង (S) នៅខាងក្រៅមេដែក។\n៣. វ៉ិចទ័រដែនម៉ាញេទិច B៖ មានខ្នាតគិតជា តេស្លា (T)។',
+                    teacher: '១. ចោទសំណួរបំផុស៖ បង្ហាញបាតុភូត ឬរូបភាព រួចជំរុញឱ្យសិស្សចោទសួរ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកក្រុមឱ្យសិស្សធ្វើពិសោធន៍ ឬអានឯកសារដើម្បីរកចម្លើយ។\n៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលការបកស្រាយលទ្ធផល រួចគ្រូបូកសរុបទ្រឹស្តីផ្លូវការ។',
+                    student: '១. សង្កេតបាតុភូត ចោទសួរ និងទស្សន៍ទាយចម្លើយបឋម (សម្មតិកម្ម)។\n២. សហការក្នុងក្រុមធ្វើពិសោធន៍ ឬស្រាវជ្រាវទិន្នន័យក្នុងសៀវភៅពុម្ព។\n៣. វិភាគលទ្ធផល ឡើងបង្ហាញសេចក្តីសន្និដ្ឋាន និងកត់ត្រាមេរៀន។'
                 }
             },
             '5es': {
                 label: 'លំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate)',
-                description: '១. ទាក់ទាញ (Engage) -> ២. រុករក (Explore) -> ៣. ពន្យល់ (Explain) -> ៤. ពង្រីកចំណេះដឹង (Elaborate) -> ៥. វាយតម្លៃ (Evaluate)',
+                description: 'Engage (ទាក់ទាញ) ➔ Explore (រុករក) ➔ Explain (ពន្យល់) ➔ Elaborate (ពង្រីកចំណេះដឹង) ➔ Evaluate (វាយតម្លៃ)។',
                 step3Template: {
-                    content: 'ខ្លឹមសារមេរៀនពេញលេញតាមលំនាំទាំង ៥ ដំណាក់កាល (5Es)។',
-                    teacher: '១. ទាក់ទាញ (Engage)៖ បង្ហាញរូបភាព/បាតុភូតប្លែកៗ ដើម្បីទាក់ទាញចំណាប់អារម្មណ៍ និងភ្ជាប់ចំណេះដឹងចាស់។\n២. រុករក (Explore)៖ ចែកសម្ភារ/សន្លឹកកិច្ចការឱ្យសិស្សធ្វើការងារក្រុមសង្កេត និងប្រមូលទិន្នន័យ។\n៣. ពន្យល់ (Explain)៖ ឱ្យតំណាងក្រុមបកស្រាយលទ្ធផល រួចគ្រូពន្យល់បន្ថែមនូវបញ្ញត្តិ និងរូបមន្តផ្លូវការ។\n៤. ពង្រីកចំណេះដឹង (Elaborate)៖ ដាក់ស្ថានភាពថ្មី ឬលំហាត់អនុវត្តឱ្យសិស្សភ្ជាប់ទៅនឹងជីវភាពរស់នៅ។\n៥. វាយតម្លៃ (Evaluate)៖ សង្កេត និងសួរសំណួរផ្ទៀងផ្ទាត់ការយល់ដឹងរបស់សិស្ស។',
-                    student: '១. ទាក់ទាញ៖ សង្កេត និងឆ្លើយសំណួរបំផុសយ៉ាងសកម្ម។\n២. រុករក៖ អនុវត្តការពិសោធន៍ ឬវិភាគឯកសារក្នុងក្រុម។\n៣. ពន្យល់៖ ឡើងបង្ហាញការរកឃើញរបស់ក្រុម និងស្តាប់ការបំភ្លឺរបស់គ្រូ។\n៤. ពង្រីកចំណេះដឹង៖ អនុវត្តទ្រឹស្តីដែលបានរៀនទៅដោះស្រាយបញ្ហាថ្មី។\n៥. វាយតម្លៃ៖ ឆ្លុះបញ្ចាំងការយល់ដឹង និងកត់ត្រាខ្លឹមសារមេរៀន។'
+                    content: 'ខ្លឹមសារមេរៀនសង្ខេបតាមដំណាក់កាលទាំង ៥ នៃលំនាំបង្រៀន 5Es។',
+                    teacher: '១. Engage (ទាក់ទាញ)៖ បង្ហាញវីដេអូ ឬសំណួរប្លែកៗផ្សារភ្ជាប់ជីវភាពរស់នៅ។\n២. Explore (រុករក)៖ ចែកសន្លឹកកិច្ចការឱ្យសិស្សពិភាក្សា និងសង្កេតរកគោលការណ៍។\n៣. Explain (ពន្យល់)៖ ឱ្យសិស្សបកស្រាយ រួចគ្រូបំពេញបន្ថែមនិយមន័យ និងរូបមន្ត។\n៤. Elaborate (ពង្រីក)៖ ដាក់លំហាត់ ឬករណីសិក្សាថ្មីឱ្យសិស្សអនុវត្តបន្ថែម។\n៥. Evaluate (វាយតម្លៃ)៖ សង្កេត និងសួរសំណួរផ្ទៀងផ្ទាត់ការយល់ដឹង។',
+                    student: '១. Engage៖ សង្កេត និងឆ្លើយសំណួរបំផុសដោយចំណាប់អារម្មណ៍។\n២. Explore៖ រុករក សាកល្បង និងកត់ត្រាការរកឃើញក្នុងក្រុម។\n៣. Explain៖ ពន្យល់គំនិតដោយប្រើពាក្យពេចន៍ផ្ទាល់ខ្លួន និងស្តាប់ការបំពេញបន្ថែម។\n៤. Elaborate៖ អនុវត្តចំណេះដឹងថ្មីទៅដោះស្រាយបញ្ហាប្រហាក់ប្រហែល។\n៥. Evaluate៖ ឆ្លើយសំណួរវាយតម្លៃ និងឆ្លុះបញ្ចាំងការសិក្សា។'
                 }
             },
             active: {
                 label: 'បែបសិស្សមជ្ឈមណ្ឌល / សកម្ម (Active Learning)',
-                description: 'ផ្តោតលើការចូលរួមអនុវត្តជាក់ស្តែង ការពិភាក្សា ការវិភាគករណីសិក្សា និងការឆ្លុះបញ្ចាំងរបស់សិស្ស',
+                description: 'ផ្តោតលើការចូលរួមអនុវត្តផ្ទាល់ ការពិភាក្សា ការជជែកដេញដោល និងការធ្វើសកម្មភាពជាក់ស្តែងរបស់សិស្ស។',
                 step3Template: {
-                    content: 'ខ្លឹមសារគោល និងសកម្មភាពអនុវត្តជាក់ស្តែងក្នុងថ្នាក់។',
-                    teacher: '១. ណែនាំខ្លឹមសារសង្ខេប៖ បង្ហាញបញ្ញត្តិគោល និងភ្ជាប់ទៅនឹងការអនុវត្តជាក់ស្តែង។\n២. សម្របសម្រួលសកម្មភាពអនុវត្ត៖ ចែកសន្លឹកកិច្ចការ ឬសម្ភារពិសោធន៍ឱ្យសិស្សធ្វើការងារក្រុម និងជួយតម្រង់ទិស។\n៣. ឆ្លុះបញ្ចាំង និងសំយោគ៖ ដឹកនាំការពិភាក្សាប្រៀបធៀបលទ្ធផល និងបូកសរុបខ្លឹមសារផ្លូវការ។',
-                    student: '១. ស្តាប់ និងកត់ត្រា៖ ចាប់យកគោលគំនិត និងការណែនាំរបស់គ្រូ។\n២. អនុវត្តជាក់ស្តែង៖ សហការធ្វើពិសោធន៍ វិភាគករណីសិក្សា ឬដោះស្រាយលំហាត់យ៉ាងសកម្ម។\n៣. ឆ្លុះបញ្ចាំង និងសំយោគ៖ ឡើងបង្ហាញលទ្ធផល ផ្លាស់ប្តូរយោបល់ និងកត់ត្រាមេរៀនសង្ខេប។'
+                    content: 'ខ្លឹមសារមេរៀនគោល និងសកម្មភាពអនុវត្តផ្ទាល់ក្នុងថ្នាក់។',
+                    teacher: '១. បង្ហាញគោលបំណង និងណែនាំសកម្មភាពអនុវត្តជាក់ស្តែង។\n២. ចែកសម្ភារ និងសន្លឹកកិច្ចការឱ្យសិស្សអនុវត្តជាក្រុមតូចៗ ដោយគ្រូដើរសម្របសម្រួល។\n៣. រៀបចំវេទិកាបង្ហាញលទ្ធផល និងបូកសរុបខ្លឹមសារមេរៀនសំខាន់ៗ។',
+                    student: '១. ស្តាប់ការណែនាំ និងរៀបចំក្រុមពិភាក្សា។\n២. ចូលរួមអនុវត្តសកម្មភាព វិភាគទិន្នន័យ និងផ្លាស់ប្តូរយោបល់យ៉ាងសកម្ម។\n៣. ឡើងធ្វើបទបង្ហាញ ឆ្លើយសំណួរមិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
                 }
             },
             pbl: {
                 label: 'បែបគម្រោង (Project-Based Learning - PBL)',
-                description: '១. កំណត់បញ្ហា/គម្រោង -> ២. រៀបចំផែនការ & ស្រាវជ្រាវ -> ៣. បង្កើតផលិតផល/ដំណោះស្រាយ -> ៤. ធ្វើបទបង្ហាញ & វាយតម្លៃ',
+                description: 'ជំរុញឱ្យសិស្សស្រាវជ្រាវ រចនា និងបង្កើតជាផលិតផល ឬដំណោះស្រាយជាក់ស្តែងផ្សារភ្ជាប់នឹងជីវភាព។',
                 step3Template: {
-                    content: 'ប្រធានបទគម្រោង ទ្រឹស្តីពាក់ព័ន្ធ លក្ខណៈវិនិច្ឆ័យ និងលទ្ធផលរំពឹងទុក។',
-                    teacher: '១. កំណត់សំណួរគម្រោង (Driving Question)៖ បង្ហាញស្ថានភាពបញ្ហាជាក់ស្តែងក្នុងសង្គម ឬវិទ្យាសាស្ត្រ និងកំណត់គោលដៅគម្រោង។\n២. រៀបចំផែនការ និងស្រាវជ្រាវ៖ បែងចែកក្រុម ណែនាំប្រភពឯកសារ និងជួយតម្រង់ទិសការរចនាគម្រោង។\n៣. អនុវត្ត និងបង្កើតស្នាដៃ៖ តាមដានវឌ្ឍនភាពក្រុម និងផ្តល់មតិកែលម្អជាប្រចាំ។\n៤. ធ្វើបទបង្ហាញ និងឆ្លុះបញ្ចាំង៖ រៀបចំឱ្យក្រុមនីមួយៗបង្ហាញស្នាដៃ និងវាយតម្លៃតាមរូប្រ៊ិក (Rubric)។',
-                    student: '១. កំណត់សំណួរគម្រោង៖ វិភាគបញ្ហា និងកំណត់គោលបំណងគម្រោងរបស់ក្រុម។\n២. រៀបចំផែនការ និងស្រាវជ្រាវ៖ បែងចែកតួនាទីសមាជិក ប្រមូលទិន្នន័យ និងសិក្សាទ្រឹស្តីពាក់ព័ន្ធ។\n៣. អនុវត្ត និងបង្កើតស្នាដៃ៖ សហការគ្នាផលិតគំរូ ផ្ទាំងរូបភាព ឬរបាយការណ៍ដំណោះស្រាយ។\n៤. ធ្វើបទបង្ហាញ និងឆ្លុះបញ្ចាំង៖ ឡើងធ្វើបទបង្ហាញ ឆ្លើយសំណួរ និងទទួលយកមតិកែលម្អ។'
+                    content: 'ប្រធានបទគម្រោងខ្នាតតូច និងខ្លឹមសារទ្រឹស្តីគាំទ្រការអនុវត្តគម្រោង។',
+                    teacher: '១. ចោទសំណួរគន្លឹះ (Driving Question) និងកំណត់គោលដៅគម្រោង។\n២. ណែនាំទ្រឹស្តីមូលដ្ឋាន និងចែកក្រុមរៀបចំផែនការស្រាវជ្រាវ/ផលិតគំរូ។\n៣. តាមដាន ផ្តល់ប្រឹក្សា និងវាយតម្លៃបទបង្ហាញលទ្ធផលគម្រោងរបស់សិស្ស។',
+                    student: '១. វិភាគសំណួរគន្លឹះ និងបែងចែកតួនាទីក្នុងក្រុមគម្រោង។\n២. ស្រាវជ្រាវឯកសារ ប្រមូលទិន្នន័យ និងរៀបចំផលិតផល/ផ្ទាំងបង្ហាញ។\n៣. ធ្វើបទបង្ហាញលទ្ធផលគម្រោង និងទទួលយកមតិកែលម្អ។'
                 }
             },
             tps: {
                 label: 'យុទ្ធវិធី គិត-ពិភាក្សាជាដៃគូ-ចែករំលែក (Think-Pair-Share)',
-                description: '១. គិតបុគ្គល (Think) -> ២. ពិភាក្សាជាដៃគូ (Pair) -> ៣. ចែករំលែកក្នុងថ្នាក់ (Share)',
+                description: 'សិស្សគិតដោយឯករាជ្យ (Think) ➔ ពិភាក្សាជាមួយដៃគូ (Pair) ➔ ចែករំលែកក្នុងថ្នាក់ទាំងមូល (Share)។',
                 step3Template: {
-                    content: 'សំណួរវិភាគ ឬស្ថានភាពបញ្ហាគន្លឹះ និងខ្លឹមសារសំខាន់ៗនៃមេរៀន។',
-                    teacher: '១. គិតបុគ្គល (Think)៖ ចោទសំណួរ ឬដាក់បញ្ហា ហើយទុកពេល ២-៣ នាទីឱ្យសិស្សម្នាក់ៗគិត និងកត់ត្រាចម្លើយផ្ទាល់ខ្លួន។\n២. ពិភាក្សាជាដៃគូ (Pair)៖ ឱ្យសិស្សចាប់ដៃគូជាមួយអ្នកអង្គុយជិតគ្នា ដើម្បីប្រៀបធៀប និងកែលម្អចម្លើយរួមគ្នា។\n៣. ចែករំលែកក្នុងថ្នាក់ (Share)៖ ហៅដៃគូតំណាងឡើងបង្ហាញលទ្ធផល រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។',
-                    student: '១. គិតបុគ្គល៖ អានសំណួរ គិតពិចារណា និងសរសេរគំនិតផ្ទាល់ខ្លួនដោយស្ងៀមស្ងាត់។\n២. ពិភាក្សាជាដៃគូ៖ ផ្លាស់ប្តូរយោបល់ជាមួយដៃគូ និងឯកភាពគ្នាលើចម្លើយល្អបំផុត។\n៣. ចែករំលែកក្នុងថ្នាក់៖ ឡើងបកស្រាយលទ្ធផលពិភាក្សា និងកត់ត្រាខ្លឹមសារមេរៀន។'
+                    content: 'សំណួរវិភាគស៊ីជម្រៅ និងខ្លឹមសារសំយោគនៃមេរៀន។',
+                    teacher: '១. Think (គិតឯករាជ្យ)៖ ដាក់សំណួរ ឬលំហាត់ ហើយទុកពេល ២-៣ នាទីឱ្យសិស្សគិតម្នាក់ឯង។\n២. Pair (ពិភាក្សាជាដៃគូ)៖ ឱ្យសិស្សចាប់គូពិភាក្សាប្រៀបធៀបចម្លើយគ្នា។\n៣. Share (ចែករំលែក)៖ ហៅតំណាងគូឡើងចែករំលែកគំនិត រួចគ្រូសង្ខេបខ្លឹមសារមេរៀន។',
+                    student: '១. គិត និងកត់ត្រាចម្លើយផ្ទាល់ខ្លួនដោយស្ងៀមស្ងាត់។\n២. ពិភាក្សាជាមួយមិត្តភក្តិជិតខាង ដើម្បីរកចម្លើយរួមដ៏ល្អបំផុត។\n៣. ឡើងចែករំលែកលទ្ធផលជូនថ្នាក់ទាំងមូល និងកត់ត្រាមេរៀន។'
                 }
             },
             gradual: {
                 label: 'លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)',
-                description: '១. គ្រូធ្វើជាគំរូ (I Do) -> ២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do) -> ៣. សិស្សអនុវត្តដោយខ្លួនឯង (You Do)',
+                description: 'គ្រូបង្ហាញគំរូ (I Do) ➔ គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do) ➔ សិស្សអនុវត្តដោយឯករាជ្យ (You Do)។',
                 step3Template: {
-                    content: 'និយមន័យ រូបមន្ត ឧទាហរណ៍គំរូ និងលំហាត់អនុវត្តតាមលំដាប់។',
-                    teacher: '១. គ្រូធ្វើជាគំរូ (I Do)៖ ពន្យល់ទ្រឹស្តី រូបមន្ត និងបង្ហាញរបៀបដោះស្រាយឧទាហរណ៍គំរូទី១ យ៉ាងលម្អិតលើក្តារខៀន។\n២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do)៖ ដាក់ឧទាហរណ៍ទី២ និងសម្របសម្រួលសិស្សឱ្យចូលរួមគិត និងឆ្លើយតាមជំហាននីមួយៗ។\n៣. សិស្សធ្វើដោយខ្លួនឯង (You Do)៖ ដាក់លំហាត់អនុវត្តឱ្យសិស្សធ្វើដោយឯករាជ្យ ហើយគ្រូដើរពិនិត្យជួយណែនាំ។',
-                    student: '១. គ្រូធ្វើជាគំរូ (I Do)៖ ស្តាប់ ពិនិត្យតាមដានជំហានដោះស្រាយរបស់គ្រូ និងសួរបញ្ជាក់ចំណុចឆ្ងល់។\n២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do)៖ ចូលរួមផ្តល់យោបល់ និងគណនាជំហានបន្តបន្ទាប់ជាមួយគ្រូ។\n៣. សិស្សធ្វើដោយខ្លួនឯង (You Do)៖ អនុវត្តដោះស្រាយលំហាត់ដោយខ្លួនឯង និងឡើងបង្ហាញលើក្តារខៀន។'
+                    content: 'ទ្រឹស្តី រូបមន្ត ឧទាហរណ៍គំរូ និងលំហាត់អនុវត្តតាមលំដាប់កម្រិត។',
+                    teacher: '១. គ្រូធ្វើ (I Do)៖ ពន្យល់ទ្រឹស្តី រូបមន្ត និងបង្ហាញវិធីដោះស្រាយឧទាហរណ៍គំរូយ៉ាងលម្អិត។\n២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do)៖ ដាក់លំហាត់ទី២ ហើយសម្របសម្រួលសិស្សឱ្យចូលរួមដោះស្រាយជាមួយគ្រូ។\n៣. សិស្សធ្វើ (You Do)៖ ដាក់លំហាត់អនុវត្តឱ្យសិស្សធ្វើដោយខ្លួនឯង រួចដើរពិនិត្យជួយសិស្សយឺត។',
+                    student: '១. ស្តាប់ សង្កេត និងកត់ត្រាជំហានដោះស្រាយគំរូរបស់គ្រូ។\n២. ចូលរួមឆ្លើយ និងសហការដោះស្រាយលំហាត់ទី២ ជាមួយគ្រូ។\n៣. អនុវត្តដោះស្រាយលំហាត់ដោយឯករាជ្យ និងឡើងកែលើក្តារខៀន។'
                 }
             },
             flipped: {
                 label: 'ថ្នាក់រៀនត្រឡប់ (Flipped Classroom)',
-                description: 'មុនម៉ោងរៀន៖ សិស្សសិក្សាវីដេអូ/ឯកសារនៅផ្ទះ -> ក្នុងម៉ោងរៀន៖ អនុវត្តលំហាត់ ពិភាក្សាស៊ីជម្រៅ និងដោះស្រាយបញ្ហា',
+                description: 'សិស្សសិក្សាទ្រឹស្តី ឬមើលវីដេអូមុននៅផ្ទះ ហើយប្រើពេលក្នុងថ្នាក់សម្រាប់ពិភាក្សា និងដោះស្រាយលំហាត់ស៊ីជម្រៅ។',
                 step3Template: {
-                    content: 'សង្ខេបខ្លឹមសារមេរៀនដែលសិស្សបានអានមុន និងលំហាត់អនុវត្តកម្រិតខ្ពស់ក្នុងថ្នាក់។',
-                    teacher: '១. ផ្ទៀងផ្ទាត់ការសិក្សានៅផ្ទះ៖ សួរសំណួរខ្លីៗ ឬប្រើតេស្តរហ័សដើម្បីពិនិត្យការយល់ដឹងពីវីដេអូ/ឯកសារដែលបានផ្ញើឱ្យមើលមុន។\n២. បំភ្លឺចំណុចឆ្ងល់៖ ប្រមូលសំណួរដែលសិស្សមិនទាន់យល់ច្បាស់ និងពន្យល់បន្ថែមចំចំណុចគន្លឹះ។\n៣. អនុវត្តស៊ីជម្រៅក្នុងថ្នាក់៖ ចែកលំហាត់កម្រិតខ្ពស់ ឬករណីសិក្សាឱ្យសិស្សធ្វើការងារក្រុម ដោយគ្រូដើរជួយណែនាំតាមតុ។',
-                    student: '១. ផ្ទៀងផ្ទាត់ការសិក្សានៅផ្ទះ៖ បង្ហាញកំណត់ត្រាសង្ខេប និងឆ្លើយសំណួរផ្ទៀងផ្ទាត់។\n២. បំភ្លឺចំណុចឆ្ងល់៖ លើកឡើងនូវចំណុចលំបាកដែលជួបប្រទះពេលរៀននៅផ្ទះ។\n៣. អនុវត្តស៊ីជម្រៅក្នុងថ្នាក់៖ សហការដោះស្រាយលំហាត់អនុវត្ត និងពិភាក្សាជាមួយមិត្តរួមថ្នាក់។'
+                    content: 'សេចក្តីសង្ខេបទ្រឹស្តី និងកម្រងលំហាត់/ករណីសិក្សាស៊ីជម្រៅក្នុងថ្នាក់។',
+                    teacher: '១. ត្រួតពិនិត្យការរៀបចំមុនចូលថ្នាក់៖ សួរសំណួរផ្ទៀងផ្ទាត់អំពីឯកសារ/វីដេអូដែលបានផ្តល់ឱ្យអាននៅផ្ទះ។\n២. បំភ្លឺចំណុចឆ្ងល់៖ ពន្យល់បន្ថែមលើចំណុចស្មុគស្មាញដែលសិស្សមិនទាន់យល់ច្បាស់។\n៣. អនុវត្តស៊ីជម្រៅ៖ ចែកក្រុមឱ្យដោះស្រាយលំហាត់កម្រិតខ្ពស់ និងពិភាក្សាវែកញែក។',
+                    student: '១. បង្ហាញកំណត់ត្រាដែលបានសិក្សានៅផ្ទះ និងលើកឡើងពីចំណុចឆ្ងល់។\n២. ស្តាប់ការបំភ្លឺបន្ថែមរបស់គ្រូ។\n៣. សហការដោះស្រាយលំហាត់ស៊ីជម្រៅ និងឡើងបកស្រាយក្នុងថ្នាក់។'
                 }
             },
             kwl: {
                 label: 'យុទ្ធវិធី K-W-L (ដឹងស្រាប់ - ចង់ដឹង - បានរៀន)',
-                description: '១. K (Know - អ្វីដែលដឹងស្រាប់) -> ២. W (Want to know - អ្វីដែលចង់ដឹង) -> ៣. L (Learned - អ្វីដែលបានរៀន)',
+                description: 'ផ្សារភ្ជាប់ចំណេះដឹងចាស់ (Know) ➔ កំណត់សំណួរចង់ដឹង (Want to know) ➔ សង្ខេបអ្វីដែលបានរៀន (Learned)។',
                 step3Template: {
-                    content: 'តារាង K-W-L និងខ្លឹមសារសំខាន់ៗដែលឆ្លើយតបនឹងសំណួរចង់ដឹងរបស់សិស្ស។',
-                    teacher: '១. ជួរឈរ K (ដឹងស្រាប់)៖ គូសតារាង K-W-L លើក្តារខៀន និងបំផុសឱ្យសិស្សប្រាប់អ្វីដែលពួកគេធ្លាប់ដឹងអំពីប្រធានបទ។\n២. ជួរឈរ W (ចង់ដឹង)៖ ឱ្យសិស្សបង្កើតសំណួរអំពីអ្វីដែលពួកគេចង់ដឹងបន្ថែម រួចចែកឯកសារឱ្យសិក្សាស្រាវជ្រាវ។\n៣. ជួរឈរ L (បានរៀន)៖ សម្របសម្រួលសិស្សឱ្យបំពេញចំណេះដឹងថ្មីដែលទទួលបាន និងផ្ទៀងផ្ទាត់ជាមួយជួរឈរ K និង W។',
-                    student: '១. ជួរឈរ K៖ ប្រមូលគំនិត និងរៀបរាប់ចំណេះដឹងមានស្រាប់ពាក់ព័ន្ធនឹងមេរៀន។\n២. ជួរឈរ W៖ ចោទសួរចម្ងល់ដែលចង់ដឹង រួចអានសៀវភៅពុម្ព ឬពិភាក្សាក្រុមដើម្បីរកចម្លើយ។\n៣. ជួរឈរ L៖ សរសេរសង្ខេបអ្វីដែលបានរៀនចេះថ្មីចូលក្នុងតារាង K-W-L និងសៀវភៅកត់ត្រា។'
+                    content: 'តារាង K-W-L និងខ្លឹមសារមេរៀនសំខាន់ៗឆ្លើយតបនឹងសំណួររបស់សិស្ស។',
+                    teacher: '១. ជួរ K (ដឹងស្រាប់)៖ សួរសិស្សឱ្យរៀបរាប់អ្វីដែលពួកគេធ្លាប់ដឹងទាក់ទងនឹងប្រធានបទ។\n២. ជួរ W (ចង់ដឹង)៖ ឱ្យសិស្សសរសេរសំណួរដែលចង់ដឹង រួចណែនាំឱ្យអានឯកសារស្រាវជ្រាវ។\n៣. ជួរ L (បានរៀន)៖ សម្របសម្រួលសិស្សបំពេញចំណេះដឹងថ្មីដែលរកឃើញ និងបូកសរុបមេរៀន។',
+                    student: '១. បញ្ចេញមតិអំពីចំណេះដឹងដែលមានស្រាប់ចូលក្នុងជួរ K។\n២. បង្កើតសំណួរក្នុងជួរ W និងអានសៀវភៅពុម្ពដើម្បីស្វែងរកចម្លើយ។\n៣. សរសេរសេចក្តីសង្ខេបអ្វីដែលបានរៀនចូលក្នុងជួរ L និងកត់ត្រាមេរៀន។'
                 }
             },
             conceptmap: {
                 label: 'យុទ្ធវិធីផែនទីគំនិត (Concept Mapping & Graphic Organizers)',
-                description: 'រៀបចំ និងផ្សារភ្ជាប់ទំនាក់ទំនងរវាងបញ្ញត្តិគោល បញ្ញត្តិរង រូបមន្ត និងឧទាហរណ៍តាមរយៈដ្យាក្រាម',
+                description: 'ជួយឱ្យសិស្សចេះសំយោគ និងរៀបចំទំនាក់ទំនងខ្លឹមសារមេរៀនជាដ្យាក្រាម ឬផែនទីគំនិតងាយចងចាំ។',
                 step3Template: {
-                    content: 'ផែនទីគំនិត (Concept Map) បង្ហាញទំនាក់ទំនងនៃបញ្ញត្តិសំខាន់ៗក្នុងមេរៀន។',
-                    teacher: '១. កំណត់បញ្ញត្តិគោល (Main Concept)៖ សរសេរចំណងជើងមេរៀននៅចំកណ្តាល ឬខាងលើក្តារខៀន។\n២. វិភាគ និងបំបែកមែកធាង៖ ណែនាំសិស្សឱ្យអានឯកសារ រួចស្រង់ពាក្យគន្លឹះ និយមន័យ និងរូបមន្តមករៀបចំតាមលំដាប់ថ្នាក់។\n៣. ភ្ជាប់ទំនាក់ទំនង (Linking Words)៖ ឱ្យសិស្សគូសព្រួញ និងសរសេរពាក្យភ្ជាប់បង្ហាញពីមូលហេតុ ផល ឬលក្ខណៈប្រៀបធៀប។',
-                    student: '១. កំណត់បញ្ញត្តិគោល៖ សង្កេត និងកំណត់ប្រធានបទស្នូលនៃមេរៀន។\n២. វិភាគ និងបំបែកមែកធាង៖ ពិភាក្សាក្រុមគូសផែនទីគំនិត (Mind Map / Venn Diagram / Flowchart) លើក្រដាសផ្ទាំងធំ។\n៣. ភ្ជាប់ទំនាក់ទំនង៖ បង្ហាញផែនទីគំនិតរបស់ក្រុម និងពន្យល់ពីទំនាក់ទំនងរវាងបញ្ញត្តិនីមួយៗ។'
+                    content: 'រចនាសម្ព័ន្ធផែនទីគំនិត (Concept Map) និងខ្លឹមសារលម្អិតតាមមែកធាងនីមួយៗ។',
+                    teacher: '១. បង្ហាញគំនិតមេ (Central Concept) នៅកណ្តាលក្តារខៀន។\n២. ចែកក្រុមសិស្សឱ្យអានមេរៀន រួចគូសផែនទីគំនិតបង្ហាញទំនាក់ទំនងរវាងមែកធាងរងនីមួយៗ។\n៣. ឱ្យក្រុមនីមួយៗបង្ហាញផែនទីគំនិត រួចគ្រូកែសម្រួល និងសង្ខេបខ្លឹមសារផ្លូវការ។',
+                    student: '១. សង្កេតគំនិតមេ និងស្តាប់ការណែនាំអំពីការបង្កើតផែនទីគំនិត។\n២. អានឯកសារ សំយោគពាក្យគន្លឹះ និងគូសផែនទីគំនិតលើក្រដាសផ្ទាំងធំ។\n៣. បង្ហាញ និងពន្យល់ទំនាក់ទំនងនៃផែនទីគំនិតរបស់ក្រុមខ្លួន។'
                 }
             },
             gallerywalk: {
                 label: 'យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)',
-                description: '១. ធ្វើការងារក្រុមលើផ្ទាំងក្រដាស -> ២. បិទបង្ហាញ និងដើរពិនិត្យផ្តល់យោបល់ -> ៣. កែលម្អ និងបូកសរុប',
+                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរទស្សនា វិភាគ និងផ្តល់យោបល់លើស្នាដៃក្រុមដទៃ។',
                 step3Template: {
-                    content: 'ប្រធានបទពិភាក្សាតាមស្ថានីយ និងខ្លឹមសារសំយោគនៃមេរៀន។',
-                    teacher: '១. បែងចែកប្រធានបទតាមក្រុម៖ ចែកក្រដាសផ្ទាំងធំ និងប្រធានបទរងផ្សេងៗគ្នាដល់ក្រុមនីមួយៗ។\n២. ដឹកនាំការដើរពិនិត្យ (Gallery Walk)៖ ឱ្យក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង រួចដើរពិនិត្យ និងសរសេរមតិយោបល់/សំណួរលើក្រដាសក្រុមដទៃ។\n៣. ឆ្លើយតប និងបូកសរុប៖ ឱ្យក្រុមដើមពិនិត្យមតិយោបល់ ឆ្លើយបំភ្លឺ រួចគ្រូសំយោគខ្លឹមសារមេរៀនរួម។',
-                    student: '១. ផលិតស្នាដៃក្រុម៖ ពិភាក្សា និងសរសេរចម្លើយ ឬដ្យាក្រាមលើក្រដាសផ្ទាំងធំ។\n២. ដើរពិនិត្យ និងផ្តល់មតិ៖ ដើរតាមស្ថានីយនីមួយៗ អានស្នាដៃមិត្តរួមថ្នាក់ និងបិទក្រដាសមតិយោបល់ (Sticky Notes)។\n៣. ឆ្លើយតប និងបូកសរុប៖ ត្រឡប់មកក្រុមដើម អានមតិរិះគន់ស្ថាបនា បកស្រាយបន្ថែម និងកត់ត្រាខ្លឹមសាររួម។'
+                    content: 'ខ្លឹមសារមេរៀនបែងចែកតាមស្ថានីយ (Stations) នីមួយៗក្នុងថ្នាក់រៀន។',
+                    teacher: '១. បែងចែកសិស្សជាក្រុម និងផ្តល់ប្រធានបទរងឱ្យសរសេរលើក្រដាសផ្ទាំងធំ រួចបិទតាមជញ្ជាំង។\n២. ណែនាំក្រុមនីមួយៗឱ្យដើរពិនិត្យតាមស្ថានីយ (Gallery Walk) កត់ត្រា និងសរសេរមតិយោបល់។\n៣. ឱ្យក្រុមដើមពិនិត្យមតិកែលម្អ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនទាំងមូល។',
+                    student: '១. ពិភាក្សាក្នុងក្រុម សរសេរលទ្ធផលលើក្រដាសផ្ទាំងធំ និងបិទតាមស្ថានីយ។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមសញ្ញាគ្រូ កត់ត្រា និងផ្តល់យោបល់ស្ថាបនា។\n៣. ត្រឡប់មកស្ថានីយខ្លួនវិញ បកស្រាយបន្ថែម និងកត់ត្រាមេរៀនសង្ខេប។'
                 }
             }
         };
 
         // =========================================================================
-        // 3. STATE MANAGEMENT & LOCAL STORAGE
+        // 3. STATE MANAGEMENT, FILE UPLOADS & LOCAL STORAGE
         // =========================================================================
         const STORAGE_KEY = 'moeys_highschool_lesson_plans_v3';
         let currentLessonId = null;
+        let uploadedLessonFiles = []; // Array of { id, name, mimeType, base64Data, sizeText }
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result || '';
+                    const base64 = String(result).split(',')[1] || '';
+                    resolve(base64);
+                };
+                reader.onerror = () => reject(new Error('មិនអាចអានឯកសារបានទេ'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function processSelectedFiles(fileList) {
+            const files = Array.from(fileList || []);
+            if (files.length === 0) return;
+
+            for (const file of files) {
+                const isImage = file.type.startsWith('image/');
+                const isPdf = file.type === 'application/pdf';
+                if (!isImage && !isPdf) {
+                    showToast(`ឯកសារ "${file.name}" មិនគាំទ្រទេ (សូមប្រើរូបភាព ឬ PDF)។`, 'error');
+                    continue;
+                }
+                if (file.size > 15 * 1024 * 1024) {
+                    showToast(`ឯកសារ "${file.name}" ធំជាង 15MB!`, 'error');
+                    continue;
+                }
+                try {
+                    const base64Data = await readFileAsBase64(file);
+                    uploadedLessonFiles.push({
+                        id: 'file_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                        name: file.name,
+                        mimeType: file.type,
+                        base64Data,
+                        sizeText: formatBytes(file.size)
+                    });
+                } catch (_) {
+                    showToast(`មានបញ្ហាក្នុងការអានឯកសារ "${file.name}"`, 'error');
+                }
+            }
+            renderUploadedFilesList();
+            if (uploadedLessonFiles.length > 0) {
+                showToast(`បានបញ្ចូលឯកសារមេរៀនចំនួន ${toKhmerNumerals(uploadedLessonFiles.length)} រួចរាល់!`, 'success');
+            }
+        }
+
+        async function handleLessonFilesUpload(event) {
+            await processSelectedFiles(event.target.files);
+            event.target.value = '';
+        }
+
+        function removeUploadedFile(id) {
+            uploadedLessonFiles = uploadedLessonFiles.filter(f => f.id !== id);
+            renderUploadedFilesList();
+        }
+
+        function clearUploadedFiles() {
+            uploadedLessonFiles = [];
+            renderUploadedFilesList();
+            showToast('បានលុបឯកសារមេរៀនទាំងអស់!', 'info');
+        }
+
+        function renderUploadedFilesList() {
+            const listEl = document.getElementById('uploadedFilesList');
+            const clearBtn = document.getElementById('clearFilesBtn');
+            if (!listEl || !clearBtn) return;
+
+            if (uploadedLessonFiles.length === 0) {
+                listEl.classList.add('hidden');
+                listEl.innerHTML = '';
+                clearBtn.classList.add('hidden');
+                return;
+            }
+
+            listEl.classList.remove('hidden');
+            clearBtn.classList.remove('hidden');
+            listEl.innerHTML = uploadedLessonFiles.map(f => {
+                const isPdf = f.mimeType === 'application/pdf';
+                return `
+                    <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isPdf ? 'bg-rose-100 text-rose-800' : 'bg-sky-100 text-sky-800'}">
+                                ${isPdf ? 'PDF' : 'IMG'}
+                            </span>
+                            <span class="truncate font-medium text-slate-800">${f.name}</span>
+                            <span class="text-[10px] text-slate-400 shrink-0">(${f.sizeText})</span>
+                        </div>
+                        <button type="button" onclick="removeUploadedFile('${f.id}')" class="text-slate-400 hover:text-rose-600 px-1 cursor-pointer" title="លុបឯកសារនេះ">✕</button>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
@@ -1021,6 +1176,11 @@
 
         function buildLocalFallbackLesson(grade, subject, title, methodObj) {
             return {
+                recommendedMethodKey: document.getElementById('teachingMethod').value || 'ibl',
+                recommendationReason: `មេរៀន "${title}" ក្នុងមុខវិជ្ជា${subject} មានលក្ខណៈជំរុញឱ្យសិស្សចេះគិតពិចារណា ស្រាវជ្រាវ និងផ្សារភ្ជាប់ទ្រឹស្តីទៅនឹងការអនុវត្តជាក់ស្តែង។`,
+                detectedChapter: document.getElementById('chapterInput').value || '',
+                detectedLessonTitle: title,
+                detectedSubLessons: document.getElementById('subLessonsInput').value || '',
                 objKnowledge: `ពន្យល់ពីនិយមន័យ គោលការណ៍គ្រឹះ និងរូបមន្តសំខាន់ៗនៃ "${title}" ក្នុងមុខវិជ្ជា${subject} ថ្នាក់${grade} បានត្រឹមត្រូវ។`,
                 objSkill: `វិភាគ បកស្រាយ និងអនុវត្តចំណេះដឹងអំពី "${title}" ទៅដោះស្រាយលំហាត់ និងបញ្ហាជាក់ស្តែងបានច្បាស់លាស់។`,
                 objAttitude: `មានស្មារតីសហការក្នុងក្រុម ហ៊ានចោទសួរ ពិភាក្សា និងស្រឡាញ់ការសិក្សាស្រាវជ្រាវមុខវិជ្ជា${subject}។`,
@@ -1043,6 +1203,130 @@
             };
         }
 
+        function recommendMethodHeuristically(subject, title, subLessons) {
+            const text = `${subject} ${title} ${subLessons}`.toLowerCase();
+            if (text.includes('ពិសោធន៍') || text.includes('បាតុភូត') || text.includes('ដែន') || text.includes('កម្លាំង') || text.includes('ប្រតិកម្ម')) {
+                return {
+                    key: 'ibl',
+                    reason: 'មេរៀននេះពាក់ព័ន្ធនឹងបាតុភូតវិទ្យាសាស្ត្រ និងការពិសោធន៍ ដែលសមស្របបំផុតជាមួយ «បែបរិះរក (IBL)» ដើម្បីឱ្យសិស្សចោទសួរ បង្កើតសម្មតិកម្ម និងសង្កេតរកការពិតដោយខ្លួនឯង។'
+                };
+            }
+            if (text.includes('សមីការ') || text.includes('គណនា') || text.includes('អនុគមន៍') || text.includes('លីមីត') || text.includes('ដេរីវេ') || text.includes('អាំងតេក្រាល') || text.includes('ចំណោទ')) {
+                return {
+                    key: 'gradual',
+                    reason: 'មេរៀននេះមានលក្ខណៈជារូបមន្ត និងលំហាត់គណនា ដែលសមស្របបំផុតជាមួយ «លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)» ឬ «Polya» ដើម្បីឱ្យសិស្សយល់ជំហានដោះស្រាយច្បាស់មុនអនុវត្តដោយខ្លួនឯង។'
+                };
+            }
+            if (text.includes('ប្រវត្តិ') || text.includes('អក្សរសាស្ត្រ') || text.includes('រឿង') || text.includes('ភូមិវិទ្យា') || text.includes('សីលធម៌')) {
+                return {
+                    key: 'jigsaw',
+                    reason: 'មេរៀននេះមានខ្លឹមសារអាន និងវិភាគច្រើនផ្នែក ដែលសមស្របបំផុតជាមួយ «បែបសហការ (Jigsaw)» ដើម្បីបែងចែកឱ្យសិស្សស្រាវជ្រាវតាមក្រុមអ្នកជំនាញ និងបង្រៀនត្រឡប់គ្នាវិញ។'
+                };
+            }
+            return {
+                key: '5es',
+                reason: 'មេរៀននេះមានទាំងទ្រឹស្តី និងការអនុវត្ត ដែលសមស្របជាមួយ «លំនាំបង្រៀន 5Es» ដើម្បីទាក់ទាញចំណាប់អារម្មណ៍ រុករក ពន្យល់ និងពង្រីកចំណេះដឹងសិស្សជាជំហានៗ។'
+            };
+        }
+
+        function displayMethodRecommendation(methodKey, reason) {
+            const card = document.getElementById('aiRecommendationCard');
+            const titleEl = document.getElementById('aiRecMethodTitle');
+            const reasonEl = document.getElementById('aiRecReasonText');
+            const methodObj = PEDAGOGICAL_METHODS[methodKey];
+            if (!card || !titleEl || !reasonEl || !methodObj) return;
+
+            titleEl.textContent = `វិធីសាស្ត្រណែនាំ៖ ${methodObj.label}`;
+            reasonEl.textContent = reason || methodObj.description;
+            card.classList.remove('hidden');
+        }
+
+        async function analyzeAndRecommendMethodOnly() {
+            const grade = document.getElementById('gradeInput').value;
+            const subject = document.getElementById('subjectInput').value;
+            const title = document.getElementById('lessonTitleInput').value.trim();
+            const subLessons = document.getElementById('subLessonsInput').value.trim();
+
+            if (!title && uploadedLessonFiles.length === 0) {
+                showToast('សូមបញ្ចូលចំណងជើងមេរៀន ឬ Upload ឯកសារមេរៀនជាមុនសិន!', 'error');
+                return;
+            }
+
+            showToast('AI កំពុងវិភាគមេរៀនដើម្បីជ្រើសរើសវិធីសាស្ត្រសមស្រប...', 'info');
+
+            const methodListDescription = Object.entries(PEDAGOGICAL_METHODS)
+                .map(([k, v]) => `- "${k}": ${v.label} (${v.description})`)
+                .join('\n');
+
+            const userParts = [
+                {
+                    text: `ចូរវិភាគខ្លឹមសារមេរៀនវិទ្យាល័យខាងក្រោម (រួមទាំងរូបភាព ឬ PDF ដែលបានភ្ជាប់ប្រសិនបើមាន) ហើយជ្រើសរើសវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនតែ ១ គត់ដែលសមស្របបំផុតក្នុងចំណោមបញ្ជីខាងក្រោម៖
+${methodListDescription}
+
+ព័ត៌មានមេរៀន៖
+- កម្រិតថ្នាក់៖ ${grade}
+- មុខវិជ្ជា៖ ${subject}
+- ចំណងជើងមេរៀន៖ ${title || '(ទាញចេញពីឯកសារភ្ជាប់)'}
+- ចំណងជើងរង៖ ${subLessons || '(ទាញចេញពីឯកសារភ្ជាប់)'}`
+                }
+            ];
+
+            for (const f of uploadedLessonFiles) {
+                userParts.push({
+                    inlineData: {
+                        mimeType: f.mimeType,
+                        data: f.base64Data
+                    }
+                });
+            }
+
+            const payload = {
+                contents: [{ role: 'user', parts: userParts }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            recommendedMethodKey: {
+                                type: "STRING",
+                                enum: Object.keys(PEDAGOGICAL_METHODS)
+                            },
+                            recommendationReason: { type: "STRING" }
+                        },
+                        required: ["recommendedMethodKey", "recommendationReason"]
+                    }
+                }
+            };
+
+            const apiKey = "";
+            const endpoints = [
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
+            ];
+
+            let recData = null;
+            for (const url of endpoints) {
+                try {
+                    const result = await fetchWithBackoff(url, payload, 1);
+                    const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (rawText) {
+                        recData = JSON.parse(rawText);
+                        break;
+                    }
+                } catch (_) {}
+            }
+
+            if (!recData || !PEDAGOGICAL_METHODS[recData.recommendedMethodKey]) {
+                const fallback = recommendMethodHeuristically(subject, title, subLessons);
+                recData = { recommendedMethodKey: fallback.key, recommendationReason: fallback.reason };
+            }
+
+            document.getElementById('teachingMethod').value = recData.recommendedMethodKey;
+            onMethodChange();
+            displayMethodRecommendation(recData.recommendedMethodKey, recData.recommendationReason);
+            showToast('AI បានជ្រើសរើសវិធីសាស្ត្របង្រៀនសមស្របរួចរាល់!', 'success');
+        }
+
         async function generateLessonWithAI() {
             const grade = document.getElementById('gradeInput').value;
             const subject = document.getElementById('subjectInput').value;
@@ -1051,11 +1335,12 @@
             const subLessons = document.getElementById('subLessonsInput').value.trim();
             const headerDate = document.getElementById('headerDateInput').value;
             const duration = document.getElementById('durationInput').value;
-            const methodKey = document.getElementById('teachingMethod').value;
-            const methodObj = PEDAGOGICAL_METHODS[methodKey];
+            const autoSelectMethod = document.getElementById('autoSelectMethodCheckbox')?.checked ?? true;
+            const currentMethodKey = document.getElementById('teachingMethod').value;
+            const currentMethodObj = PEDAGOGICAL_METHODS[currentMethodKey];
 
-            if (!title) {
-                showToast('សូមបញ្ចូលចំណងជើងមេរៀនជាមុនសិន!', 'error');
+            if (!title && uploadedLessonFiles.length === 0) {
+                showToast('សូមបញ្ចូលចំណងជើងមេរៀន ឬ Upload រូបភាព/PDF មេរៀនជាមុនសិន!', 'error');
                 return;
             }
 
@@ -1065,43 +1350,64 @@
 
             btn.disabled = true;
             btn.classList.add('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = 'Gemini 4 Hydrogen កំពុងរៀបចំកិច្ចតែងការ...';
+            btnText.textContent = uploadedLessonFiles.length > 0
+                ? 'AI កំពុងអានឯកសារ វិភាគវិធីសាស្ត្រ និងបង្កើតកិច្ចតែងការ...'
+                : 'AI កំពុងវិភាគមេរៀន និងបង្កើតកិច្ចតែងការ...';
             btnIcon.classList.add('animate-spin-fast');
 
-            const systemPrompt = `អ្នកគឺជាគ្រូឧទ្ទេស និងអ្នកជំនាញគរុកោសល្យកម្រិតវិទ្យាល័យ (ថ្នាក់ទី១០ ទី១១ ទី១២) នៃក្រសួងអប់រំ យុវជន និងកីឡា កម្ពុជា ដែលដំណើរការដោយម៉ូដែល Gemini 4 Hydrogen។
-ចូរបង្កើតកិច្ចតែងការបង្រៀនកម្រិតវិទ្យាល័យជាភាសាខ្មែរផ្លូវការ ត្រឹមត្រូវតាមក្បួនខ្នាតគរុកោសល្យ ៥ ជំហាន មានខ្លឹមសារស៊ីជម្រៅសមស្របតាមកម្មវិធីសិក្សាគោលវិទ្យាល័យ (មាននិយមន័យ រូបមន្ត ទ្រឹស្តី ការវិភាគ និងលំហាត់គំរូ)។
-សំខាន់បំផុត៖ នៅក្នុង "ជំហានទី៣៖ មេរៀនប្រចាំថ្ងៃ" អ្នកត្រូវរៀបចំសកម្មភាពគ្រូ និងសកម្មភាពសិស្ស ឱ្យឆ្លុះបញ្ចាំងយ៉ាងច្បាស់តាមជំហានលម្អិតនៃវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនដែលបានជ្រើសរើស៖
-- ប្រសិនបើជា Jigsaw៖ ត្រូវបែងចែកច្បាស់នូវ ១. ក្រុមដើម (Home Group), ២. ក្រុមអ្នកជំនាញ (Expert Group), ៣. បង្រៀនត្រឡប់ក្រុមដើម (Teach Back)។
-- ប្រសិនបើជា Polya៖ ត្រូវបែងចែកច្បាស់នូវ ១. ស្វែងយល់ពីបញ្ហា, ២. រៀបចំផែនការ, ៣. អនុវត្តផែនការ, ៤. ពិនិត្យផ្ទៀងផ្ទាត់ឡើងវិញ។
-- ប្រសិនបើជា IBL៖ ត្រូវប្រើដំណាក់កាល ចោទសួរ បង្កើតសម្មតិកម្ម ស្រាវជ្រាវ/ពិសោធន៍ វិភាគ និងសន្និដ្ឋាន។
-- ប្រសិនបើជា 5Es៖ ត្រូវបែងចែកច្បាស់នូវ ១. ទាក់ទាញ (Engage), ២. រុករក (Explore), ៣. ពន្យល់ (Explain), ៤. ពង្រីកចំណេះដឹង (Elaborate), ៥. វាយតម្លៃ (Evaluate)។
-- ប្រសិនបើជា Active Learning៖ ត្រូវប្រើសកម្មភាពអនុវត្តជាក់ស្តែង និងការពិភាក្សាសកម្ម។
-- ប្រសិនបើជា Project-Based Learning (PBL)៖ ត្រូវបែងចែកច្បាស់នូវ ១. កំណត់សំណួរគម្រោង, ២. រៀបចំផែនការ និងស្រាវជ្រាវ, ៣. បង្កើតស្នាដៃ/ដំណោះស្រាយ, ៤. ធ្វើបទបង្ហាញ និងវាយតម្លៃ។
-- ប្រសិនបើជា Think-Pair-Share៖ ត្រូវបែងចែកច្បាស់នូវ ១. គិតបុគ្គល (Think), ២. ពិភាក្សាជាដៃគូ (Pair), ៣. ចែករំលែកក្នុងថ្នាក់ (Share)។
-- ប្រសិនបើជា I Do - We Do - You Do៖ ត្រូវបែងចែកច្បាស់នូវ ១. គ្រូធ្វើជាគំរូ (I Do), ២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do), ៣. សិស្សធ្វើដោយខ្លួនឯង (You Do)។
-- ប្រសិនបើជា Flipped Classroom៖ ត្រូវបែងចែកច្បាស់នូវ ១. ផ្ទៀងផ្ទាត់ការសិក្សាមុនម៉ោងរៀន, ២. បំភ្លឺចំណុចឆ្ងល់, ៣. អនុវត្តលំហាត់ស៊ីជម្រៅក្នុងថ្នាក់។
-- ប្រសិនបើជា K-W-L៖ ត្រូវបែងចែកច្បាស់នូវ ១. ជួរឈរ K (ដឹងស្រាប់), ២. ជួរឈរ W (ចង់ដឹង), ៣. ជួរឈរ L (បានរៀន)។
-- ប្រសិនបើជា Concept Mapping៖ ត្រូវបែងចែកច្បាស់នូវ ១. កំណត់បញ្ញត្តិគោល, ២. បំបែកមែកធាងបញ្ញត្តិរង, ៣. ភ្ជាប់ទំនាក់ទំនង និងបកស្រាយផែនទីគំនិត។
-- ប្រសិនបើជា Gallery Walk៖ ត្រូវបែងចែកច្បាស់នូវ ១. ផលិតស្នាដៃក្រុម, ២. ដើរពិនិត្យ និងផ្តល់មតិយោបល់តាមស្ថានីយ, ៣. ឆ្លើយតប និងបូកសរុបខ្លឹមសាររួម។`;
+            const methodListDescription = Object.entries(PEDAGOGICAL_METHODS)
+                .map(([k, v]) => `- "${k}": ${v.label} -> ${v.description}`)
+                .join('\n');
 
-            const userQuery = `សូមបង្កើតកិច្ចតែងការបង្រៀនវិទ្យាល័យសម្រាប់៖
+            const systemPrompt = `អ្នកគឺជាគ្រូឧទ្ទេស និងអ្នកជំនាញគរុកោសល្យកម្រិតវិទ្យាល័យ (ថ្នាក់ទី១០ ទី១១ ទី១២) នៃក្រសួងអប់រំ យុវជន និងកីឡា កម្ពុជា។
+ភារកិច្ចរបស់អ្នកមាន ៣ ដំណាក់កាលសំខាន់ៗ៖
+១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីឯកសារភ្ជាប់ (រូបភាពទំព័រសៀវភៅ ឬ PDF ប្រសិនបើមាន) ដើម្បីកំណត់ ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
+២. វិភាគលក្ខណៈមេរៀន និងកំណត់វិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនសមស្របបំផុត (recommendedMethodKey) ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យយ៉ាងច្បាស់ (recommendationReason) ជាភាសាខ្មែរ។
+បញ្ជីកូដវិធីសាស្ត្រទាំង ១២ ដែលអាចជ្រើសរើសបាន៖
+${methodListDescription}
+(ចំណាំ៖ ប្រសិនបើអ្នកប្រើប្រាស់បានកំណត់វិធីសាស្ត្រជាក់លាក់រួចហើយ ត្រូវប្រើកូដ "${currentMethodKey}" ក្នុងការសរសេរជំហានទី៣ ប៉ុន្តែនៅតែផ្តល់ការវិភាគក្នុង recommendationReason)។
+៣. សរសេរកិច្ចតែងការបង្រៀនវិទ្យាល័យ ៥ ជំហានពេញលេញ ដោយក្នុង "ជំហានទី៣" ត្រូវបែងចែកសកម្មភាពគ្រូ (s3Teacher) និងសកម្មភាពសិស្ស (s3Student) ឱ្យត្រូវតាមដំណាក់កាលនៃវិធីសាស្ត្របង្រៀនដែលបានជ្រើសរើសយ៉ាងត្រឹមត្រូវ។`;
+
+            const methodInstruction = autoSelectMethod
+                ? `សូម AI វិភាគខ្លឹមសារមេរៀន (រួមទាំងឯកសាររូបភាព/PDF បើមាន) រួចជ្រើសរើសវិធីសាស្ត្របង្រៀន ១ ដែលសមស្របបំផុតដោយស្វ័យប្រវត្តិ ហើយបង្កើតកិច្ចតែងការតាមវិធីសាស្ត្រនោះ។`
+                : `សូមប្រើវិធីសាស្ត្របង្រៀន "${currentMethodKey}" (${currentMethodObj.label}) ដែលអ្នកប្រើប្រាស់បានជ្រើសរើស ហើយពន្យល់ពីភាពសមស្របរបស់វាជាមួយមេរៀននេះ។`;
+
+            const userQuery = `សូមវិភាគ និងបង្កើតកិច្ចតែងការបង្រៀនវិទ្យាល័យសម្រាប់៖
 - កម្រិតថ្នាក់៖ ${grade}
 - មុខវិជ្ជា៖ ${subject}
-- ជំពូកទី៖ ${chapter}
-- មេរៀនទី៖ ${title}
-- ចំណងជើងរង៖ ${subLessons}
+- ជំពូកទី៖ ${chapter || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
+- មេរៀនទី៖ ${title || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
+- ចំណងជើងរង៖ ${subLessons || '(សូមស្រង់ពីឯកសារភ្ជាប់)'}
 - កាលបរិច្ឆេទ៖ ${headerDate}
 - រយៈពេល៖ ${duration}
-- គោលវិធី/វិធីសាស្ត្របង្រៀន៖ ${methodObj.label} (${methodObj.description})`;
+- ការណែនាំអំពីវិធីសាស្ត្របង្រៀន៖ ${methodInstruction}`;
+
+            const userParts = [{ text: userQuery }];
+            for (const f of uploadedLessonFiles) {
+                userParts.push({
+                    inlineData: {
+                        mimeType: f.mimeType,
+                        data: f.base64Data
+                    }
+                });
+            }
 
             const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
+                contents: [{ role: 'user', parts: userParts }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: "OBJECT",
                         properties: {
+                            recommendedMethodKey: {
+                                type: "STRING",
+                                enum: Object.keys(PEDAGOGICAL_METHODS)
+                            },
+                            recommendationReason: { type: "STRING" },
+                            detectedChapter: { type: "STRING" },
+                            detectedLessonTitle: { type: "STRING" },
+                            detectedSubLessons: { type: "STRING" },
                             objKnowledge: { type: "STRING" },
                             objSkill: { type: "STRING" },
                             objAttitude: { type: "STRING" },
@@ -1123,6 +1429,8 @@
                             s5Student: { type: "STRING" }
                         },
                         required: [
+                            "recommendedMethodKey", "recommendationReason",
+                            "detectedChapter", "detectedLessonTitle", "detectedSubLessons",
                             "objKnowledge", "objSkill", "objAttitude", "materials",
                             "s1Content", "s1Teacher", "s1Student",
                             "s2Content", "s2Teacher", "s2Student",
@@ -1135,7 +1443,6 @@
             };
 
             const apiKey = "";
-            // Attempt Gemini 4 Hydrogen endpoint first, then fallback to runtime Gemini endpoint if needed
             const endpoints = [
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
@@ -1157,10 +1464,38 @@
             }
 
             if (!generatedData) {
-                generatedData = buildLocalFallbackLesson(grade, subject, title, methodObj);
-                showToast('បានបង្កើតគំរូកិច្ចតែងការតាមវិធីសាស្ត្រដែលបានជ្រើសរើស!', 'info');
+                const heuristic = recommendMethodHeuristically(subject, title, subLessons);
+                const chosenKey = autoSelectMethod ? heuristic.key : currentMethodKey;
+                const chosenObj = PEDAGOGICAL_METHODS[chosenKey] || currentMethodObj;
+                generatedData = buildLocalFallbackLesson(grade, subject, title || 'មេរៀនពីឯកសារ', chosenObj);
+                generatedData.recommendedMethodKey = chosenKey;
+                generatedData.recommendationReason = heuristic.reason;
+                showToast('បានវិភាគ និងបង្កើតគំរូកិច្ចតែងការតាមវិធីសាស្ត្រសមស្រប!', 'info');
             } else {
-                showToast('Gemini 4 Hydrogen បានបង្កើតកិច្ចតែងការរួចរាល់!', 'success');
+                showToast('AI បានវិភាគឯកសារ និងបង្កើតកិច្ចតែងការរួចរាល់!', 'success');
+            }
+
+            // Apply AI-recommended method if autoSelectMethod is enabled
+            const finalMethodKey = (autoSelectMethod && PEDAGOGICAL_METHODS[generatedData.recommendedMethodKey])
+                ? generatedData.recommendedMethodKey
+                : currentMethodKey;
+
+            document.getElementById('teachingMethod').value = finalMethodKey;
+            const finalMethodObj = PEDAGOGICAL_METHODS[finalMethodKey];
+            if (finalMethodObj) {
+                document.getElementById('methodHintBox').innerHTML = `<span class="font-bold">លំនាំ៖</span> ${finalMethodObj.description}`;
+            }
+            displayMethodRecommendation(finalMethodKey, generatedData.recommendationReason);
+
+            // Auto-fill detected chapter/title/sublessons if extracted from uploaded files or empty
+            if (generatedData.detectedChapter && (!chapter || uploadedLessonFiles.length > 0)) {
+                document.getElementById('chapterInput').value = generatedData.detectedChapter;
+            }
+            if (generatedData.detectedLessonTitle && (!title || uploadedLessonFiles.length > 0)) {
+                document.getElementById('lessonTitleInput').value = generatedData.detectedLessonTitle;
+            }
+            if (generatedData.detectedSubLessons && (!subLessons || uploadedLessonFiles.length > 0)) {
+                document.getElementById('subLessonsInput').value = generatedData.detectedSubLessons;
             }
 
             // Populate form fields
@@ -1179,7 +1514,7 @@
 
             btn.disabled = false;
             btn.classList.remove('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = 'បង្កើតកិច្ចតែងការដោយ Gemini 4 Hydrogen';
+            btnText.textContent = 'វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI';
             btnIcon.classList.remove('animate-spin-fast');
         }
 
@@ -1457,6 +1792,8 @@
         // =========================================================================
         // 7. INITIALIZATION
         // =========================================================================
+        // 7. INITIALIZATION & DRAG-AND-DROP SUPPORT
+        // =========================================================================
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
             const yyyy = today.getFullYear();
@@ -1466,6 +1803,30 @@
             updateKhmerLunarDate();
             updateSavedCount();
             syncPreview();
+
+            // Enable Drag-and-Drop on fileDropZone
+            const dropZone = document.getElementById('fileDropZone');
+            if (dropZone) {
+                ['dragenter', 'dragover'].forEach(evtName => {
+                    dropZone.addEventListener(evtName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropZone.classList.add('bg-indigo-100', 'border-indigo-500');
+                    });
+                });
+                ['dragleave', 'drop'].forEach(evtName => {
+                    dropZone.addEventListener(evtName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropZone.classList.remove('bg-indigo-100', 'border-indigo-500');
+                    });
+                });
+                dropZone.addEventListener('drop', async (e) => {
+                    if (e.dataTransfer?.files?.length) {
+                        await processSelectedFiles(e.dataTransfer.files);
+                    }
+                });
+            }
         });
     </script>
 </body>
