@@ -374,12 +374,20 @@
                         </div>
 
                         <!-- AI Pedagogical Recommendation Card -->
-                        <div id="aiRecommendationCard" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1">
+                        <div id="aiRecommendationCard" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1.5">
                             <div class="font-bold text-emerald-900 flex items-center gap-1.5">
                                 <span>💡</span>
                                 <span id="aiRecommendationTitle">វិធីសាស្ត្រណែនាំ៖</span>
                             </div>
                             <p id="aiRecommendationReason" class="text-[11px] leading-relaxed text-emerald-800"></p>
+                            <!-- NEW: Pacing & Lesson Scope Analysis for 1h vs 2h -->
+                            <div id="aiPacingBox" class="hidden pt-1.5 border-t border-emerald-200/80 space-y-0.5">
+                                <div class="font-bold text-indigo-950 flex items-center gap-1">
+                                    <span>⏱️</span>
+                                    <span id="aiPacingTitle">ការវិភាគទំហំមេរៀនតាមរយៈពេលសិក្សា៖</span>
+                                </div>
+                                <p id="aiPacingReason" class="text-[11px] leading-relaxed text-slate-800"></p>
+                            </div>
                         </div>
 
                         <!-- Main AI Generate Button -->
@@ -595,7 +603,7 @@
 
                 <!-- High School Name (Left) -->
                 <div class="text-left text-[12.5px] mb-2">
-                    <div class="font-moul text-[12.5px]" id="prevSchool">វិទ្យាល័យ ព្រះស៊ីសុវត្ថិ</div>
+                    <div class="font-moul text-[12.5px]" id="prevSchool">វិទ្យាល័យ ស្រីសន្ធរ</div>
                 </div>
 
                 <!-- Document Title -->
@@ -738,7 +746,7 @@
                 <div class="mt-6 grid grid-cols-2 gap-4 text-[12.5px] leading-relaxed">
                     <div class="text-center pt-4">
                         <div>បានឃើញ និងឯកភាព</div>
-                        <div class="font-moul text-[12px] mt-0.5" id="prevPrincipal">នាយកវិទ្យាល័យ</div>
+                        <div class="font-moul text-[12px] mt-0.5" id="prevPrincipal">នាយកសាលា</div>
                         <div class="h-14"></div>
                     </div>
                     <div class="text-center">
@@ -746,7 +754,7 @@
                         <div id="prevSolarDateText">ធ្វើនៅរាជធានីភ្នំពេញ ថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦</div>
                         <div class="font-moul text-[12px] mt-0.5">គ្រូបង្រៀន</div>
                         <div class="h-12"></div>
-                        <div class="font-bold" id="prevTeacher">លោកគ្រូ សុខ វិបុល</div>
+                        <div class="font-bold" id="prevTeacher">លោកគ្រូ រ៉ាន កក្កដា</div>
                     </div>
                 </div>
 
@@ -957,42 +965,38 @@
                 label: 'យុទ្ធវិធី K-W-L (ដឹងស្រាប់ - ចង់ដឹង - បានរៀន)',
                 description: 'ផ្សារភ្ជាប់ចំណេះដឹងចាស់ (Know) ➔ កំណត់សំណួរចង់ដឹង (Want to know) ➔ សង្ខេបអ្វីដែលបានរៀន (Learned)។',
                 step3Template: {
-                    content: 'តារាង K-W-L និងខ្លឹមសារមេរៀនសំខាន់ៗឆ្លើយតបនឹងសំណួររបស់សិស្ស។',
-                    teacher: '១. ជួរ K (ដឹងស្រាប់)៖ សួរសិស្សឱ្យរៀបរាប់អ្វីដែលពួកគេធ្លាប់ដឹងទាក់ទងនឹងប្រធានបទ។\n២. ជួរ W (ចង់ដឹង)៖ ឱ្យសិស្សសរសេរសំណួរដែលចង់ដឹង រួចណែនាំឱ្យអានឯកសារស្រាវជ្រាវ។\n៣. ជួរ L (បានរៀន)៖ សម្របសម្រួលសិស្សបំពេញចំណេះដឹងថ្មីដែលរកឃើញ និងបូកសរុបមេរៀន។',
-                    student: '១. បញ្ចេញមតិអំពីចំណេះដឹងដែលមានស្រាប់ចូលក្នុងជួរ K។\n២. បង្កើតសំណួរក្នុងជួរ W និងអានសៀវភៅពុម្ពដើម្បីស្វែងរកចម្លើយ។\n៣. សរសេរសេចក្តីសង្ខេបអ្វីដែលបានរៀនចូលក្នុងជួរ L និងកត់ត្រាមេរៀន។'
+                    content: 'តារាង K-W-L និងខ្លឹមសារមេរៀនសំខាន់ៗដែលសិស្សបានរកឃើញ។',
+                    teacher: '១. Know (ដឹងស្រាប់)៖ សួរសិស្សថាតើពួកគេធ្លាប់ដឹងអ្វីខ្លះអំពីប្រធានបទមេរៀននេះ។\n២. Want to know (ចង់ដឹង)៖ ឱ្យសិស្សបង្កើតសំណួរដែលចង់ដឹង និងស្រាវជ្រាវក្នុងសៀវភៅពុម្ព។\n៣. Learned (បានរៀន)៖ សម្របសម្រួលសិស្សបំពេញចម្លើយដែលរកឃើញ និងបូកសរុបមេរៀន។',
+                    student: '១. រំលឹក និងប្រាប់ចំណេះដឹងដែលមានស្រាប់ចូលក្នុងជួរ K។\n២. សរសេរសំណួរចង់ដឹងចូលក្នុងជួរ W និងអានឯកសារស្វែងរកចម្លើយ។\n៣. កត់ត្រាចំណេះដឹងថ្មីចូលក្នុងជួរ L និងឡើងបង្ហាញ។'
                 }
             },
             conceptmap: {
                 label: 'យុទ្ធវិធីផែនទីគំនិត (Concept Mapping & Graphic Organizers)',
-                description: 'ជួយឱ្យសិស្សចេះសំយោគ និងរៀបចំទំនាក់ទំនងខ្លឹមសារមេរៀនជាដ្យាក្រាម ឬផែនទីគំនិតងាយចងចាំ។',
+                description: 'រៀបចំទំនាក់ទំនងគោលគំនិត និយមន័យ និងរូបមន្តជាដ្យាក្រាម ឬផែនទីគំនិតងាយយល់ និងចងចាំ។',
                 step3Template: {
-                    content: 'រចនាសម្ព័ន្ធផែនទីគំនិត (Concept Map) និងខ្លឹមសារលម្អិតតាមមែកធាងនីមួយៗ។',
-                    teacher: '១. បង្ហាញគំនិតមេ (Central Concept) នៅកណ្តាលក្តារខៀន។\n២. ចែកក្រុមសិស្សឱ្យអានមេរៀន រួចគូសផែនទីគំនិតបង្ហាញទំនាក់ទំនងរវាងមែកធាងរងនីមួយៗ។\n៣. ឱ្យក្រុមនីមួយៗបង្ហាញផែនទីគំនិត រួចគ្រូកែសម្រួល និងសង្ខេបខ្លឹមសារផ្លូវការ។',
-                    student: '១. សង្កេតគំនិតមេ និងស្តាប់ការណែនាំអំពីការបង្កើតផែនទីគំនិត។\n២. អានឯកសារ សំយោគពាក្យគន្លឹះ និងគូសផែនទីគំនិតលើក្រដាសផ្ទាំងធំ។\n៣. បង្ហាញ និងពន្យល់ទំនាក់ទំនងនៃផែនទីគំនិតរបស់ក្រុមខ្លួន។'
+                    content: 'ផែនទីគំនិត (Concept Map) បង្ហាញពីទំនាក់ទំនងរវាងគោលគំនិតសំខាន់ៗនៃមេរៀន។',
+                    teacher: '១. បង្ហាញគោលគំនិតមេ (Central Concept) នៅកណ្តាលក្តារខៀន។\n២. ចែកក្រុមឱ្យសិស្សអានមេរៀន រួចគូរមែកធាងភ្ជាប់និយមន័យ លក្ខណៈ និងរូបមន្តលើផ្ទាំងក្រដាសធំ។\n៣. ពិនិត្យ កែលម្អផែនទីគំនិតរបស់ក្រុមនីមួយៗ និងសង្ខេបមេរៀន។',
+                    student: '១. កំណត់ពាក្យគន្លឹះ និងគោលគំនិតរងចេញពីមេរៀន។\n២. សហការគូរផែនទីគំនិតបង្ហាញទំនាក់ទំនងមេរៀនយ៉ាងមានរបៀប។\n៣. ឡើងពន្យល់ផែនទីគំនិតរបស់ក្រុម និងកត់ត្រាចូលសៀវភៅ។'
                 }
             },
             gallerywalk: {
                 label: 'យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)',
-                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរទស្សនា វិភាគ និងផ្តល់យោបល់លើស្នាដៃក្រុមដទៃ។',
+                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរពិនិត្យ និងផ្តល់មតិកែលម្អឆ្លងក្រុម ➔ បូកសរុបខ្លឹមសាររួម។',
                 step3Template: {
-                    content: 'ខ្លឹមសារមេរៀនបែងចែកតាមស្ថានីយ (Stations) នីមួយៗក្នុងថ្នាក់រៀន។',
-                    teacher: '១. បែងចែកសិស្សជាក្រុម និងផ្តល់ប្រធានបទរងឱ្យសរសេរលើក្រដាសផ្ទាំងធំ រួចបិទតាមជញ្ជាំង។\n២. ណែនាំក្រុមនីមួយៗឱ្យដើរពិនិត្យតាមស្ថានីយ (Gallery Walk) កត់ត្រា និងសរសេរមតិយោបល់។\n៣. ឱ្យក្រុមដើមពិនិត្យមតិកែលម្អ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនទាំងមូល។',
-                    student: '១. ពិភាក្សាក្នុងក្រុម សរសេរលទ្ធផលលើក្រដាសផ្ទាំងធំ និងបិទតាមស្ថានីយ។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមសញ្ញាគ្រូ កត់ត្រា និងផ្តល់យោបល់ស្ថាបនា។\n៣. ត្រឡប់មកស្ថានីយខ្លួនវិញ បកស្រាយបន្ថែម និងកត់ត្រាមេរៀនសង្ខេប។'
+                    content: 'ប្រធានបទពិភាក្សាតាមស្ថានីយក្រុម និងខ្លឹមសារសំយោគនៃមេរៀន។',
+                    teacher: '១. បែងចែកក្រុម និងប្រធានបទរង ឱ្យសិស្សសរសេរលទ្ធផលលើផ្ទាំងក្រដាសធំ (Poster)។\n២. រៀបចំ Gallery Walk៖ ឱ្យក្រុមនីមួយៗដើរពិនិត្យស្នាដៃក្រុមផ្សេង និងបិទក្រដាសមតិយោបល់។\n៣. ឱ្យក្រុមដើមឆ្លើយតបមតិយោបល់ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។',
+                    student: '១. ពិភាក្សា និងរៀបចំផ្ទាំងបង្ហាញលទ្ធផលរបស់ក្រុម។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមស្ថានីយ កត់ត្រា និងផ្តល់មតិកែលម្អ។\n៣. បកស្រាយបំភ្លឺសំណួររបស់មិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
                 }
             }
         };
 
         // =========================================================================
-        // 3. STATE MANAGEMENT, FILE UPLOADS & LOCAL STORAGE
+        // 3. APPLICATION STATE & API KEY MANAGEMENT
         // =========================================================================
-        const STORAGE_KEY = 'moeys_highschool_lesson_plans_v3';
-        const API_KEY_STORAGE = 'kakada_gemini_api_key';
+        const STORAGE_KEY = 'khmer_highschool_lesson_plans_v3';
+        const API_KEY_STORAGE = 'khmer_lp_gemini_api_key';
         let currentLessonId = null;
-        let uploadedLessonFiles = []; // Array of { id, name, mimeType, base64Data, sizeText, extractedText, pageImages }
-
-        function getActiveApiKey() {
-            return (document.getElementById('geminiApiKeyInput')?.value || localStorage.getItem(API_KEY_STORAGE) || '').trim();
-        }
+        let uploadedLessonFiles = [];
 
         function toggleApiKeyPanel() {
             const panel = document.getElementById('apiKeyPanel');
@@ -1000,14 +1004,75 @@
         }
 
         function saveGeminiApiKey() {
-            const val = (document.getElementById('geminiApiKeyInput')?.value || '').trim();
+            const input = document.getElementById('geminiApiKeyInput');
+            const val = (input?.value || '').trim();
             if (val) {
                 localStorage.setItem(API_KEY_STORAGE, val);
-                showToast('បានរក្សាទុក API Key រួចរាល់!', 'success');
-                document.getElementById('apiKeyPanel')?.classList.add('hidden');
+                showToast('បានរក្សាទុក Google Gemini API Key រួចរាល់!', 'success');
             } else {
                 localStorage.removeItem(API_KEY_STORAGE);
-                showToast('បានលុប API Key!', 'info');
+                showToast('បានលុប API Key ចេញ!', 'info');
+            }
+            const panel = document.getElementById('apiKeyPanel');
+            if (panel) panel.classList.add('hidden');
+        }
+
+        function getActiveApiKey() {
+            return (localStorage.getItem(API_KEY_STORAGE) || '').trim();
+        }
+
+        function showAiRecommendation(methodKey, reason, pacingTitle = '', pacingReason = '') {
+            const card = document.getElementById('aiRecommendationCard');
+            const titleEl = document.getElementById('aiRecommendationTitle');
+            const reasonEl = document.getElementById('aiRecommendationReason');
+            const pacingBox = document.getElementById('aiPacingBox');
+            const pacingTitleEl = document.getElementById('aiPacingTitle');
+            const pacingReasonEl = document.getElementById('aiPacingReason');
+            const methodObj = PEDAGOGICAL_METHODS[methodKey];
+            if (!card || !titleEl || !reasonEl || !methodObj) return;
+
+            titleEl.textContent = `វិធីសាស្ត្រណែនាំ៖ ${methodObj.label}`;
+            reasonEl.textContent = reason || methodObj.description;
+
+            if (pacingBox && pacingTitleEl && pacingReasonEl) {
+                if (pacingTitle || pacingReason) {
+                    pacingTitleEl.textContent = pacingTitle || 'ការវិភាគទំហំមេរៀនតាមរយៈពេលសិក្សា៖';
+                    pacingReasonEl.textContent = pacingReason;
+                    pacingBox.classList.remove('hidden');
+                } else {
+                    pacingBox.classList.add('hidden');
+                }
+            }
+
+            card.classList.remove('hidden');
+        }
+
+        function inferLessonPacingLocally(duration, subLessons, title) {
+            const isOneHour = String(duration || '').startsWith('៥០');
+            const subLines = String(subLessons || '')
+                .split('\n')
+                .map(l => l.trim())
+                .filter(Boolean);
+            const totalSubs = subLines.length;
+
+            if (isOneHour) {
+                if (totalSubs >= 3) {
+                    const selected = subLines.slice(0, 2).join(' និង ');
+                    return {
+                        pacingTitle: `ការវិភាគពេលវេលា (៥០ នាទី / ១ ម៉ោងសិក្សា)៖ គួរបង្រៀនត្រឹម ១ ទៅ ២ ចំណុចគោល`,
+                        pacingReason: `មេរៀន "${title}" មានចំណងជើងរងសរុប ${toKhmerNumerals(totalSubs)} ចំណុច ដែលច្រើនពេកសម្រាប់រយៈពេល ៥០ នាទី (ជំហានទី៣ មានត្រឹម ៣០ នាទី)។ ដើម្បីសម្រេចគោលបំណងមេរៀនបានច្បាស់លាស់ គ្រូគួរលើកយកតែ ១ ឬ ២ ចំណុចដំបូង (${selected}) មកបង្រៀនសិន ហើយទុកចំណុចនៅសល់សម្រាប់ម៉ោងសិក្សាបន្ទាប់។`
+                    };
+                }
+                return {
+                    pacingTitle: `ការវិភាគពេលវេលា (៥០ នាទី / ១ ម៉ោងសិក្សា)៖ សមស្របសម្រាប់ ១ ទៅ ២ ចំណុច`,
+                    pacingReason: `ក្នុងរយៈពេល ៥០ នាទី (ជំហានទី៣ មាន ៣០ នាទី) ទំហំមេរៀន "${title}" (${toKhmerNumerals(Math.max(1, totalSubs))} ចំណុច) គឺសមល្មមអាចឱ្យសិស្សចាប់យកខ្លឹមសារគោល និងអនុវត្តលំហាត់ខ្លីៗបានទាន់ពេលវេលា។`
+                };
+            } else {
+                const countToTeach = totalSubs > 0 ? Math.min(totalSubs, 3) : 2;
+                return {
+                    pacingTitle: `ការវិភាគពេលវេលា (១០០ នាទី / ២ ម៉ោងសិក្សា)៖ អាចបង្រៀនបាន ${toKhmerNumerals(countToTeach)} ទៅ ${toKhmerNumerals(Math.max(countToTeach, 3))} ចំណុច`,
+                    pacingReason: `ដោយសារមានរយៈពេល ១០០ នាទីពេញ (ជំហានទី៣ មានដល់ទៅ ៦៥ នាទី) គ្រូអាចគ្របដណ្តប់ខ្លឹមសារមេរៀន "${title}" បានចំនួន ${toKhmerNumerals(countToTeach)} ចំណុច ព្រមទាំងមានពេលគ្រប់គ្រាន់សម្រាប់ការពិភាក្សាក្រុម និងដោះស្រាយលំហាត់អនុវត្តស៊ីជម្រៅ។`
+                };
             }
         }
 
@@ -1709,13 +1774,14 @@ ${methodListDesc}`
                 .join('\n');
 
             const systemPrompt = `អ្នកគឺជាគ្រូឧទ្ទេស និងអ្នកជំនាញគរុកោសល្យកម្រិតវិទ្យាល័យ (ថ្នាក់ទី១០ ទី១១ ទី១២) នៃក្រសួងអប់រំ យុវជន និងកីឡា កម្ពុជា។
-ភារកិច្ចរបស់អ្នកមាន ៣ ដំណាក់កាលសំខាន់ៗ៖
-១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីអត្ថបទ PDF និងរូបភាពទំព័រសៀវភៅដែលបានភ្ជាប់ (ប្រសិនបើមាន) ដើម្បីវិភាគ និងកំណត់ កម្រិតថ្នាក់ (detectedGrade) ឈ្មោះមុខវិជ្ជា (detectedSubject) ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
-២. វិភាគលក្ខណៈមេរៀន និងកំណត់វិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនសមស្របបំផុត (recommendedMethodKey) ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យយ៉ាងច្បាស់ (recommendationReason) ជាភាសាខ្មែរ។
+ភារកិច្ចរបស់អ្នកមាន ៤ ដំណាក់កាលសំខាន់ៗ៖
+១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីអត្ថបទ PDF និងរូបភាពទំព័រសៀវភៅដែលបានភ្ជាប់ (ប្រសិនបើមាន) ដើម្បីវិភាគ និងកំណត់ កម្រិតថ្នាក់ (detectedGrade) ឈ្មោះមុខវិជ្ជា (detectedSubject) ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត។
+២. វិភាគគោលបំណងមេរៀន និងរយៈពេលបង្រៀន (${duration}) ដើម្បីវាយតម្លៃថាតើក្នុងរយៈពេល ១ ម៉ោងសិក្សា (៥០ នាទី) ឬ ២ ម៉ោងសិក្សា (១០០ នាទី) គ្រូត្រូវបង្រៀនប៉ុន្មានចំណុច (recommendedPointsCount & pacingAnalysis) ទើបសមស្របតាមសមត្ថភាពសិស្ស និងសម្រេចគោលបំណងបានពិតប្រាកដ។ ត្រូវកំណត់វត្ថុបំណង (objKnowledge, objSkill, objAttitude) និងខ្លឹមសារជំហានទី៣ (s3Content, s3Teacher, s3Student) ឱ្យត្រូវចំនួនចំណុចដែលបានវិភាគនោះ (ឧ. បើ ៥០ នាទី ហើយមេរៀនវែង ត្រូវបង្រៀនតែ ១ ឬ ២ ចំណុចគោលប៉ុណ្ណោះ)។
+៣. វិភាគលក្ខណៈមេរៀន និងកំណត់វិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនសមស្របបំផុត (recommendedMethodKey) ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យយ៉ាងច្បាស់ (recommendationReason) ជាភាសាខ្មែរ។
 បញ្ជីកូដវិធីសាស្ត្រទាំង ១២ ដែលអាចជ្រើសរើសបាន៖
 ${methodListDescription}
 (ចំណាំ៖ ប្រសិនបើអ្នកប្រើប្រាស់មិនបានបើកការជ្រើសរើសស្វ័យប្រវត្តិទេ ត្រូវប្រើកូដ "${currentMethodKey}" ក្នុងការសរសេរជំហានទី៣ ប៉ុន្តែនៅតែផ្តល់ការវិភាគក្នុង recommendationReason)។
-៣. សរសេរកិច្ចតែងការបង្រៀនវិទ្យាល័យ ៥ ជំហានពេញលេញ ដោយក្នុង "ជំហានទី៣" ត្រូវបែងចែកសកម្មភាពគ្រូ (s3Teacher) និងសកម្មភាពសិស្ស (s3Student) ឱ្យត្រូវតាមដំណាក់កាលនៃវិធីសាស្ត្របង្រៀនដែលបានជ្រើសរើសយ៉ាងត្រឹមត្រូវ។`;
+៤. សរសេរកិច្ចតែងការបង្រៀនវិទ្យាល័យ ៥ ជំហានពេញលេញ ដោយក្នុង "ជំហានទី៣" ត្រូវបែងចែកសកម្មភាពគ្រូ (s3Teacher) និងសកម្មភាពសិស្ស (s3Student) ឱ្យត្រូវតាមដំណាក់កាលនៃវិធីសាស្ត្របង្រៀនដែលបានជ្រើសរើសយ៉ាងត្រឹមត្រូវ។`;
 
             const userParts = [
                 {
@@ -1725,7 +1791,7 @@ ${methodListDescription}
 - ជំពូកទី៖ ${chapter}
 - មេរៀនទី៖ ${title}
 - ចំណងជើងរង៖ ${subLessons}
-- រយៈពេលបង្រៀន៖ ${duration}
+- រយៈពេលបង្រៀន៖ ${duration} (សូមវិភាគគោលបំណងមេរៀនថាក្នុងរយៈពេលនេះ ត្រូវបង្រៀនប៉ុន្មានចំណុចទើបសមស្រប)
 - ការកំណត់វិធីសាស្ត្រ៖ ${autoSelectMethod ? 'ឱ្យ AI វិភាគ និងជ្រើសរើសវិធីសាស្ត្រសមស្របបំផុតដោយស្វ័យប្រវត្តិ' : `ប្រើវិធីសាស្ត្រ "${currentMethodKey}" (${PEDAGOGICAL_METHODS[currentMethodKey]?.label})`}
 ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត្ថបទ និងរូបភាពឯកសារមេរៀនភ្ជាប់មកជាមួយ សូមស្រង់ឈ្មោះមុខវិជ្ជា ចំណងជើងមេរៀន ចំណងជើងរង និងខ្លឹមសារពិតប្រាកដពីឯកសារទាំងនោះ!' : ''}`
                 },
@@ -1745,6 +1811,8 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត�
                                 enum: Object.keys(PEDAGOGICAL_METHODS)
                             },
                             recommendationReason: { type: "STRING" },
+                            recommendedPointsCount: { type: "STRING" },
+                            pacingAnalysis: { type: "STRING" },
                             detectedGrade: { type: "STRING" },
                             detectedSubject: { type: "STRING" },
                             detectedChapter: { type: "STRING" },
@@ -1772,6 +1840,7 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត�
                         },
                         required: [
                             "recommendedMethodKey", "recommendationReason",
+                            "recommendedPointsCount", "pacingAnalysis",
                             "detectedGrade", "detectedSubject",
                             "detectedChapter", "detectedLessonTitle", "detectedSubLessons",
                             "objKnowledge", "objSkill", "objAttitude", "materials",
@@ -1808,10 +1877,13 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត�
                 const localRec = autoSelectMethod
                     ? inferRecommendedMethodLocally(subject, `${title} ${pdfText.slice(0, 800)}`, subLessons)
                     : { key: currentMethodKey, reason: PEDAGOGICAL_METHODS[currentMethodKey]?.description };
+                const localPacing = inferLessonPacingLocally(duration, subLessons, title);
                 const chosenMethod = PEDAGOGICAL_METHODS[localRec.key] || PEDAGOGICAL_METHODS[currentMethodKey];
                 generatedData = buildLocalFallbackLessonFromPdfText(grade, subject, title, chosenMethod, pdfText);
                 generatedData.recommendedMethodKey = localRec.key;
                 generatedData.recommendationReason = localRec.reason;
+                generatedData.recommendedPointsCount = localPacing.pacingTitle;
+                generatedData.pacingAnalysis = localPacing.pacingReason;
             }
 
             // Apply recommended pedagogical method if auto-select is enabled
@@ -1821,9 +1893,12 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត�
 
             document.getElementById('teachingMethod').value = finalMethodKey;
             onMethodChange();
+            const fallbackPacing = inferLessonPacingLocally(duration, generatedData.detectedSubLessons || subLessons, generatedData.detectedLessonTitle || title);
             showAiRecommendation(
                 generatedData.recommendedMethodKey || finalMethodKey,
-                generatedData.recommendationReason
+                generatedData.recommendationReason,
+                generatedData.recommendedPointsCount || fallbackPacing.pacingTitle,
+                generatedData.pacingAnalysis || fallbackPacing.pacingReason
             );
 
             // Auto-fill detected grade/subject/chapter/title/sublessons if extracted from uploaded files
