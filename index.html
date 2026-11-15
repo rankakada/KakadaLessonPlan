@@ -1218,12 +1218,11 @@
                 if (file.type === 'application/pdf') {
                     await extractPdfData(file);
                 } else if (file.type.startsWith('image/')) {
-                    const dataUrl = await readFileAsDataUrl(file);
-                    const base64 = dataUrl.split(',')[1];
+                    const compressedBase64 = await compressImageFile(file, 1100, 0.78);
                     uploadedLessonFiles.push({
                         name: file.name,
-                        mimeType: file.type,
-                        base64,
+                        mimeType: 'image/jpeg',
+                        base64: compressedBase64,
                         isPdf: false
                     });
                 }
@@ -1234,10 +1233,33 @@
             }
         }
 
-        function readFileAsDataUrl(file) {
+        function compressImageFile(file, maxDim = 1100, quality = 0.78) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) {
+                                h = Math.round((h * maxDim) / w);
+                                w = maxDim;
+                            } else {
+                                w = Math.round((w * maxDim) / h);
+                                h = maxDim;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                    img.src = reader.result;
+                };
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
@@ -1295,13 +1317,14 @@
                 if (window.pdfjsLib) {
                     const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                     totalPages = pdf.numPages;
-                    const maxPages = Math.min(totalPages, 10);
+                    const maxPages = Math.min(totalPages, 8);
 
-                    for (let p = 1; p <= maxPages; p++) {
+                    // Process pages in parallel for instant text extraction & fast thumbnail rendering
+                    const pageIndices = Array.from({ length: maxPages }, (_, i) => i + 1);
+                    const pageResults = await Promise.all(pageIndices.map(async (p) => {
                         const page = await pdf.getPage(p);
                         const textContent = await page.getTextContent();
 
-                        // Reconstruct lines using Y-coordinate grouping so Khmer words stay intact
                         let lines = [];
                         let currentLine = [];
                         let lastY = null;
@@ -1315,22 +1338,29 @@
                             if (y !== null) lastY = y;
                         }
                         if (currentLine.length > 0) lines.push(currentLine.join(''));
-
                         const cleanedPageStr = normalizeExtractedKhmerText(lines.join('\n'));
-                        if (cleanedPageStr.trim()) {
-                            extractedText += `--- ទំព័រទី ${toKhmerNumerals(p)} ---\n${cleanedPageStr}\n`;
-                        }
 
-                        // Render high-resolution page images (up to 4 pages) so Gemini Vision reads exact Khmer glyphs
-                        if (p <= 4) {
-                            const viewport = page.getViewport({ scale: 2.0 });
+                        // Render first 2 pages at fast 1.35x scale for rapid AI Vision OCR
+                        let imgBase64 = null;
+                        if (p <= 2) {
+                            const viewport = page.getViewport({ scale: 1.35 });
                             const canvas = document.createElement('canvas');
                             canvas.width = viewport.width;
                             canvas.height = viewport.height;
                             const ctx = canvas.getContext('2d');
                             await page.render({ canvasContext: ctx, viewport }).promise;
-                            const imgBase64 = canvas.toDataURL('image/jpeg', 0.88).split(',')[1];
-                            pageImages.push(imgBase64);
+                            imgBase64 = canvas.toDataURL('image/jpeg', 0.72).split(',')[1];
+                        }
+
+                        return { p, cleanedPageStr, imgBase64 };
+                    }));
+
+                    for (const res of pageResults) {
+                        if (res.cleanedPageStr.trim()) {
+                            extractedText += `--- ទំព័រទី ${toKhmerNumerals(res.p)} ---\n${res.cleanedPageStr}\n`;
+                        }
+                        if (res.imgBase64) {
+                            pageImages.push(res.imgBase64);
                         }
                     }
                 }
@@ -1359,12 +1389,7 @@
                     }
                 }
 
-                // Automatically refine Khmer OCR spelling with Gemini Vision if API key is configured
-                if (getActiveApiKey() && pageImages.length > 0) {
-                    await fixExtractedPdfKhmerSpelling(true);
-                } else {
-                    showToast(`បានអានឯកសារ PDF "${file.name}" និងតម្រៀបអក្ខរាវិរុទ្ធខ្មែររួចរាល់!`, 'success');
-                }
+                showToast(`បានអានឯកសារ PDF "${file.name}" រួចរាល់!`, 'success');
             } catch (err) {
                 showToast('មានបញ្ហាក្នុងការអាន PDF សូមសាកល្បងម្តងទៀត!', 'error');
             }
@@ -1381,7 +1406,7 @@
             if (!apiKey) {
                 pdfBox.value = normalizeExtractedKhmerText(currentText);
                 if (!silent) {
-                    showToast('បានតម្រៀបស្រៈ និងជើងអក្សរខ្មែរ! (បញ្ចូល API Key ដើម្បីឱ្យ AI ពិនិត្យអក្ខរាវិរុទ្ធពីរូបភាព PDF ១០០%)', 'info');
+                    showToast('បានតម្រៀបស្រៈ និងជើងអក្សរខ្មែរ! (បញ្ចូល API Key ដើម្បីឱ្យ AI ពិនិត្យអក្ខរាវិរុទ្ធ ១០០%)', 'info');
                 }
                 return;
             }
@@ -1389,14 +1414,14 @@
             const origBtnText = btn ? btn.textContent : '';
             if (btn) {
                 btn.disabled = true;
-                btn.textContent = '⏳ កំពុងកែអក្ខរាវិរុទ្ធ...';
+                btn.textContent = '⏳ កំពុងកែ...';
             }
 
             try {
                 const imageParts = [];
                 for (const f of uploadedLessonFiles) {
                     if (f.isPdf && Array.isArray(f.pageImages)) {
-                        for (const imgB64 of f.pageImages.slice(0, 4)) {
+                        for (const imgB64 of f.pageImages.slice(0, 2)) {
                             imageParts.push({ inlineData: { mimeType: 'image/jpeg', data: imgB64 } });
                         }
                     }
@@ -1405,39 +1430,30 @@
                 const payload = {
                     systemInstruction: {
                         parts: [{
-                            text: `អ្នកគឺជាអ្នកជំនាញអក្ខរាវិរុទ្ធភាសាខ្មែរ (វចនានុក្រមសម្តេចព្រះសង្ឃរាជ ជួន ណាត) និង OCR ឯកសារសៀវភៅពុម្ពកម្ពុជា។
-ចូរអានរូបភាពទំព័រ PDF ដែលបានភ្ជាប់ និងផ្ទៀងផ្ទាត់ជាមួយអត្ថបទបឋម រួចសរសេរអត្ថបទមេរៀនទាំងអស់ឡើងវិញជាភាសាខ្មែរ Unicode ដែលត្រឹមត្រូវតាមអក្ខរាវិរុទ្ធ ១០០% (ជួសជុលជើងអក្សរ ស្រៈ និងពាក្យដែលដាច់ ឬខុសដោយសារ PDF)។ ត្រូវរក្សាខ្លឹមសារដើមទាំងស្រុង ដោយមិនបាច់បន្ថែមការពន្យល់ក្រៅប្រធានបទឡើយ។`
+                            text: `អ្នកគឺជាអ្នកជំនាញអក្ខរាវិរុទ្ធភាសាខ្មែរ។ ចូរពិនិត្យរូបភាពទំព័រ PDF និងអត្ថបទបឋម រួចសរសេរអត្ថបទមេរៀនឡើងវិញជាភាសាខ្មែរ Unicode ត្រឹមត្រូវតាមអក្ខរាវិរុទ្ធ ១០០% ដោយរក្សាខ្លឹមសារដើមទាំងស្រុង។`
                         }]
                     },
                     contents: [{
                         role: 'user',
                         parts: [
-                            { text: `ចូរស្រង់ និងកែអក្ខរាវិរុទ្ធអត្ថបទខ្មែរចេញពីទំព័រ PDF នេះឱ្យបានត្រឹមត្រូវ៖\n\nអត្ថបទបឋម៖\n${currentText.slice(0, 12000)}` },
+                            { text: `កែអក្ខរាវិរុទ្ធអត្ថបទខ្មែរនេះឱ្យបានត្រឹមត្រូវ៖\n${currentText.slice(0, 10000)}` },
                             ...imageParts
                         ]
                     }]
                 };
 
-                const endpoints = [
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
-                ];
-
-                for (const url of endpoints) {
-                    try {
-                        const res = await fetchWithBackoff(url, payload, 1);
-                        const corrected = res?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (corrected && corrected.trim()) {
-                            pdfBox.value = corrected.trim();
-                            // Update stored extractedText on PDF file objects
-                            uploadedLessonFiles.forEach(f => {
-                                if (f.isPdf) f.extractedText = corrected.trim();
-                            });
-                            showToast('AI បានពិនិត្យ និងកែអក្ខរាវិរុទ្ធអត្ថបទ PDF រួចរាល់ ១០០%!', 'success');
-                            break;
-                        }
-                    } catch (_) {}
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const res = await fetchWithBackoff(url, payload, 1);
+                const corrected = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (corrected && corrected.trim()) {
+                    pdfBox.value = corrected.trim();
+                    uploadedLessonFiles.forEach(f => {
+                        if (f.isPdf) f.extractedText = corrected.trim();
+                    });
+                    if (!silent) showToast('AI បានកែអក្ខរាវិរុទ្ធអត្ថបទ PDF រួចរាល់!', 'success');
                 }
+            } catch (_) {
+                if (!silent) showToast('មិនអាចភ្ជាប់ AI បានទេ សូមពិនិត្យ API Key!', 'error');
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -1565,30 +1581,38 @@
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-amber-900 border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>កំពុងស្កេនស្រង់ព័ត៌មាន...</span>`;
+                btn.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-amber-900 border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>កំពុងស្កេនរហ័ស...</span>`;
             }
 
-            const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
+            const pdfBox = document.getElementById('extractedPdfTextBox');
+            const pdfText = (pdfBox?.value || '').trim();
             const apiKey = getActiveApiKey();
             let detected = null;
+
+            // Instant local regex extraction first so UI updates immediately
+            if (pdfText) {
+                detected = parseMetadataLocallyFromText(pdfText);
+                if (detected) applyDetectedLessonMetadata(detected);
+            }
 
             if (apiKey) {
                 const payload = {
                     systemInstruction: {
                         parts: [{
-                            text: `អ្នកគឺជាអ្នកជំនាញអានសៀវភៅពុម្ពវិទ្យាល័យកម្ពុជា។ ចូរស្រង់ព័ត៌មានពីរូបភាព ឬអត្ថបទ PDF ខាងក្រោមជា JSON៖
+                            text: `អ្នកគឺជាអ្នកជំនាញអានសៀវភៅពុម្ពវិទ្យាល័យកម្ពុជា និងអក្ខរាវិរុទ្ធខ្មែរ។ ចូរស្រង់ព័ត៌មានពីឯកសារមេរៀន និងកែអក្ខរាវិរុទ្ធអត្ថបទមេរៀនឱ្យត្រឹមត្រូវជា JSON តែមួយ៖
 - grade: កម្រិតថ្នាក់ (ឧ. ទី១០, ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ), ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ))
-- subject: ឈ្មោះមុខវិជ្ជា (ឧ. គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិវិទ្យា, ភូមិវិទ្យា...)
-- chapterNum: លេខជំពូកជាលេខខ្មែរ (ឧ. ២)
+- subject: ឈ្មោះមុខវិជ្ជា (គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិវិទ្យា, ភូមិវិទ្យា...)
+- chapterNum: លេខជំពូកជាលេខខ្មែរ
 - chapterTitle: ឈ្មោះជំពូក
-- lessonNum: លេខមេរៀនជាលេខខ្មែរ (ឧ. ១)
+- lessonNum: លេខមេរៀនជាលេខខ្មែរ
 - lessonTitle: ចំណងជើងមេរៀន
-- subLessons: ចំណងជើងរងទាំងអស់ក្នុងមេរៀន តម្រៀបតាមលំដាប់ (១. ... ២. ...)`
+- subLessons: ចំណងជើងរងទាំងអស់ក្នុងមេរៀន (១. ... ២. ...)
+- cleanKhmerText: អត្ថបទខ្លឹមសារមេរៀនសង្ខេបដែលបានកែអក្ខរាវិរុទ្ធខ្មែរត្រឹមត្រូវ ១០០%`
                         }]
                     },
                     contents: [{
                         role: 'user',
-                        parts: [{ text: 'ចូរស្រង់កម្រិតថ្នាក់ មុខវិជ្ជា ជំពូកទី មេរៀនទី និងចំណងជើងរងទាំងអស់ចេញពីឯកសារមេរៀននេះ៖' }, ...buildAttachedLessonParts()]
+                        parts: [{ text: 'ស្រង់ព័ត៌មានមេរៀន និងកែអក្ខរាវិរុទ្ធអត្ថបទមេរៀននេះ៖' }, ...buildAttachedLessonParts()]
                     }],
                     generationConfig: {
                         responseMimeType: "application/json",
@@ -1601,37 +1625,34 @@
                                 chapterTitle: { type: "STRING" },
                                 lessonNum: { type: "STRING" },
                                 lessonTitle: { type: "STRING" },
-                                subLessons: { type: "STRING" }
+                                subLessons: { type: "STRING" },
+                                cleanKhmerText: { type: "STRING" }
                             }
                         }
                     }
                 };
 
-                const endpoints = [
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
-                ];
-                for (const url of endpoints) {
-                    try {
-                        const res = await fetchWithBackoff(url, payload, 1);
-                        const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (raw) {
-                            detected = JSON.parse(raw);
-                            break;
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                    const res = await fetchWithBackoff(url, payload, 1);
+                    const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (raw) {
+                        detected = JSON.parse(raw);
+                        if (detected.cleanKhmerText && pdfBox) {
+                            pdfBox.value = detected.cleanKhmerText;
+                            uploadedLessonFiles.forEach(f => {
+                                if (f.isPdf) f.extractedText = detected.cleanKhmerText;
+                            });
                         }
-                    } catch (_) {}
-                }
-            }
-
-            if (!detected && pdfText) {
-                detected = parseMetadataLocallyFromText(pdfText);
+                    }
+                } catch (_) {}
             }
 
             if (detected) {
                 applyDetectedLessonMetadata(detected);
-                showToast('បានស្រង់ព័ត៌មានមុខវិជ្ជា និងចំណងជើងមេរៀនចេញពីឯកសាររួចរាល់!', 'success');
+                showToast('បានស្កេន និងស្រង់ព័ត៌មានមេរៀនរួចរាល់យ៉ាងរហ័ស!', 'success');
             } else {
-                showToast('សូមបញ្ចូល API Key ដើម្បីស្កេនរូបភាព ឬពិនិត្យអត្ថបទ PDF!', 'info');
+                showToast('សូមបញ្ចូល API Key ដើម្បីឱ្យ AI ស្កេនរូបភាព ឬ PDF!', 'info');
             }
 
             if (btn) {
@@ -2193,21 +2214,14 @@
                     }
                 };
 
-                const endpoints = [
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
-                ];
-
-                for (const url of endpoints) {
-                    try {
-                        const res = await fetchWithBackoff(url, payload, 1);
-                        const rawText = res?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (rawText) {
-                            generated = JSON.parse(rawText);
-                            break;
-                        }
-                    } catch (_) {}
-                }
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                try {
+                    const res = await fetchWithBackoff(url, payload, 1);
+                    const rawText = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (rawText) {
+                        generated = JSON.parse(rawText);
+                    }
+                } catch (_) {}
             }
 
             if (!generated) {
@@ -2258,9 +2272,122 @@
         }
 
         function appendAiChatBubble(role, text) {
-// ... existing code ... -->
-            sendBtn.disabled = false;
-            sendBtn.textContent = 'ផ្ញើ';
+            const box = document.getElementById('aiChatMessages');
+            if (!box) return;
+            if (aiChatHistory.length === 0) {
+                box.innerHTML = '';
+            }
+            const div = document.createElement('div');
+            div.className = role === 'user'
+                ? 'p-2 rounded-lg bg-indigo-600 text-white ml-6 text-[11px] leading-relaxed'
+                : 'p-2 rounded-lg bg-slate-100 text-slate-800 mr-6 text-[11px] leading-relaxed border border-slate-200';
+            div.textContent = text;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function clearAiChatHistory() {
+            aiChatHistory = [];
+            const box = document.getElementById('aiChatMessages');
+            if (box) {
+                box.innerHTML = `<div class="text-[11px] text-slate-500 italic">អ្នកអាចប្រាប់ AI ឱ្យកែសម្រួលផ្នែកណាមួយនៃកិច្ចតែងការនេះបានភ្លាមៗ (ឧ. បន្ថែមលំហាត់ ពន្យល់បន្ថែម ឬកែវត្ថុបំណង)...</div>`;
+            }
+        }
+
+        function sendQuickRefinePrompt(promptText) {
+            const input = document.getElementById('aiChatInput');
+            if (input) {
+                input.value = promptText;
+                refineLessonWithChat();
+            }
+        }
+
+        async function refineLessonWithChat() {
+            const input = document.getElementById('aiChatInput');
+            const sendBtn = document.getElementById('aiChatSendBtn');
+            const instruction = (input?.value || '').trim();
+            if (!instruction) return;
+
+            appendAiChatBubble('user', instruction);
+            aiChatHistory.push({ role: 'user', text: instruction });
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '...';
+
+            const apiKey = getActiveApiKey();
+            const currentState = collectFormState();
+
+            if (!apiKey) {
+                const reply = 'សូមបញ្ចូល Gemini API Key ជាមុនសិន ដើម្បីឱ្យ AI កែលម្អកិច្ចតែងការតាមសំណើរបស់អ្នក!';
+                appendAiChatBubble('ai', reply);
+                aiChatHistory.push({ role: 'ai', text: reply });
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'ផ្ញើ';
+                return;
+            }
+
+            try {
+                const editableFields = [
+                    'objKnowledge', 'objSkill', 'objAttitude', 'materialsInput',
+                    's1Content', 's1Teacher', 's1Student',
+                    's2Content', 's2Teacher', 's2Student',
+                    's3Content', 's3Teacher', 's3Student',
+                    's4Content', 's4Teacher', 's4Student',
+                    's5Content', 's5Teacher', 's5Student'
+                ];
+                const snapshot = {};
+                editableFields.forEach(f => snapshot[f] = currentState[f] || '');
+
+                const props = { replyMessage: { type: 'STRING' } };
+                editableFields.forEach(f => props[f] = { type: 'STRING' });
+
+                const payload = {
+                    systemInstruction: {
+                        parts: [{
+                            text: `អ្នកគឺជាជំនួយការគរុកោសល្យ។ ចូរកែសម្រួលកិច្ចតែងការបង្រៀនបច្ចុប្បន្នទៅតាមសំណើរបស់គ្រូបង្រៀន ដោយរក្សាផ្នែកផ្សេងទៀតឱ្យនៅដដែល និងត្រឡប់មកវិញជា JSON ដែលមាន replyMessage (សារឆ្លើយតបខ្លីជាភាសាខ្មែរ) និង field ទាំងអស់នៃកិច្ចតែងការ។`
+                        }]
+                    },
+                    contents: [{
+                        role: 'user',
+                        parts: [
+                            { text: `កិច្ចតែងការបច្ចុប្បន្ន៖\n${JSON.stringify(snapshot)}\n\nសំណើកែសម្រួលរបស់គ្រូ៖ ${instruction}` },
+                            ...buildAttachedLessonParts()
+                        ]
+                    }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: props,
+                            required: ['replyMessage', ...editableFields]
+                        }
+                    }
+                };
+
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const res = await fetchWithBackoff(url, payload, 1);
+                const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (raw) {
+                    const updated = JSON.parse(raw);
+                    for (const f of editableFields) {
+                        if (updated[f] !== undefined && document.getElementById(f)) {
+                            document.getElementById(f).value = updated[f];
+                        }
+                    }
+                    syncPreview();
+                    const reply = updated.replyMessage || 'បានកែសម្រួលកិច្ចតែងការតាមសំណើរបស់អ្នករួចរាល់!';
+                    appendAiChatBubble('ai', reply);
+                    aiChatHistory.push({ role: 'ai', text: reply });
+                    showToast('បានធ្វើបច្ចុប្បន្នភាពកិច្ចតែងការរួចរាល់!', 'success');
+                }
+            } catch (_) {
+                const errMsg = 'មានបញ្ហាក្នុងការភ្ជាប់ AI សូមព្យាយាមម្តងទៀត!';
+                appendAiChatBubble('ai', errMsg);
+                aiChatHistory.push({ role: 'ai', text: errMsg });
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'ផ្ញើ';
+            }
         }
 
         // =========================================================================
