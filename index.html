@@ -6,6 +6,13 @@
     <title>ប្រព័ន្ធបង្កើត និងគ្រប់គ្រងកិច្ចតែងការបង្រៀនកម្រិតវិទ្យាល័យ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF.js for reliable PDF text extraction & page rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+    </script>
     <!-- Google Fonts: Khmer OS Moul Light & Khmer OS Siemreap fallbacks (Moul, Siemreap, Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -220,7 +227,24 @@
                         <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-sm">✨</span>
                         <h2 class="font-bold text-indigo-950 text-sm sm:text-base">ជំនួយការ AI បង្កើតកិច្ចតែងការ</h2>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-semibold">Gemini 4 Hydrogen</span>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="toggleApiKeyPanel()" class="px-2 py-0.5 rounded-full bg-white hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-semibold cursor-pointer transition" title="កំណត់ Google Gemini API Key">
+                            🔑 API Key
+                        </button>
+                        <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-semibold">Gemini 4 Hydrogen</span>
+                    </div>
+                </div>
+
+                <!-- Collapsible API Key Config Box (Essential for Vercel/Netlify hosting & PDF AI Vision) -->
+                <div id="apiKeyPanel" class="hidden mb-3 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] font-bold text-indigo-950">Google Gemini API Key (សម្រាប់វិភាគ PDF & រូបភាព)</label>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 underline hover:text-indigo-800">យក Key ឥតគិតថ្លៃ</a>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <button type="button" onclick="saveGeminiApiKey()" class="px-3 py-1.5 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold cursor-pointer">រក្សាទុក</button>
+                    </div>
                 </div>
 
                 <div class="space-y-2.5">
@@ -228,18 +252,18 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">កម្រិតថ្នាក់</label>
                             <select id="gradeInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                                <option value="ទី១០">ទី១០</option>
-                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ)">ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ)</option>
-                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)</option>
-                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)" selected>ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)</option>
-                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)</option>
+                                <option value="ទី១០">ថ្នាក់ទី១០</option>
+                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ)">ថ្នាក់ទី១១ (វិទ្យាសាស្ត្រ)</option>
+                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ថ្នាក់ទី១១ (វិទ្យាសាស្ត្រសង្គម)</option>
+                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)" selected>ថ្នាក់ទី១២ (វិទ្យាសាស្ត្រ)</option>
+                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ថ្នាក់ទី១២ (វិទ្យាសាស្ត្រសង្គម)</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">មុខវិជ្ជា</label>
                             <select id="subjectInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                                <option value="រូបវិទ្យា" selected>រូបវិទ្យា</option>
                                 <option value="គណិតវិទ្យា">គណិតវិទ្យា</option>
+                                <option value="រូបវិទ្យា" selected>រូបវិទ្យា</option>
                                 <option value="គីមីវិទ្យា">គីមីវិទ្យា</option>
                                 <option value="ជីវវិទ្យា">ជីវវិទ្យា</option>
                                 <option value="ផែនដី និងបរិស្ថានវិទ្យា">ផែនដី និងបរិស្ថានវិទ្យា</option>
@@ -248,20 +272,26 @@
                                 <option value="ភូមិវិទ្យា">ភូមិវិទ្យា</option>
                                 <option value="សីលធម៌-ពលរដ្ឋវិជ្ជា">សីលធម៌-ពលរដ្ឋវិជ្ជា</option>
                                 <option value="សេដ្ឋកិច្ចវិទ្យា">សេដ្ឋកិច្ចវិទ្យា</option>
-                                <option value="ភាសាអង់គ្លេស">ភាសាអង់គ្លេស</option>
+                                <option value="ភាសាអង់គ្លេស (English)">ភាសាអង់គ្លេស (English)</option>
                                 <option value="ព័ត៌មានវិទ្យា (ICT)">ព័ត៌មានវិទ្យា (ICT)</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">ជំពូកទី</label>
-                        <input type="text" id="chapterInput" oninput="syncPreview()" value="ទី២៖ អគ្គិសនី និងម៉ាញេទិច" placeholder="ឧ. ទី២៖ អគ្គិសនី និងម៉ាញេទិច" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ជំពូកទី (លេខជំពូក និងឈ្មោះជំពូក)</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="chapterNumInput" oninput="syncPreview()" value="២" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="chapterInput" oninput="syncPreview()" value="អគ្គិសនី និងម៉ាញេទិច" placeholder="............" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">មេរៀនទី</label>
-                        <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ទី១៖ ដែនម៉ាញេទិច" placeholder="ឧ. ទី១៖ ដែនម៉ាញេទិច" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">មេរៀនទី (លេខមេរៀន និងឈ្មោះមេរៀន)</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="lessonNumInput" oninput="syncPreview()" value="១" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ដែនម៉ាញេទិច" placeholder=".........." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
                     </div>
 
                     <div>
@@ -290,6 +320,14 @@
                         </label>
                         <!-- Uploaded Files Preview List -->
                         <div id="uploadedFilesList" class="mt-2 space-y-1.5 hidden"></div>
+                        <!-- Extracted PDF Text Preview Box -->
+                        <div id="extractedPdfTextWrapper" class="hidden mt-2 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-indigo-900">📄 អត្ថបទដែលស្រង់បានពី PDF (អាចកែសម្រួលបាន)៖</span>
+                                <span id="pdfPageBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-semibold"></span>
+                            </div>
+                            <textarea id="extractedPdfTextBox" rows="3" placeholder="អត្ថបទពី PDF នឹងបង្ហាញនៅទីនេះ..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-[11px] text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                        </div>
                         <!-- Quick Extract Metadata Button (Visible when files are uploaded) -->
                         <button type="button" id="extractMetadataBtn" onclick="extractMetadataFromFiles()" class="hidden mt-2 w-full py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
                             <span>🔍</span>
@@ -583,14 +621,14 @@
                         <td style="vertical-align: top; padding: 1px 0;" id="prevGrade">ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">ជំពូកទី</td>
+                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevChapterLabel">ជំពូកទី២</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevChapter">ទី២៖ អគ្គិសនី និងម៉ាញេទិច</td>
+                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevChapter">អគ្គិសនី និងម៉ាញេទិច</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">មេរៀនទី</td>
+                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevLessonLabel">មេរៀនទី១</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevLessonTitle">ទី១៖ ដែនម៉ាញេទិច</td>
+                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevLessonTitle">ដែនម៉ាញេទិច</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">ចំណងជើងរង</td>
@@ -948,8 +986,30 @@
         // 3. STATE MANAGEMENT, FILE UPLOADS & LOCAL STORAGE
         // =========================================================================
         const STORAGE_KEY = 'moeys_highschool_lesson_plans_v3';
+        const API_KEY_STORAGE = 'kakada_gemini_api_key';
         let currentLessonId = null;
-        let uploadedLessonFiles = []; // Array of { id, name, mimeType, base64Data, sizeText }
+        let uploadedLessonFiles = []; // Array of { id, name, mimeType, base64Data, sizeText, extractedText, pageImages }
+
+        function getActiveApiKey() {
+            return (document.getElementById('geminiApiKeyInput')?.value || localStorage.getItem(API_KEY_STORAGE) || '').trim();
+        }
+
+        function toggleApiKeyPanel() {
+            const panel = document.getElementById('apiKeyPanel');
+            if (panel) panel.classList.toggle('hidden');
+        }
+
+        function saveGeminiApiKey() {
+            const val = (document.getElementById('geminiApiKeyInput')?.value || '').trim();
+            if (val) {
+                localStorage.setItem(API_KEY_STORAGE, val);
+                showToast('បានរក្សាទុក API Key រួចរាល់!', 'success');
+                document.getElementById('apiKeyPanel')?.classList.add('hidden');
+            } else {
+                localStorage.removeItem(API_KEY_STORAGE);
+                showToast('បានលុប API Key!', 'info');
+            }
+        }
 
         function formatBytes(bytes) {
             if (bytes < 1024) return bytes + ' B';
@@ -970,87 +1030,96 @@
             });
         }
 
-        async function processSelectedFiles(fileList) {
-            const files = Array.from(fileList || []);
-            if (files.length === 0) return;
+        async function parsePdfFileClientSide(file) {
+            if (!window.pdfjsLib) {
+                return { extractedText: '', pageImages: [], numPages: 0 };
+            }
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const numPages = pdf.numPages;
+            const maxPagesToProcess = Math.min(numPages, 8);
+            let fullText = '';
+            const pageImages = [];
 
-            for (const file of files) {
-                const isImage = file.type.startsWith('image/');
-                const isPdf = file.type === 'application/pdf';
-                if (!isImage && !isPdf) {
-                    showToast(`ឯកសារ "${file.name}" មិនគាំទ្រទេ (សូមប្រើរូបភាព ឬ PDF)។`, 'error');
-                    continue;
+            for (let pageNum = 1; pageNum <= maxPagesToProcess; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const pageStr = textContent.items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim();
+                if (pageStr) {
+                    fullText += `--- ទំព័រទី ${pageNum} ---\n${pageStr}\n\n`;
                 }
-                if (file.size > 15 * 1024 * 1024) {
-                    showToast(`ឯកសារ "${file.name}" ធំជាង 15MB!`, 'error');
-                    continue;
-                }
-                try {
-                    const base64Data = await readFileAsBase64(file);
-                    uploadedLessonFiles.push({
-                        id: 'file_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-                        name: file.name,
-                        mimeType: file.type,
-                        base64Data,
-                        sizeText: formatBytes(file.size)
-                    });
-                } catch (_) {
-                    showToast(`មានបញ្ហាក្នុងការអានឯកសារ "${file.name}"`, 'error');
+
+                // Also render first 3 pages as JPEG images so scanned/image-based Khmer PDFs can be read by Vision AI
+                if (pageNum <= 3) {
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    await page.render({ canvasContext: ctx, viewport }).promise;
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    const imgBase64 = dataUrl.split(',')[1] || '';
+                    if (imgBase64) {
+                        pageImages.push(imgBase64);
+                    }
                 }
             }
-            renderUploadedFilesList();
-            if (uploadedLessonFiles.length > 0) {
-                showToast(`បានបញ្ចូលឯកសារមេរៀនចំនួន ${toKhmerNumerals(uploadedLessonFiles.length)} រួចរាល់!`, 'success');
-            }
+            return { extractedText: fullText.trim(), pageImages, numPages };
         }
 
-        async function handleLessonFilesUpload(event) {
-            await processSelectedFiles(event.target.files);
-            event.target.value = '';
-        }
+        function parseLessonMetadataLocallyFromText(rawText) {
+            if (!rawText) return null;
+            const cleanText = rawText.replace(/\r/g, '\n');
 
-        function removeUploadedFile(id) {
-            uploadedLessonFiles = uploadedLessonFiles.filter(f => f.id !== id);
-            renderUploadedFilesList();
-        }
-
-        function clearUploadedFiles() {
-            uploadedLessonFiles = [];
-            renderUploadedFilesList();
-            showToast('បានលុបឯកសារមេរៀនទាំងអស់!', 'info');
-        }
-
-        function renderUploadedFilesList() {
-            const listEl = document.getElementById('uploadedFilesList');
-            const clearBtn = document.getElementById('clearFilesBtn');
-            const extractBtn = document.getElementById('extractMetadataBtn');
-            if (!listEl || !clearBtn) return;
-
-            if (uploadedLessonFiles.length === 0) {
-                listEl.classList.add('hidden');
-                listEl.innerHTML = '';
-                clearBtn.classList.add('hidden');
-                if (extractBtn) extractBtn.classList.add('hidden');
-                return;
+            // Detect Subject
+            const subjectSelect = document.getElementById('subjectInput');
+            const subjects = Array.from(subjectSelect.options).map(o => o.value);
+            let detectedSubject = '';
+            for (const subj of subjects) {
+                const baseSubj = subj.split(' ')[0];
+                if (cleanText.includes(subj) || cleanText.includes(baseSubj)) {
+                    detectedSubject = subj;
+                    break;
+                }
             }
 
-            listEl.classList.remove('hidden');
-            clearBtn.classList.remove('hidden');
-            if (extractBtn) extractBtn.classList.remove('hidden');
-            listEl.innerHTML = uploadedLessonFiles.map(f => {
-                const isPdf = f.mimeType === 'application/pdf';
-                const icon = isPdf ? '📕' : '🖼️';
-                return `
-                    <div class="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-white border border-indigo-200 text-xs">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <span>${icon}</span>
-                            <span class="font-medium text-slate-800 truncate">${escapeHtml(f.name)}</span>
-                            <span class="text-[10px] text-slate-400 shrink-0">(${f.sizeText})</span>
-                        </div>
-                        <button type="button" onclick="removeUploadedFile('${f.id}')" class="text-rose-500 hover:text-rose-700 font-bold px-1.5 cursor-pointer" title="លុប">✕</button>
-                    </div>
-                `;
-            }).join('');
+            // Detect Grade
+            let detectedGrade = '';
+            if (/ថ្នាក់ទី\s*១២|ទី១២|grade\s*12/i.test(cleanText)) {
+                detectedGrade = cleanText.includes('សង្គម') ? 'ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)' : 'ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)';
+            } else if (/ថ្នាក់ទី\s*១១|ទី១១|grade\s*11/i.test(cleanText)) {
+                detectedGrade = cleanText.includes('សង្គម') ? 'ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)' : 'ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ)';
+            } else if (/ថ្នាក់ទី\s*១០|ទី១០|grade\s*10/i.test(cleanText)) {
+                detectedGrade = 'ទី១០';
+            }
+
+            // Detect Chapter
+            const chapterMatch = cleanText.match(/ជំពូកទី\s*([០-៩0-9]+)[\s៖:.]*([^\n។]{0,80})/);
+            const detectedChapterNum = chapterMatch ? chapterMatch[1].trim() : '';
+            const detectedChapter = chapterMatch ? chapterMatch[2].trim() : '';
+
+            // Detect Lesson Title
+            const lessonMatch = cleanText.match(/មេរៀនទី\s*([០-៩0-9]+)[\s៖:.]*([^\n។]{0,90})/);
+            const detectedLessonNum = lessonMatch ? lessonMatch[1].trim() : '';
+            const detectedLessonTitle = lessonMatch ? lessonMatch[2].trim() : '';
+
+            // Detect Sub-lessons (១. ..., ២. ..., ៣. ...)
+            const subMatches = cleanText.match(/(?:^|\n|\s)([១-៩]\.\s*[^\n។]{3,85})/g);
+            let detectedSubLessons = '';
+            if (subMatches && subMatches.length > 0) {
+                const uniqueSubs = [...new Set(subMatches.map(s => s.trim()))].slice(0, 6);
+                detectedSubLessons = uniqueSubs.join('\n');
+            }
+
+            return {
+                detectedSubject,
+                detectedGrade,
+                detectedChapterNum,
+                detectedChapter,
+                detectedLessonNum,
+                detectedLessonTitle,
+                detectedSubLessons
+            };
         }
 
         function escapeHtml(str) {
@@ -1061,19 +1130,126 @@
                 .replace(/"/g, '&quot;');
         }
 
+        async function handleLessonFilesUpload(event) {
+            const files = event?.target?.files;
+            if (files && files.length > 0) {
+                await processSelectedFiles(files);
+                event.target.value = '';
+            }
+        }
+
+        async function processSelectedFiles(fileList) {
+            const files = Array.from(fileList);
+            if (files.length === 0) return;
+
+            showToast('កំពុងអាន និងរៀបចំឯកសារមេរៀន...', 'info');
+            for (const file of files) {
+                try {
+                    const base64Data = await readFileAsBase64(file);
+                    let extractedText = '';
+                    let pageImages = [];
+                    let numPages = 0;
+
+                    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                        const pdfParsed = await parsePdfFileClientSide(file);
+                        extractedText = pdfParsed.extractedText;
+                        pageImages = pdfParsed.pageImages;
+                        numPages = pdfParsed.numPages;
+                    }
+
+                    uploadedLessonFiles.push({
+                        id: 'f_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                        name: file.name,
+                        mimeType: file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg'),
+                        base64Data,
+                        sizeText: formatBytes(file.size),
+                        extractedText,
+                        pageImages,
+                        numPages
+                    });
+                } catch (err) {
+                    showToast(`មានបញ្ហាក្នុងការអានឯកសារ ${file.name}`, 'error');
+                }
+            }
+
+            renderUploadedFilesList();
+            showToast(`បានបញ្ចូលឯកសារចំនួន ${toKhmerNumerals(files.length)} រួចរាល់!`, 'success');
+        }
+
+        function renderUploadedFilesList() {
+            const listEl = document.getElementById('uploadedFilesList');
+            const clearBtn = document.getElementById('clearFilesBtn');
+            const extractBtn = document.getElementById('extractMetadataBtn');
+            const pdfWrapper = document.getElementById('extractedPdfTextWrapper');
+            const pdfBox = document.getElementById('extractedPdfTextBox');
+            const pdfBadge = document.getElementById('pdfPageBadge');
+
+            if (!listEl) return;
+
+            if (uploadedLessonFiles.length === 0) {
+                listEl.innerHTML = '';
+                listEl.classList.add('hidden');
+                if (clearBtn) clearBtn.classList.add('hidden');
+                if (extractBtn) extractBtn.classList.add('hidden');
+                if (pdfWrapper) pdfWrapper.classList.add('hidden');
+                if (pdfBox) pdfBox.value = '';
+                return;
+            }
+
+            listEl.classList.remove('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            if (extractBtn) extractBtn.classList.remove('hidden');
+
+            listEl.innerHTML = uploadedLessonFiles.map(f => {
+                const isPdf = f.mimeType === 'application/pdf';
+                return `
+                    <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs">
+                        <div class="flex items-center gap-2 truncate pr-2">
+                            <span>${isPdf ? '📄' : '🖼️'}</span>
+                            <span class="font-medium text-slate-800 truncate">${escapeHtml(f.name)}</span>
+                            <span class="text-[10px] text-slate-400 shrink-0">(${escapeHtml(f.sizeText)})</span>
+                        </div>
+                        <button type="button" onclick="removeUploadedFile('${f.id}')" class="text-rose-500 hover:text-rose-700 font-bold px-1.5 cursor-pointer" title="លុប">✕</button>
+                    </div>
+                `;
+            }).join('');
+
+            const pdfFiles = uploadedLessonFiles.filter(f => f.mimeType === 'application/pdf');
+            if (pdfFiles.length > 0 && pdfWrapper && pdfBox) {
+                const combinedText = pdfFiles.map(f => f.extractedText).filter(Boolean).join('\n\n');
+                const totalPages = pdfFiles.reduce((sum, f) => sum + (f.numPages || 0), 0);
+                pdfWrapper.classList.remove('hidden');
+                if (pdfBadge) pdfBadge.textContent = `${toKhmerNumerals(totalPages)} ទំព័រ`;
+                pdfBox.value = combinedText || '(PDF នេះជាប្រភេទរូបភាពស្កេន — AI នឹងអានតាមរយៈរូបភាពទំព័រដោយស្វ័យប្រវត្តិ)';
+            } else if (pdfWrapper) {
+                pdfWrapper.classList.add('hidden');
+            }
+        }
+
+        function removeUploadedFile(id) {
+            uploadedLessonFiles = uploadedLessonFiles.filter(f => f.id !== id);
+            renderUploadedFilesList();
+        }
+
+        function clearUploadedFiles() {
+            uploadedLessonFiles = [];
+            renderUploadedFilesList();
+            showToast('បានលុបឯកសារដែលបានបញ្ចូលទាំងអស់!', 'info');
+        }
+
         function onMethodChange() {
-            const key = document.getElementById('teachingMethod')?.value || 'ibl';
-            const method = PEDAGOGICAL_METHODS[key];
+            const methodKey = document.getElementById('teachingMethod')?.value || 'ibl';
             const hintBox = document.getElementById('methodHintBox');
-            if (method && hintBox) {
-                hintBox.innerHTML = `<span class="font-bold">លំនាំ៖</span> ${method.description}`;
+            const methodObj = PEDAGOGICAL_METHODS[methodKey];
+            if (hintBox && methodObj) {
+                hintBox.innerHTML = `<span class="font-bold">លំនាំ៖</span> ${escapeHtml(methodObj.description)}`;
             }
             syncPreview();
         }
 
         function onDurationChange() {
-            const dur = document.getElementById('durationInput')?.value || '';
-            if (dur.startsWith('៥០')) {
+            const durationVal = document.getElementById('durationInput')?.value || '';
+            if (durationVal.startsWith('៥០')) {
                 document.getElementById('s1Time').value = '៣ នាទី';
                 document.getElementById('s2Time').value = '៥ នាទី';
                 document.getElementById('s3Time').value = '៣០ នាទី';
@@ -1090,25 +1266,28 @@
         }
 
         function syncPreview() {
+            const getVal = (id, fallback = '') => document.getElementById(id)?.value ?? fallback;
             const setText = (id, val) => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = val;
-            };
-            const getVal = (id, fallback = '') => {
-                const el = document.getElementById(id);
-                return el ? el.value : fallback;
             };
 
             const methodKey = getVal('teachingMethod', 'ibl');
             const methodLabel = PEDAGOGICAL_METHODS[methodKey]?.label || '';
             const teacherName = getVal('teacherInput');
+            const chapNum = getVal('chapterNumInput').trim();
+            const chapName = getVal('chapterInput').trim();
+            const lessonNum = getVal('lessonNumInput').trim();
+            const lessonName = getVal('lessonTitleInput').trim();
 
             setText('prevSchool', getVal('schoolInput'));
             setText('prevHeaderDate', getVal('headerDateInput'));
             setText('prevSubject', getVal('subjectInput'));
             setText('prevGrade', getVal('gradeInput'));
-            setText('prevChapter', getVal('chapterInput'));
-            setText('prevLessonTitle', getVal('lessonTitleInput'));
+            setText('prevChapterLabel', chapNum ? `ជំពូកទី${chapNum}` : 'ជំពូកទី...');
+            setText('prevChapter', chapName || '............');
+            setText('prevLessonLabel', lessonNum ? `មេរៀនទី${lessonNum}` : 'មេរៀនទី...');
+            setText('prevLessonTitle', lessonName || '..........');
             setText('prevSubLessons', getVal('subLessonsInput'));
             setText('prevMethod', methodLabel);
             setText('prevHeaderTeacher', teacherName);
@@ -1248,44 +1427,102 @@
 
             if (data.detectedGrade) {
                 const gradeSelect = document.getElementById('gradeInput');
-                const matchedGrade = Array.from(gradeSelect.options).find(opt =>
-                    opt.value === data.detectedGrade ||
-                    opt.value.includes(data.detectedGrade) ||
-                    data.detectedGrade.includes(opt.value.split(' ')[0])
-                );
-                if (matchedGrade) {
-                    gradeSelect.value = matchedGrade.value;
+                if (gradeSelect) {
+                    const matchedGrade = Array.from(gradeSelect.options).find(opt =>
+                        opt.value.includes(data.detectedGrade) || data.detectedGrade.includes(opt.value.split(' ')[0])
+                    );
+                    if (matchedGrade) gradeSelect.value = matchedGrade.value;
                 }
             }
-
             if (data.detectedSubject) {
                 const subjectSelect = document.getElementById('subjectInput');
-                const matchedSubject = Array.from(subjectSelect.options).find(opt =>
-                    opt.value === data.detectedSubject ||
-                    opt.value.includes(data.detectedSubject) ||
-                    data.detectedSubject.includes(opt.value)
-                );
-                if (matchedSubject) {
-                    subjectSelect.value = matchedSubject.value;
-                } else {
-                    const customOpt = document.createElement('option');
-                    customOpt.value = data.detectedSubject;
-                    customOpt.textContent = data.detectedSubject;
-                    subjectSelect.appendChild(customOpt);
-                    subjectSelect.value = data.detectedSubject;
+                if (subjectSelect) {
+                    const matchedSubject = Array.from(subjectSelect.options).find(opt =>
+                        opt.value.includes(data.detectedSubject) || data.detectedSubject.includes(opt.value.split(' ')[0])
+                    );
+                    if (matchedSubject) subjectSelect.value = matchedSubject.value;
                 }
             }
-
+            if (data.detectedChapterNum && document.getElementById('chapterNumInput')) {
+                document.getElementById('chapterNumInput').value = data.detectedChapterNum;
+            }
             if (data.detectedChapter) {
-                document.getElementById('chapterInput').value = data.detectedChapter;
+                let cleanChap = data.detectedChapter.trim();
+                const numPrefix = cleanChap.match(/^(?:ជំពូកទី\s*)?([០-៩0-9]+)[\s៖:.]+(.*)$/);
+                if (numPrefix) {
+                    if (document.getElementById('chapterNumInput')) {
+                        document.getElementById('chapterNumInput').value = numPrefix[1];
+                    }
+                    cleanChap = numPrefix[2].trim();
+                }
+                document.getElementById('chapterInput').value = cleanChap;
+            }
+            if (data.detectedLessonNum && document.getElementById('lessonNumInput')) {
+                document.getElementById('lessonNumInput').value = data.detectedLessonNum;
             }
             if (data.detectedLessonTitle) {
-                document.getElementById('lessonTitleInput').value = data.detectedLessonTitle;
+                let cleanLesson = data.detectedLessonTitle.trim();
+                const lessonPrefix = cleanLesson.match(/^(?:មេរៀនទី\s*|ទី\s*)?([០-៩0-9]+)[\s៖:.]+(.*)$/);
+                if (lessonPrefix) {
+                    if (document.getElementById('lessonNumInput')) {
+                        document.getElementById('lessonNumInput').value = lessonPrefix[1];
+                    }
+                    cleanLesson = lessonPrefix[2].trim();
+                }
+                document.getElementById('lessonTitleInput').value = cleanLesson;
             }
             if (data.detectedSubLessons) {
                 document.getElementById('subLessonsInput').value = data.detectedSubLessons;
             }
             syncPreview();
+        }
+
+        function buildAttachedLessonParts() {
+            const parts = [];
+            const editedPdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
+            if (editedPdfText && !editedPdfText.startsWith('(PDF នេះជាប្រភេទរូបភាពស្កេន')) {
+                parts.push({
+                    text: `ខាងក្រោមនេះគឺជាអត្ថបទពេញលេញដែលបានស្រង់ចេញពីឯកសារ PDF មេរៀន៖\n"""\n${editedPdfText.slice(0, 28000)}\n"""`
+                });
+            }
+
+            for (const f of uploadedLessonFiles) {
+                if (f.mimeType === 'application/pdf') {
+                    // Send rendered page images for scanned PDFs + raw PDF inlineData
+                    if (Array.isArray(f.pageImages) && f.pageImages.length > 0) {
+                        for (const imgBase64 of f.pageImages) {
+                            parts.push({
+                                inlineData: { mimeType: 'image/jpeg', data: imgBase64 }
+                            });
+                        }
+                    } else if (f.base64Data) {
+                        parts.push({
+                            inlineData: { mimeType: 'application/pdf', data: f.base64Data }
+                        });
+                    }
+                } else if (f.base64Data) {
+                    parts.push({
+                        inlineData: { mimeType: f.mimeType, data: f.base64Data }
+                    });
+                }
+            }
+            return parts;
+        }
+
+        function buildLocalFallbackLessonFromPdfText(grade, subject, title, methodObj, pdfText) {
+            const base = buildLocalFallbackLesson(grade, subject, title, methodObj);
+            if (!pdfText || pdfText.startsWith('(PDF នេះជាប្រភេទរូបភាពស្កេន')) {
+                return base;
+            }
+            const lines = pdfText
+                .split('\n')
+                .map(l => l.trim())
+                .filter(l => l && !l.startsWith('--- ទំព័រទី'));
+            const summaryLines = lines.slice(0, 12).join('\n');
+            if (summaryLines) {
+                base.s3Content = `ខ្លឹមសារមេរៀនសំខាន់ៗស្រង់ពីឯកសារ PDF (${title})៖\n${summaryLines}`;
+            }
+            return base;
         }
 
         async function extractMetadataFromFiles() {
@@ -1304,23 +1541,15 @@
 
             const userParts = [
                 {
-                    text: `ចូរពិនិត្យមើលឯកសារមេរៀន (រូបភាពទំព័រសៀវភៅ ឬ PDF) ដែលបានភ្ជាប់ រួចវិភាគ និងស្រង់ព័ត៌មានខាងក្រោមជាភាសាខ្មែរឱ្យបានត្រឹមត្រូវបំផុត៖
+                    text: `ចូរពិនិត្យមើលអត្ថបទ និងរូបភាពទំព័រមេរៀន (PDF ឬរូបភាពសៀវភៅពុម្ព) ដែលបានភ្ជាប់ រួចវិភាគ និងស្រង់ព័ត៌មានខាងក្រោមជាភាសាខ្មែរឱ្យបានត្រឹមត្រូវបំផុត៖
 ១. detectedSubject: ឈ្មោះមុខវិជ្ជា (គួរត្រូវនឹងបញ្ជីនេះប្រសិនបើអាច៖ ${subjectOptions})
 ២. detectedGrade: កម្រិតថ្នាក់ (គួរត្រូវនឹងបញ្ជីនេះប្រសិនបើអាច៖ ${gradeOptions})
 ៣. detectedChapter: ជំពូកទី (ឧ. ទី២៖ អគ្គិសនី និងម៉ាញេទិច)
 ៤. detectedLessonTitle: ចំណងជើងមេរៀនទី (ឧ. ទី១៖ ដែនម៉ាញេទិច)
 ៥. detectedSubLessons: ចំណងជើងរងទាំងអស់ដែលមានក្នុងមេរៀន (រៀបតាមលេខរៀង ១. ... ២. ...)`
-                }
+                },
+                ...buildAttachedLessonParts()
             ];
-
-            for (const f of uploadedLessonFiles) {
-                userParts.push({
-                    inlineData: {
-                        mimeType: f.mimeType,
-                        data: f.base64Data
-                    }
-                });
-            }
 
             const payload = {
                 contents: [{ role: 'user', parts: userParts }],
@@ -1340,7 +1569,7 @@
                 }
             };
 
-            const apiKey = "";
+            const apiKey = getActiveApiKey();
             const endpoints = [
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
@@ -1362,12 +1591,19 @@
                 applyDetectedLessonMetadata(extracted);
                 showToast(`បានស្រង់មុខវិជ្ជា «${extracted.detectedSubject}» និងមេរៀន «${extracted.detectedLessonTitle}» រួចរាល់!`, 'success');
             } else {
-                const firstFileName = uploadedLessonFiles[0]?.name?.replace(/\.[^/.]+$/, '') || '';
-                if (firstFileName) {
-                    document.getElementById('lessonTitleInput').value = firstFileName;
-                    syncPreview();
+                const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
+                const localMeta = parseLessonMetadataLocallyFromText(pdfText);
+                if (localMeta && (localMeta.detectedSubject || localMeta.detectedLessonTitle || localMeta.detectedChapter)) {
+                    applyDetectedLessonMetadata(localMeta);
+                    showToast('បានស្រង់ព័ត៌មានមេរៀនពីអត្ថបទ PDF រួចរាល់!', 'success');
+                } else {
+                    const firstFileName = uploadedLessonFiles[0]?.name?.replace(/\.[^/.]+$/, '') || '';
+                    if (firstFileName) {
+                        document.getElementById('lessonTitleInput').value = firstFileName;
+                        syncPreview();
+                    }
+                    showToast('បានទាញឈ្មោះមេរៀនបឋម (សូមបញ្ចូល API Key ដើម្បីឱ្យ AI អានរូបភាពស្កេនកាន់តែច្បាស់)!', 'info');
                 }
-                showToast('បានទាញឈ្មោះមេរៀនបឋមពីឈ្មោះឯកសារ (សូមពិនិត្យបន្ថែម)!', 'info');
             }
 
             btn.disabled = false;
@@ -1391,7 +1627,7 @@
 
             const userParts = [
                 {
-                    text: `ចូរវិភាគមេរៀនកម្រិតវិទ្យាល័យខាងក្រោម (និងឯកសារភ្ជាប់ប្រសិនបើមាន) ហើយជ្រើសរើសកូដវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនតែមួយគត់ដែលសមស្របបំផុត ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យជាភាសាខ្មែរ៖
+                    text: `ចូរវិភាគមេរៀនកម្រិតវិទ្យាល័យខាងក្រោម (រួមទាំងអត្ថបទ និងរូបភាព PDF ប្រសិនបើមាន) ហើយជ្រើសរើសកូដវិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនតែមួយគត់ដែលសមស្របបំផុត ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យជាភាសាខ្មែរ៖
 - កម្រិតថ្នាក់៖ ${grade}
 - មុខវិជ្ជា៖ ${subject}
 - ចំណងជើងមេរៀន៖ ${title}
@@ -1399,14 +1635,9 @@
 
 បញ្ជីកូដវិធីសាស្ត្រ៖
 ${methodListDesc}`
-                }
+                },
+                ...buildAttachedLessonParts()
             ];
-
-            for (const f of uploadedLessonFiles) {
-                userParts.push({
-                    inlineData: { mimeType: f.mimeType, data: f.base64Data }
-                });
-            }
 
             const payload = {
                 contents: [{ role: 'user', parts: userParts }],
@@ -1423,7 +1654,7 @@ ${methodListDesc}`
                 }
             };
 
-            const apiKey = "";
+            const apiKey = getActiveApiKey();
             const endpoints = [
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
@@ -1442,7 +1673,8 @@ ${methodListDesc}`
             }
 
             if (!analysis) {
-                const local = inferRecommendedMethodLocally(subject, title, subLessons);
+                const pdfSnippet = (document.getElementById('extractedPdfTextBox')?.value || '').slice(0, 1000);
+                const local = inferRecommendedMethodLocally(subject, `${title} ${pdfSnippet}`, subLessons);
                 analysis = { recommendedMethodKey: local.key, recommendationReason: local.reason };
             }
 
@@ -1478,7 +1710,7 @@ ${methodListDesc}`
 
             const systemPrompt = `អ្នកគឺជាគ្រូឧទ្ទេស និងអ្នកជំនាញគរុកោសល្យកម្រិតវិទ្យាល័យ (ថ្នាក់ទី១០ ទី១១ ទី១២) នៃក្រសួងអប់រំ យុវជន និងកីឡា កម្ពុជា។
 ភារកិច្ចរបស់អ្នកមាន ៣ ដំណាក់កាលសំខាន់ៗ៖
-១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីឯកសារភ្ជាប់ (រូបភាពទំព័រសៀវភៅ ឬ PDF ប្រសិនបើមាន) ដើម្បីវិភាគ និងកំណត់ កម្រិតថ្នាក់ (detectedGrade) ឈ្មោះមុខវិជ្ជា (detectedSubject) ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
+១. អាន និងស្រង់ខ្លឹមសារមេរៀនពីអត្ថបទ PDF និងរូបភាពទំព័រសៀវភៅដែលបានភ្ជាប់ (ប្រសិនបើមាន) ដើម្បីវិភាគ និងកំណត់ កម្រិតថ្នាក់ (detectedGrade) ឈ្មោះមុខវិជ្ជា (detectedSubject) ជំពូកទី (detectedChapter) មេរៀនទី (detectedLessonTitle) ចំណងជើងរង (detectedSubLessons) និងខ្លឹមសារមេរៀនលម្អិត (និយមន័យ រូបមន្ត ទ្រឹស្តី ឧទាហរណ៍)។
 ២. វិភាគលក្ខណៈមេរៀន និងកំណត់វិធីសាស្ត្រ/យុទ្ធវិធីបង្រៀនសមស្របបំផុត (recommendedMethodKey) ព្រមទាំងពន្យល់មូលហេតុគរុកោសល្យយ៉ាងច្បាស់ (recommendationReason) ជាភាសាខ្មែរ។
 បញ្ជីកូដវិធីសាស្ត្រទាំង ១២ ដែលអាចជ្រើសរើសបាន៖
 ${methodListDescription}
@@ -1495,15 +1727,10 @@ ${methodListDescription}
 - ចំណងជើងរង៖ ${subLessons}
 - រយៈពេលបង្រៀន៖ ${duration}
 - ការកំណត់វិធីសាស្ត្រ៖ ${autoSelectMethod ? 'ឱ្យ AI វិភាគ និងជ្រើសរើសវិធីសាស្ត្រសមស្របបំផុតដោយស្វ័យប្រវត្តិ' : `ប្រើវិធីសាស្ត្រ "${currentMethodKey}" (${PEDAGOGICAL_METHODS[currentMethodKey]?.label})`}
-${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯកសារមេរៀនភ្ជាប់មកជាមួយ សូមស្រង់ឈ្មោះមុខវិជ្ជា ចំណងជើងមេរៀន ចំណងជើងរង និងខ្លឹមសារពិតប្រាកដពីឯកសារទាំងនោះ!' : ''}`
-                }
+${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានអត្ថបទ និងរូបភាពឯកសារមេរៀនភ្ជាប់មកជាមួយ សូមស្រង់ឈ្មោះមុខវិជ្ជា ចំណងជើងមេរៀន ចំណងជើងរង និងខ្លឹមសារពិតប្រាកដពីឯកសារទាំងនោះ!' : ''}`
+                },
+                ...buildAttachedLessonParts()
             ];
-
-            for (const f of uploadedLessonFiles) {
-                userParts.push({
-                    inlineData: { mimeType: f.mimeType, data: f.base64Data }
-                });
-            }
 
             const payload = {
                 systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -1558,7 +1785,7 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯក�
                 }
             };
 
-            const apiKey = "";
+            const apiKey = getActiveApiKey();
             const endpoints = [
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-4-hydrogen:generateContent?key=${apiKey}`,
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`
@@ -1577,11 +1804,12 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯក�
             }
 
             if (!generatedData) {
+                const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
                 const localRec = autoSelectMethod
-                    ? inferRecommendedMethodLocally(subject, title, subLessons)
+                    ? inferRecommendedMethodLocally(subject, `${title} ${pdfText.slice(0, 800)}`, subLessons)
                     : { key: currentMethodKey, reason: PEDAGOGICAL_METHODS[currentMethodKey]?.description };
                 const chosenMethod = PEDAGOGICAL_METHODS[localRec.key] || PEDAGOGICAL_METHODS[currentMethodKey];
-                generatedData = buildLocalFallbackLesson(grade, subject, title, chosenMethod);
+                generatedData = buildLocalFallbackLessonFromPdfText(grade, subject, title, chosenMethod, pdfText);
                 generatedData.recommendedMethodKey = localRec.key;
                 generatedData.recommendationReason = localRec.reason;
             }
@@ -1658,7 +1886,7 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯក�
 
         function collectFormState() {
             const ids = [
-                'gradeInput', 'subjectInput', 'chapterInput', 'lessonTitleInput', 'subLessonsInput',
+                'gradeInput', 'subjectInput', 'chapterNumInput', 'chapterInput', 'lessonNumInput', 'lessonTitleInput', 'subLessonsInput',
                 'teachingMethod', 'schoolInput', 'headerDateInput', 'durationInput',
                 'gregorianDatePicker', 'deptInput', 'lunarDateInput', 'solarDateTextInput',
                 'teacherInput', 'principalInput', 'objKnowledge', 'objSkill', 'objAttitude',
@@ -1718,7 +1946,9 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯក�
             currentLessonId = null;
             uploadedLessonFiles = [];
             renderUploadedFilesList();
+            if (document.getElementById('chapterNumInput')) document.getElementById('chapterNumInput').value = '';
             document.getElementById('chapterInput').value = '';
+            if (document.getElementById('lessonNumInput')) document.getElementById('lessonNumInput').value = '';
             document.getElementById('lessonTitleInput').value = '';
             document.getElementById('subLessonsInput').value = '';
             document.getElementById('aiRecommendationCard').classList.add('hidden');
@@ -1866,6 +2096,12 @@ ${uploadedLessonFiles.length > 0 ? '- សម្គាល់៖ មានឯក�
         // 6. INITIALIZATION & DRAG-AND-DROP SETUP
         // =========================================================================
         window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem(API_KEY_STORAGE);
+            const keyInput = document.getElementById('geminiApiKeyInput');
+            if (savedKey && keyInput) {
+                keyInput.value = savedKey;
+            }
+
             const picker = document.getElementById('gregorianDatePicker');
             if (picker && !picker.value) {
                 picker.value = '2026-11-15';
