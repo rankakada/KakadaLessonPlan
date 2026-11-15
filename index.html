@@ -1214,11 +1214,11 @@
         }
 
         async function processSelectedFiles(files) {
-            for (const file of files) {
+            await Promise.all(files.map(async (file) => {
                 if (file.type === 'application/pdf') {
                     await extractPdfData(file);
                 } else if (file.type.startsWith('image/')) {
-                    const compressedBase64 = await compressImageFile(file, 1100, 0.78);
+                    const compressedBase64 = await compressImageFile(file, 800, 0.65);
                     uploadedLessonFiles.push({
                         name: file.name,
                         mimeType: 'image/jpeg',
@@ -1226,14 +1226,14 @@
                         isPdf: false
                     });
                 }
-            }
+            }));
             renderUploadedFilesList();
             if (uploadedLessonFiles.length > 0) {
                 await extractMetadataFromFiles();
             }
         }
 
-        function compressImageFile(file, maxDim = 1100, quality = 0.78) {
+        function compressImageFile(file, maxDim = 800, quality = 0.65) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = () => {
@@ -1503,23 +1503,23 @@
             }
         }
 
-        function clearUploadedFiles() {
-            uploadedLessonFiles = [];
-            renderUploadedFilesList();
-        }
-
-        function buildAttachedLessonParts() {
+        function buildAttachedLessonParts(maxImages = 4) {
             const parts = [];
             const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
             if (pdfText) {
-                parts.push({ text: `ខ្លឹមសារអត្ថបទមេរៀនដែលស្រង់ចេញពីឯកសារ PDF៖\n${pdfText.slice(0, 14000)}` });
+                parts.push({ text: `ខ្លឹមសារអត្ថបទមេរៀនដែលស្រង់ចេញពីឯកសារ PDF៖\n${pdfText.slice(0, 12000)}` });
             }
+            let imageCount = 0;
             for (const f of uploadedLessonFiles) {
+                if (imageCount >= maxImages) break;
                 if (!f.isPdf && f.base64) {
                     parts.push({ inlineData: { mimeType: f.mimeType, data: f.base64 } });
+                    imageCount++;
                 } else if (f.isPdf && Array.isArray(f.pageImages)) {
                     for (const imgB64 of f.pageImages.slice(0, 2)) {
+                        if (imageCount >= maxImages) break;
                         parts.push({ inlineData: { mimeType: 'image/jpeg', data: imgB64 } });
+                        imageCount++;
                     }
                 }
             }
@@ -1599,22 +1599,23 @@
                 const payload = {
                     systemInstruction: {
                         parts: [{
-                            text: `អ្នកគឺជាអ្នកជំនាញអានសៀវភៅពុម្ពវិទ្យាល័យកម្ពុជា និងអក្ខរាវិរុទ្ធខ្មែរ។ ចូរស្រង់ព័ត៌មានពីឯកសារមេរៀន និងកែអក្ខរាវិរុទ្ធអត្ថបទមេរៀនឱ្យត្រឹមត្រូវជា JSON តែមួយ៖
+                            text: `ស្រង់ព័ត៌មានពីរូបភាព/ឯកសារមេរៀនវិទ្យាល័យកម្ពុជាជា JSON យ៉ាងរហ័ស និងត្រឹមត្រូវអក្ខរាវិរុទ្ធខ្មែរ៖
 - grade: កម្រិតថ្នាក់ (ឧ. ទី១០, ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ), ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ))
 - subject: ឈ្មោះមុខវិជ្ជា (គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិវិទ្យា, ភូមិវិទ្យា...)
 - chapterNum: លេខជំពូកជាលេខខ្មែរ
 - chapterTitle: ឈ្មោះជំពូក
 - lessonNum: លេខមេរៀនជាលេខខ្មែរ
 - lessonTitle: ចំណងជើងមេរៀន
-- subLessons: ចំណងជើងរងទាំងអស់ក្នុងមេរៀន (១. ... ២. ...)
-- cleanKhmerText: អត្ថបទខ្លឹមសារមេរៀនសង្ខេបដែលបានកែអក្ខរាវិរុទ្ធខ្មែរត្រឹមត្រូវ ១០០%`
+- subLessons: ចំណងជើងរងទាំងអស់ (១. ... ២. ...)
+- cleanKhmerText: អត្ថបទខ្លឹមសារមេរៀនសង្ខេបដែលអានបានពីរូបភាព/ឯកសារ`
                         }]
                     },
                     contents: [{
                         role: 'user',
-                        parts: [{ text: 'ស្រង់ព័ត៌មានមេរៀន និងកែអក្ខរាវិរុទ្ធអត្ថបទមេរៀននេះ៖' }, ...buildAttachedLessonParts()]
+                        parts: [{ text: 'ស្រង់ព័ត៌មានមេរៀននេះ៖' }, ...buildAttachedLessonParts(2)]
                     }],
                     generationConfig: {
+                        thinkingConfig: { thinkingBudget: 0 },
                         responseMimeType: "application/json",
                         responseSchema: {
                             type: "OBJECT",
