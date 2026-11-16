@@ -217,12 +217,12 @@
     <!-- Main Workspace Grid -->
     <main class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        <!-- LEFT PANEL: Editor & Gemini 4 Hydrogen Generator -->
+        <!-- LEFT PANEL: Editor & Gemini 4 Argon Generator -->
         <section id="editorPanel" class="no-print lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col">
             
             <!-- AI Generator Box -->
             <div class="bg-gradient-to-br from-indigo-50 via-blue-50 to-amber-50/40 p-4 sm:p-5 border-b border-indigo-100">
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <div class="flex items-center gap-2">
                         <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-sm">✨</span>
                         <h2 class="font-bold text-indigo-950 text-sm sm:text-base">ជំនួយការ AI បង្កើតកិច្ចតែងការ</h2>
@@ -231,15 +231,24 @@
                         <button type="button" onclick="toggleApiKeyPanel()" class="px-2 py-0.5 rounded-full bg-white hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-semibold cursor-pointer transition" title="កំណត់ Google Gemini API Key">
                             🔑 API Key
                         </button>
-                        <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-semibold">Gemini 4 Hydrogen</span>
+                        <select id="argonThinkingLevel" title="កម្រិតគិតវិភាគរបស់ AI" class="px-2 py-0.5 rounded-full bg-white border border-indigo-200 text-indigo-900 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer">
+                            <option value="LOW">លឿន (LOW)</option>
+                            <option value="MEDIUM" selected>មធ្យម (MEDIUM)</option>
+                            <option value="HIGH">ស៊ីជម្រៅ (HIGH)</option>
+                            <option value="XHIGH" id="xhighOption">ខ្ពស់បំផុត (XHIGH)</option>
+                        </select>
+                        <select id="aiModelSelect" onchange="onAiModelChange()" title="ជ្រើសរើសម៉ូដែល AI" class="px-2.5 py-0.5 rounded-full bg-indigo-100 hover:bg-indigo-200 border border-indigo-200 text-indigo-900 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer transition">
+                            <option value="gemini-4-hydrogen" selected>⚡ Gemini 4 Hydrogen</option>
+                            <option value="gemini-4-argon">🎯 Gemini 4 Argon</option>
+                        </select>
                     </div>
                 </div>
 
                 <!-- Collapsible API Key Config Box (Essential for Vercel/Netlify hosting & PDF AI Vision) -->
                 <div id="apiKeyPanel" class="hidden mb-3 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <label class="text-[11px] font-bold text-indigo-950">Google Gemini API Key (សម្រាប់វិភាគ PDF & រូបភាព)</label>
-                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 underline hover:text-indigo-800">យក Key ឥតគិតថ្លៃ</a>
+                        <label class="text-[11px] font-bold text-indigo-950">Google Gemini API Key (សម្រាប់ Gemini 4 Hydrogen & Argon • វិភាគ PDF & រូបភាព)</label>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 underline hover:text-indigo-800">យក Key</a>
                     </div>
                     <div class="flex gap-1.5">
                         <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -253,17 +262,15 @@
                             <label class="block text-xs font-semibold text-slate-700 mb-1">កម្រិតថ្នាក់</label>
                             <select id="gradeInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="ទី១០">ថ្នាក់ទី១០</option>
-                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ)">ថ្នាក់ទី១១ (វិទ្យាសាស្ត្រ)</option>
-                                <option value="ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ថ្នាក់ទី១១ (វិទ្យាសាស្ត្រសង្គម)</option>
-                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)" selected>ថ្នាក់ទី១២ (វិទ្យាសាស្ត្រ)</option>
-                                <option value="ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រសង្គម)">ថ្នាក់ទី១២ (វិទ្យាសាស្ត្រសង្គម)</option>
+                                <option value="ទី១១" selected>ថ្នាក់ទី១១</option>
+                                <option value="ទី១២">ថ្នាក់ទី១២</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">មុខវិជ្ជា</label>
                             <select id="subjectInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="គណិតវិទ្យា">គណិតវិទ្យា</option>
-                                <option value="រូបវិទ្យា" selected>រូបវិទ្យា</option>
+                                <option value="រូបវិទ្យា">រូបវិទ្យា</option>
                                 <option value="គីមីវិទ្យា">គីមីវិទ្យា</option>
                                 <option value="ជីវវិទ្យា">ជីវវិទ្យា</option>
                                 <option value="ផែនដី និងបរិស្ថានវិទ្យា">ផែនដី និងបរិស្ថានវិទ្យា</option>
@@ -273,16 +280,48 @@
                                 <option value="សីលធម៌-ពលរដ្ឋវិជ្ជា">សីលធម៌-ពលរដ្ឋវិជ្ជា</option>
                                 <option value="សេដ្ឋកិច្ចវិទ្យា">សេដ្ឋកិច្ចវិទ្យា</option>
                                 <option value="ភាសាអង់គ្លេស (English)">ភាសាអង់គ្លេស (English)</option>
-                                <option value="ព័ត៌មានវិទ្យា (ICT)">ព័ត៌មានវិទ្យា (ICT)</option>
+                                <option value="ព័ត៌មានវិទ្យា (ICT)" selected>ព័ត៌មានវិទ្យា (ICT)</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
+                        <label class="block text-xs font-semibold text-indigo-900 mb-1">📚 ជ្រើសមេរៀនរហ័ស (ICT ថ្នាក់ទី១១ តាមសៀវភៅក្រសួង / EBC)</label>
+                        <select id="moeysIctPreset" onchange="applyMoeysIctPreset()" class="w-full px-3 py-2 rounded-xl border border-indigo-200 bg-white text-xs sm:text-sm text-indigo-950 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- ជ្រើសមេរៀនពីសៀវភៅសិក្សាគោលក្រសួង (ឬវាយបញ្ចូលដោយខ្លួនឯង) --</option>
+                            <optgroup label="ជំពូកទី១៖ ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា">
+                                <option value="c1l1" selected>ជំពូកទី១ មេរៀនទី១៖ ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា</option>
+                                <option value="c1l2">ជំពូកទី១ មេរៀនទី២៖ ប្រសិទ្ធភាពនៃទំនាក់ទំនង និងកុំព្យូទ័រ</option>
+                                <option value="c1l3">ជំពូកទី១ មេរៀនទី៣៖ កូដ មធ្យោបាយធ្វើទំនាក់ទំនង និងការរៀនវាយអក្សរខ្មែរ</option>
+                            </optgroup>
+                            <optgroup label="ជំពូកទី២៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ">
+                                <option value="c2l1">ជំពូកទី២ មេរៀនទី១៖ លិខិតផ្ទាល់ខ្លួន និងលិខិតរបស់ស្ថាប័នរដ្ឋ</option>
+                                <option value="c2l2">ជំពូកទី២ មេរៀនទី២៖ លិខិតជំនួញ</option>
+                                <option value="c2l3">ជំពូកទី២ មេរៀនទី៣៖ ការកត់ត្រា និងរៀបចំព័ត៌មានឲ្យមានរចនាសម្ព័ន្ធ</option>
+                                <option value="c2l4">ជំពូកទី២ មេរៀនទី៤៖ ការស្វែងរកការងារ</option>
+                            </optgroup>
+                            <optgroup label="ជំពូកទី៣៖ អ៊ីនធឺណិត និងអ៊ីមែល">
+                                <option value="c3l1">ជំពូកទី៣ មេរៀនទី១៖ អ៊ីនធឺណិត</option>
+                                <option value="c3l2">ជំពូកទី៣ មេរៀនទី២៖ ទំនាក់ទំនងការងារផ្ទៃក្នុង និងសារអេឡិចត្រូនិក</option>
+                            </optgroup>
+                            <optgroup label="ជំពូកទី៤៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ">
+                                <option value="c4l1">ជំពូកទី៤ មេរៀនទី១៖ ការណែនាំអំពីបទបង្ហាញ</option>
+                                <option value="c4l2">ជំពូកទី៤ មេរៀនទី២៖ ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ</option>
+                                <option value="c4l3">ជំពូកទី៤ មេរៀនទី៣៖ ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ</option>
+                            </optgroup>
+                            <optgroup label="ជំពូកទី៥៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី">
+                                <option value="c5l1">ជំពូកទី៥ មេរៀនទី១៖ ឯកសារពាណិជ្ជកម្ម</option>
+                                <option value="c5l2">ជំពូកទី៥ មេរៀនទី២៖ ការគណនាប្រាក់ចំណេញនៃជំនួញ</option>
+                                <option value="c5l3">ជំពូកទី៥ មេរៀនទី៣៖ ការធ្វើឲ្យជំនួញមានសក្តានុពល</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ជំពូកទី (លេខជំពូក និងឈ្មោះជំពូក)</label>
                         <div class="flex gap-2">
-                            <input type="text" id="chapterNumInput" oninput="syncPreview()" value="២" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <input type="text" id="chapterInput" oninput="syncPreview()" value="អគ្គិសនី និងម៉ាញេទិច" placeholder="............" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="chapterNumInput" oninput="syncPreview()" value="១" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="chapterInput" oninput="syncPreview()" value="ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា" placeholder="............" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
@@ -290,14 +329,16 @@
                         <label class="block text-xs font-semibold text-slate-700 mb-1">មេរៀនទី (លេខមេរៀន និងឈ្មោះមេរៀន)</label>
                         <div class="flex gap-2">
                             <input type="text" id="lessonNumInput" oninput="syncPreview()" value="១" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ដែនម៉ាញេទិច" placeholder=".........." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា" placeholder=".........." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ចំណងជើងរង</label>
-                        <textarea id="subLessonsInput" oninput="onSubLessonsEdited()" rows="2" placeholder="១. ...&#10;២. ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. និយមន័យដែនម៉ាញេទិច និងខ្សែដែនម៉ាញេទិច
-២. វ៉ិចទ័រដែនម៉ាញេទិច និងអាំងឌុចស្យុងម៉ាញេទិច</textarea>
+                        <textarea id="subLessonsInput" oninput="onSubLessonsEdited()" rows="2" placeholder="១. ...&#10;២. ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត
+២. ទំនាក់ទំនង និងបច្ចេកវិទ្យាព័ត៌មាន និងសារគមនាគមន៍
+៣. កុំព្យូទ័រ កម្មវិធីកុំព្យូទ័រ ឯកសារ និងថតឯកសារ
+៤. ការប្រើកណ្ដុរ ផ្ទៃតុ និងបង្អួចកម្មវិធី</textarea>
                         <!-- Interactive Sub-topic Selector for 1h vs 2h Lesson Pacing -->
                         <div id="subTopicSelectorPanel" class="hidden mt-2 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1.5">
                             <div class="flex items-center justify-between gap-2">
@@ -308,13 +349,21 @@
                         </div>
                     </div>
 
-                    <!-- NEW: Upload Image or PDF Lesson Source -->
+                    <!-- Upload Image or PDF Lesson Source -->
                     <div class="pt-1">
                         <div class="flex items-center justify-between mb-1">
                             <label class="block text-xs font-semibold text-slate-700">បញ្ចូលឯកសារមេរៀន (រូបភាព ឬ PDF - ជាជម្រើស)</label>
                             <button type="button" id="clearFilesBtn" onclick="clearUploadedFiles()" class="hidden text-[11px] font-semibold text-rose-600 hover:text-rose-800 cursor-pointer">
                                 លុបឯកសារទាំងអស់
                             </button>
+                        </div>
+                        <div class="mb-2 p-2 rounded-xl bg-white/90 border border-indigo-100 flex flex-wrap items-center justify-between gap-1.5 text-[11px]">
+                            <span class="font-semibold text-indigo-950">📖 សៀវភៅគោលក្រសួង (SalaDigital)៖</span>
+                            <div class="flex flex-wrap gap-1">
+                                <a href="https://sala.moeys.gov.kh/kh/library/00001479" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១០</a>
+                                <a href="https://sala.moeys.gov.kh/kh/library/00004413" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១១</a>
+                                <a href="https://sala.moeys.gov.kh/kh/library/00004414" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១២</a>
+                            </div>
                         </div>
                         <label id="fileDropZone" for="lessonFileInput" class="flex flex-col items-center justify-center w-full px-3 py-3 border-2 border-dashed border-indigo-300 rounded-xl bg-white/80 hover:bg-indigo-50/70 transition cursor-pointer text-center">
                             <div class="flex items-center gap-2 text-indigo-800 text-xs font-semibold">
@@ -363,13 +412,15 @@
                         </label>
 
                         <select id="teachingMethod" onchange="onMethodChange()" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-indigo-200 bg-indigo-50/40 text-indigo-950 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (Pedagogical Methods)">
+                            <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (MoEYS & ICT Methods)">
+                                <option value="demo" selected>បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)</option>
+                                <option value="active">បែបសិស្សមជ្ឈមណ្ឌល / ពិភាក្សាសកម្ម (Active Learning)</option>
                                 <option value="jigsaw">បែបសហការ (Cooperative Learning - Jigsaw)</option>
                                 <option value="polya">បែបដោះស្រាយបញ្ហា (Problem Solving - Polya)</option>
-                                <option value="ibl" selected>បែបរិះរក (Inquiry-Based Learning - IBL)</option>
+                                <option value="ibl">បែបរិះរក (Inquiry-Based Learning - IBL)</option>
                                 <option value="5es">លំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate)</option>
-                                <option value="active">បែបសិស្សមជ្ឈមណ្ឌល / សកម្ម (Active Learning)</option>
                                 <option value="pbl">បែបគម្រោង (Project-Based Learning - PBL)</option>
+                                <option value="inductive">បែបឧបមាន-អនុមាន និងសំណួរ-ចម្លើយ (Inductive-Deductive)</option>
                             </optgroup>
                             <optgroup label="យុទ្ធវិធី និងបច្ចេកទេសបង្រៀន (Teaching Strategies & Techniques)">
                                 <option value="tps">យុទ្ធវិធី គិត-ពិភាក្សាជាដៃគូ-ចែករំលែក (Think-Pair-Share)</option>
@@ -406,7 +457,7 @@
                         <!-- Main AI Generate Button -->
                         <button type="button" id="aiGenerateBtn" onclick="generateLessonWithAI()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-700 via-blue-700 to-indigo-800 hover:from-indigo-600 hover:to-blue-600 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                             <span>✨</span>
-                            <span>វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ AI</span>
+                            <span id="aiGenerateBtnLabel">វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ Gemini 4 Hydrogen</span>
                         </button>
 
                         <!-- Interactive AI Refinement Chat Box -->
@@ -442,7 +493,7 @@
                             <!-- Chat Input Form -->
                             <div class="flex gap-1.5">
                                 <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter'){event.preventDefault();refineLessonWithChat();}" placeholder="វាយសំណើកែលម្អកិច្ចតែងការនៅទីនេះ..." class="flex-1 px-3 py-2 rounded-xl border border-indigo-200 bg-white text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                                <button type="button" id="aiChatSendBtn" onclick="refineLessonWithChat()" class="px-3.5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold shadow-xs transition shrink-0 cursor-pointer">
+                                <button type="button" id="aiChatSendBtn" onclick="refineLessonWithChat()" class="px-3.5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold shadow-sm transition shrink-0 cursor-pointer">
                                     ផ្ញើ
                                 </button>
                             </div>
@@ -482,7 +533,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs text-slate-600 mb-1">ទីតាំង/ខេត្ត-រាជធានី (សម្រាប់កាលបរិច្ឆេទហត្ថលេខា)</label>
-                            <input type="text" id="deptInput" oninput="syncPreview()" value="រាជធានីភ្នំពេញ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="deptInput" oninput="updateKhmerLunarDate()" value="ស្រីសន្ឌរ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs text-slate-600 mb-1">កាលបរិច្ឆេទចន្ទគតិខ្មែរ (ផ្នែកហត្ថលេខា)</label>
@@ -513,15 +564,15 @@
                     </h3>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• វិជ្ជាសម្បទា (ចំណេះដឹង)</label>
-                        <textarea id="objKnowledge" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ពន្យល់ពីនិយមន័យដែនម៉ាញេទិច លក្ខណៈនៃខ្សែដែនម៉ាញេទិច និងប្រាប់រូបមន្តគណនាអាំងឌុចស្យុងម៉ាញេទិចបានត្រឹមត្រូវតាមរយៈការពិភាក្សា និងសង្កេតពិសោធន៍។</textarea>
+                        <textarea id="objKnowledge" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ពន្យល់ពីភាពខុសគ្នារវាងព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត ព្រមទាំងរៀបរាប់ពីផ្នែកមូលដ្ឋាននៃកុំព្យូទ័រ ឯកសារ និងថតឯកសារបានត្រឹមត្រូវតាមសៀវភៅសិក្សាគោល។</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• បំណិនសម្បទា (ជំនាញ)</label>
-                        <textarea id="objSkill" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">កំណត់ទិស និងទិសដៅនៃវ៉ិចទ័រដែនម៉ាញេទិចដោយប្រើវិធានដៃស្តាំ និងគណនាតម្លៃដែនម៉ាញេទិចត្រង់ចំណុចមួយបានច្បាស់លាស់។</textarea>
+                        <textarea id="objSkill" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ប្រើប្រាស់កណ្ដុរ (ចុចឆ្វេង ស្តាំ ទ្វេដង) គ្រប់គ្រងបង្អួចកម្មវិធីលើផ្ទៃតុ និងបង្កើត/រៀបចំឯកសារ និងថតឯកសារក្នុងកុំព្យូទ័របានត្រឹមត្រូវ។</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• ចរិយាសម្បទា (ឥរិយាបថ)</label>
-                        <textarea id="objAttitude" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">មានស្មារតីសហការក្នុងក្រុម ហ៊ានបញ្ចេញមតិ និងយល់ដឹងពីអត្ថប្រយោជន៍នៃម៉ាញេទិចក្នុងជីវភាពរស់នៅប្រចាំថ្ងៃ។</textarea>
+                        <textarea id="objAttitude" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">មានស្មារតីសហការក្នុងក្រុម ប្រើប្រាស់កុំព្យូទ័រដោយប្រុងប្រយ័ត្ន និងរៀបចំឯកសារសិក្សាមានរបៀបរៀបរយ។</textarea>
                     </div>
                 </div>
 
@@ -535,8 +586,8 @@
                     </h3>
                     <div>
                         <label class="block text-xs text-slate-600 mb-1">សម្ភារបង្រៀន និងរៀន</label>
-                        <textarea id="materialsInput" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">- សៀវភៅសិក្សាគោលរូបវិទ្យា ថ្នាក់ទី១២ របស់ក្រសួងអប់រំ យុវជន និងកីឡា
-- របារមេដែក ម្សៅដែក ត្រីវិស័យ ផ្ទាំងរូបភាព និងសន្លឹកកិច្ចការក្រុម។</textarea>
+                        <textarea id="materialsInput" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">- សៀវភៅសិក្សាគោលព័ត៌មានវិទ្យា (ICT) កម្រិតវិទ្យាល័យ របស់ក្រសួងអប់រំ យុវជន និងកីឡា
+- កុំព្យូទ័រ Projector រូបភាពផ្នែករឹង-ទន់ និងសន្លឹកកិច្ចការក្រុម។</textarea>
                     </div>
                 </div>
 
@@ -568,7 +619,7 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី២៖ រំលឹកមេរៀន</span>
                             <input type="text" id="s2Time" oninput="syncPreview()" value="៥ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s2Content" oninput="syncPreview()" rows="2" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- កែលំហាត់កិច្ចការផ្ទះ និងរំលឹកពីបន្ទុកអគ្គិសនី និងចរន្តអគ្គិសនី។</textarea>
+                        <textarea id="s2Content" oninput="syncPreview()" rows="2" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យកិច្ចការផ្ទះ និងសួរសំណួរបំផុសអំពីការប្រើប្រាស់ឧបករណ៍ទំនាក់ទំនងប្រចាំថ្ងៃ។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s2Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ហៅសិស្សឡើងកែកិច្ចការផ្ទះ និងសួរសំណួរបំផុសភ្ជាប់ទៅមេរៀនថ្មី។</textarea>
                             <textarea id="s2Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ឡើងកែកិច្ចការផ្ទះលើក្តារខៀន និងឆ្លើយសំណួររំលឹក។</textarea>
@@ -581,16 +632,16 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី៣៖ ខ្លឹមសារមេរៀនថ្មី</span>
                             <input type="text" id="s3Time" oninput="syncPreview()" value="៣០ នាទី" class="w-24 px-2 py-1 rounded-lg border border-indigo-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s3Content" oninput="syncPreview()" rows="4" placeholder="ខ្លឹមសារមេរៀន" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. និយមន័យដែនម៉ាញេទិច៖ គឺជាមជ្ឈដ្ឋានជុំវិញមេដែក ឬចរន្តអគ្គិសនីដែលមានអំពើលើម្ជុលមេដែក។
-២. ខ្សែដែនម៉ាញេទិច៖ មានទិសដៅចេញពីប៉ូលជើង (N) ទៅប៉ូលត្បូង (S) នៅខាងក្រៅមេដែក។
-៣. វ៉ិចទ័រដែនម៉ាញេទិច B៖ មានខ្នាតគិតជា តេស្លា (T)។</textarea>
+                        <textarea id="s3Content" oninput="syncPreview()" rows="4" placeholder="ខ្លឹមសារមេរៀន" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត៖ ព័ត៌មានជាទិន្នន័យមានន័យ ចំណេះដឹងជាការយល់ដឹងតាមការសិក្សា និងគតិបណ្ឌិតជាការអនុវត្តចំណេះដឹង។
+២. ទំនាក់ទំនង និង ICT៖ ការផ្ទេរព័ត៌មាន និងបច្ចេកវិទ្យាអេឡិចត្រូនិកសម្រាប់ផ្ទុក ដំណើរការ និងទាក់ទង។
+៣. កុំព្យូទ័រ ឯកសារ និងថតឯកសារ៖ ការប្រើកណ្ដុរ ផ្ទៃតុ (Desktop) និងការរៀបចំឯកសារក្នុងថត (Folder)។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <textarea id="s3Teacher" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ចោទសំណួរបំផុស៖ បង្ហាញរបារមេដែក និងត្រីវិស័យ រួចសួរថាហេតុអ្វីម្ជុលត្រីវិស័យងាក?
-២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកសិស្សជាក្រុម ឱ្យធ្វើពិសោធន៍រោយម្សៅដែកជុំវិញមេដែក និងអានសៀវភៅពុម្ព។
-៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលក្រុមនីមួយៗឡើងបកស្រាយលទ្ធផលពិសោធន៍ រួចគ្រូបូកសរុបនិយមន័យ និងរូបមន្តផ្លូវការ។</textarea>
-                            <textarea id="s3Student" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ចោទសំណួរ និងទស្សន៍ទាយ៖ សង្កេតបាតុភូត និងចោទសំណួរអំពីកម្លាំងម៉ាញេទិច។
-២. ស្រាវជ្រាវ និងពិសោធន៍៖ សហការក្នុងក្រុមធ្វើពិសោធន៍ សង្កេតខ្សែដែនម៉ាញេទិច និងកត់ត្រាទិន្នន័យ។
-៣. វិភាគ និងសន្និដ្ឋាន៖ តំណាងក្រុមឡើងបង្ហាញលទ្ធផល និងកត់ត្រាខ្លឹមសារមេរៀនចូលសៀវភៅ។</textarea>
+                            <textarea id="s3Teacher" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ចោទសំណួរបំផុស៖ សួរសិស្សអំពីរបៀបធ្វើទំនាក់ទំនង និងភាពខុសគ្នារវាងព័ត៌មាន និងចំណេះដឹង។
+២. ស្រាវជ្រាវ និងអនុវត្ត៖ បែងចែកសិស្សជាក្រុមអានសៀវភៅសិក្សាគោល និងអនុវត្តផ្ទាល់លើកុំព្យូទ័របង្កើតថតឯកសារ (Folder) និងប្រើកណ្ដុរ។
+៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលក្រុមឡើងបង្ហាញលទ្ធផល រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។</textarea>
+                            <textarea id="s3Student" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. សង្កេត និងឆ្លើយសំណួរ៖ ពិភាក្សាបែងចែកទំនាក់ទំនងផ្ទាល់មាត់ សរសេរ និងកាយវិការ។
+២. អនុវត្តជាក់ស្តែង៖ សហការក្នុងក្រុមបង្កើតថតឯកសារថ្មី រៀបចំឯកសារ និងប្រើបង្អួចកម្មវិធីលើផ្ទៃតុ។
+៣. វិភាគ និងសន្និដ្ឋាន៖ តំណាងក្រុមឡើងបង្ហាញ និងកត់ត្រាខ្លឹមសារមេរៀនចូលសៀវភៅ។</textarea>
                         </div>
                     </div>
 
@@ -600,7 +651,7 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី៤៖ ពង្រឹងពុទ្ធិ</span>
                             <input type="text" id="s4Time" oninput="syncPreview()" value="៨ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s4Content" oninput="syncPreview()" rows="2" placeholder="សំណួរ ឬលំហាត់ពង្រឹង" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- សំណួរ៖ ដូចម្តេចដែលហៅថា ដែនម៉ាញេទិច? តើខ្សែដែនម៉ាញេទិចមានទិសដៅដូចម្តេច?</textarea>
+                        <textarea id="s4Content" oninput="syncPreview()" rows="2" placeholder="សំណួរ ឬលំហាត់ពង្រឹង" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- សំណួរ៖ តើព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិតខុសគ្នាដូចម្តេច? តើថតឯកសារ (Folder) មាននាទីធ្វើអ្វី?</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s4Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ចោទសំណួរវាយតម្លៃ និងដាក់លំហាត់អនុវត្តខ្លីៗដើម្បីវាស់ស្ទង់ការយល់ដឹង។</textarea>
                             <textarea id="s4Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- គិត និងឆ្លើយសំណួរដោយឯករាជ្យ ព្រមទាំងដោះស្រាយលំហាត់លើក្តារខៀន។</textarea>
@@ -613,7 +664,7 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី៥៖ បណ្តាំផ្ញើ</span>
                             <input type="text" id="s5Time" oninput="syncPreview()" value="៤ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s5Content" oninput="syncPreview()" rows="2" placeholder="កិច្ចការផ្ទះ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ធ្វើលំហាត់ទី១ និងទី២ ទំព័រទី៤៥ ក្នុងសៀវភៅពុម្ព និងអានមេរៀនបន្ទាប់។</textarea>
+                        <textarea id="s5Content" oninput="syncPreview()" rows="2" placeholder="កិច្ចការផ្ទះ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- អានមេរៀនទី១ ឡើងវិញ និងអនុវត្តរៀបចំឯកសារសិក្សាក្នុងថតឯកសារតាមមុខវិជ្ជា និងត្រៀមមេរៀនទី២។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s5Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំលឹកមេរៀនឡើងវិញនៅផ្ទះ។</textarea>
                             <textarea id="s5Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- កត់ត្រាកិច្ចការផ្ទះ និងស្តាប់ការណែនាំរបស់គ្រូ។</textarea>
@@ -678,7 +729,7 @@
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">កម្រិតថ្នាក់</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0;" id="prevGrade">ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ)</td>
+                        <td style="vertical-align: top; padding: 1px 0;" id="prevGrade">ទី១១</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevChapterLabel">ជំពូកទី២</td>
@@ -699,7 +750,7 @@
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">គោលវិធី/វិធីសាស្រ្ត</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0;" id="prevMethod">បែបរិះរក (Inquiry-Based Learning - IBL)</td>
+                        <td style="vertical-align: top; padding: 1px 0;" id="prevMethod">បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">បង្រៀនដោយ</td>
@@ -802,7 +853,7 @@
                     </div>
                     <div class="text-center">
                         <div id="prevLunarDate">ថ្ងៃអាទិត្យ ៦កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ព.ស. ២៥៧០</div>
-                        <div id="prevSolarDateText">រាជធានីភ្នំពេញ ថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦</div>
+                        <div id="prevSolarDateText">ស្រីសន្ឌរ ថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦</div>
                         <div class="font-moul text-[12px] mt-1">គ្រូបង្រៀន</div>
                         <div class="mt-12 font-bold" id="prevTeacher">លោកគ្រូ រ៉ាន កក្កដា</div>
                     </div>
@@ -813,7 +864,7 @@
     </main>
 
     <!-- Saved Lesson Plans Modal Drawer -->
-    <div id="savedDrawerModal" class="no-print fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div id="savedDrawerModal" class="no-print fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
             <div class="px-5 py-4 bg-indigo-950 text-white flex items-center justify-between">
                 <h3 class="font-bold text-sm sm:text-base">បញ្ជីកិច្ចតែងការបង្រៀនដែលបានរក្សាទុក</h3>
@@ -883,7 +934,7 @@
 
         function updateKhmerLunarDate() {
             const picker = document.getElementById('gregorianDatePicker');
-            const deptVal = document.getElementById('deptInput')?.value || 'រាជធានីភ្នំពេញ';
+            const deptVal = document.getElementById('deptInput')?.value || 'ស្រីសន្ឌរ';
             let dateObj = new Date(2026, 10, 15);
             if (picker && picker.value) {
                 const parts = picker.value.split('-').map(Number);
@@ -914,7 +965,6 @@
             const textLen = (pdfText || '').length;
             const hasHeavyMathOrTheory = /រូបមន្ត|សម្រាយ|ឧទាហរណ៍|លំហាត់|ពិសោធន៍|ប្រតិកម្ម|សមីការ/.test(`${title} ${subLessons} ${pdfText.slice(0, 1500)}`);
 
-            // Determine ideal count of sub-topics to teach in this session
             let recommendedCount = 1;
             if (isOneHour) {
                 if (totalSubs <= 1) {
@@ -1038,6 +1088,40 @@
             return chosen.length > 0 ? chosen.join('\n') : lines.join('\n');
         }
 
+        const MOEYS_ICT_CURRICULUM = {
+            c1l1: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '១', lTitle: 'ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា', subs: '១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត\n២. ទំនាក់ទំនង និងបច្ចេកវិទ្យាព័ត៌មាន និងសារគមនាគមន៍\n៣. កុំព្យូទ័រ កម្មវិធីកុំព្យូទ័រ ឯកសារ និងថតឯកសារ\n៤. ការប្រើកណ្ដុរ ផ្ទៃតុ និងបង្អួចកម្មវិធី' },
+            c1l2: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '២', lTitle: 'ប្រសិទ្ធភាពនៃទំនាក់ទំនង និងកុំព្យូទ័រ', subs: '១. ការទំនាក់ទំនងប្រកបដោយប្រសិទ្ធភាព\n២. តួនាទីកុំព្យូទ័រក្នុងការងារទំនាក់ទំនង' },
+            c1l3: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '៣', lTitle: 'កូដ មធ្យោបាយធ្វើទំនាក់ទំនង និងការរៀនវាយអក្សរខ្មែរ', subs: '១. កូដ និងមធ្យោបាយធ្វើទំនាក់ទំនង\n២. ការរៀនវាយអក្សរខ្មែរយូនីកូដ (Khmer Unicode)' },
+            c2l1: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '១', lTitle: 'លិខិតផ្ទាល់ខ្លួន និងលិខិតរបស់ស្ថាប័នរដ្ឋ', subs: '១. រចនាសម្ព័ន្ធលិខិតផ្ទាល់ខ្លួន\n២. ទម្រង់លិខិតរដ្ឋបាល និងស្ថាប័នរដ្ឋ' },
+            c2l2: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '២', lTitle: 'លិខិតជំនួញ', subs: '១. គោលការណ៍សរសេរលិខិតជំនួញ\n២. ការរចនាលិខិតជំនួញក្នុងកម្មវិធីអត្ថបទ' },
+            c2l3: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '៣', lTitle: 'ការកត់ត្រា និងរៀបចំព័ត៌មានឲ្យមានរចនាសម្ព័ន្ធ', subs: '១. ការប្រើប្រាស់តារាង និងបញ្ជី\n២. ការរៀបចំទម្រង់ឯកសារឱ្យមានសណ្តាប់ធ្នាប់' },
+            c2l4: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '៤', lTitle: 'ការស្វែងរកការងារ', subs: '១. ការរៀបចំប្រវត្តិរូបសង្ខេប (CV)\n២. លិខិតស្នើសុំការងារ (Cover Letter)' },
+            c3l1: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '១', lTitle: 'អ៊ីនធឺណិត', subs: '១. សញ្ញាណអ៊ីនធឺណិត និងកម្មវិធីរុករក (Web Browser)\n២. ការស្វែងរកព័ត៌មាន និងសុវត្ថិភាពលើអ៊ីនធឺណិត' },
+            c3l2: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '២', lTitle: 'ទំនាក់ទំនងការងារផ្ទៃក្នុង និងសារអេឡិចត្រូនិក', subs: '១. ការបង្កើត និងប្រើប្រាស់អ៊ីមែល (Email)\n២. ក្រមសីលធម៌ក្នុងការផ្ញើសារអេឡិចត្រូនិក' },
+            c4l1: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '១', lTitle: 'ការណែនាំអំពីបទបង្ហាញ', subs: '១. គោលបំណង និងកម្មវិធីបង្កើតបទបង្ហាញ\n២. ការបង្កើតស្លាយ (Slide) មូលដ្ឋាន' },
+            c4l2: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '២', lTitle: 'ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ', subs: '១. ការបញ្ចូលរូបភាព តារាង និងក្រាហ្វិក\n២. ការប្រើចលនា (Animations & Transitions)' },
+            c4l3: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '៣', lTitle: 'ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ', subs: '១. ការរៀបចំលំដាប់ខ្លឹមសារបទបង្ហាញ\n២. បច្ចេកទេសធ្វើបទបង្ហាញប្រកបដោយប្រសិទ្ធភាព' },
+            c5l1: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '១', lTitle: 'ឯកសារពាណិជ្ជកម្ម', subs: '១. ការណែនាំអំពីកម្មវិធីសៀវភៅបញ្ជី (Spreadsheet)\n២. ការរៀបចំតារាងវិក្កយបត្រ និងបញ្ជីទំនិញ' },
+            c5l2: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '២', lTitle: 'ការគណនាប្រាក់ចំណេញនៃជំនួញ', subs: '១. ការប្រើប្រាស់រូបមន្តគណនា (SUM, AVERAGE, IF)\n២. ការវិភាគចំណូល ចំណាយ និងប្រាក់ចំណេញ' },
+            c5l3: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '៣', lTitle: 'ការធ្វើឲ្យជំនួញមានសក្តានុពល', subs: '១. ការបង្កើតគំនូសតាង (Charts) វិភាគទិន្នន័យ\n២. ការតម្រៀប និងចម្រោះទិន្នន័យ (Sort & Filter)' }
+        };
+
+        function applyMoeysIctPreset() {
+            const key = document.getElementById('moeysIctPreset')?.value;
+            const item = MOEYS_ICT_CURRICULUM[key];
+            if (!item) return;
+            document.getElementById('subjectInput').value = 'ព័ត៌មានវិទ្យា (ICT)';
+            document.getElementById('chapterNumInput').value = item.chNum;
+            document.getElementById('chapterInput').value = item.chTitle;
+            document.getElementById('lessonNumInput').value = item.lNum;
+            document.getElementById('lessonTitleInput').value = item.lTitle;
+            document.getElementById('subLessonsInput').value = item.subs;
+            selectedSubTopicIndices = null;
+            renderSubTopicCheckboxes();
+            syncPreview();
+            showToast(`បានជ្រើសមេរៀន "${item.lTitle}" តាមសៀវភៅក្រសួងអប់រំ!`, 'info');
+        }
+
         function onSubLessonsEdited() {
             selectedSubTopicIndices = null;
             renderSubTopicCheckboxes();
@@ -1066,11 +1150,29 @@
                     student: '១. អាន និងវិភាគបញ្ហា កំណត់អ្វីដែលស្គាល់ និងអ្វីដែលត្រូវរក។\n២. ពិភាក្សាជ្រើសរើសរូបមន្ត ឬវិធីសាស្ត្រដោះស្រាយ។\n៣. អនុវត្តការគណនា និងសរសេរដំណោះស្រាយលម្អិត។\n៤. ផ្ទៀងផ្ទាត់លទ្ធផល ខ្នាត និងឡើងបង្ហាញលើក្តារខៀន។'
                 }
             },
+            demo: {
+                label: 'បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)',
+                description: 'ស័ក្តិសមបំផុតសម្រាប់មេរៀន ICT៖ គ្រូបង្ហាញជំហានគំរូលើអេក្រង់ ➔ សិស្សអនុវត្តផ្ទាល់លើកុំព្យូទ័រ ➔ គ្រូដើរសម្របសម្រួល និងសង្ខេប។',
+                step3Template: {
+                    content: 'ខ្លឹមសារគោល និងជំហានអនុវត្តបច្ចេកទេសផ្ទាល់លើកុំព្យូទ័រ/កម្មវិធី។',
+                    teacher: '១. ពន្យល់ និងបង្ហាញគំរូ (Demonstration)៖ ពន្យល់គោលគំនិតសំខាន់ៗ រួចបង្ហាញជំហានអនុវត្តផ្ទាល់តាម Projector យ៉ាងច្បាស់លាស់។\n២. អនុវត្តផ្ទាល់ (Hands-on Practice)៖ ឱ្យសិស្សអនុវត្តតាមជំហានលើកុំព្យូទ័ររៀងៗខ្លួន ឬជាគូ ដោយគ្រូដើរពិនិត្យ និងជួយកែតម្រូវ។\n៣. សង្ខេប និងផ្ទៀងផ្ទាត់៖ ជ្រើសស្នាដៃសិស្សមកបង្ហាញ រួចគ្រូបូកសរុបចំណុចគន្លឹះ។',
+                    student: '១. សង្កេតការបង្ហាញជំហានគំរូរបស់គ្រូ និងកត់ត្រាចំណុចសំខាន់ៗ។\n២. អនុវត្តផ្ទាល់លើកុំព្យូទ័រតាមការណែនាំ និងសហការដោះស្រាយបញ្ហាជាមួយដៃគូ។\n៣. បង្ហាញលទ្ធផលការងារ និងកត់ត្រាខ្លឹមសារសង្ខេបចូលសៀវភៅ។'
+                }
+            },
+            inductive: {
+                label: 'បែបឧបមាន-អនុមាន និងសំណួរ-ចម្លើយ (Inductive-Deductive)',
+                description: 'វិធីសាស្ត្រផ្លូវការក្រសួងអប់រំ៖ ចាប់ពីឧទាហរណ៍ជាក់ស្តែងទាញរកនិយមន័យ/ក្បួនរួម រួចអនុវត្តទៅកាន់លំហាត់ថ្មី។',
+                step3Template: {
+                    content: 'ឧទាហរណ៍ជាក់ស្តែង និយមន័យ/គោលការណ៍រួម និងការអនុវត្ត។',
+                    teacher: '១. ឧបមាន (Inductive)៖ លើកឧទាហរណ៍ជាក់ស្តែង និងចោទសំណួរឱ្យសិស្សសង្កេតទាញរកនិយមន័យ ឬក្បួនរួម។\n២. បញ្ជាក់ទ្រឹស្តី៖ សម្របសម្រួលចម្លើយសិស្ស រួចបូកសរុបជានិយមន័យ ឬគោលការណ៍ផ្លូវការ។\n៣. អនុមាន (Deductive)៖ ឱ្យសិស្សយកក្បួននោះទៅអនុវត្តដោះស្រាយករណី ឬលំហាត់ថ្មី។',
+                    student: '១. សង្កេតឧទាហរណ៍ គិត និងឆ្លើយសំណួររបស់គ្រូដើម្បីទាញរកគោលការណ៍រួម។\n២. កត់ត្រានិយមន័យ និងក្បួនផ្លូវការចូលសៀវភៅ។\n៣. អនុវត្តទ្រឹស្តីទៅដោះស្រាយលំហាត់ ឬស្ថានភាពថ្មី។'
+                }
+            },
             ibl: {
                 label: 'បែបរិះរក (Inquiry-Based Learning - IBL)',
                 description: 'លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង។',
                 step3Template: {
-                    content: '១. និយមន័យដែនម៉ាញេទិច៖ គឺជាមជ្ឈដ្ឋានជុំវិញមេដែក ឬចរន្តអគ្គិសនីដែលមានអំពើលើម្ជុលមេដែក។\n២. ខ្សែដែនម៉ាញេទិច៖ មានទិសដៅចេញពីប៉ូលជើង (N) ទៅប៉ូលត្បូង (S) នៅខាងក្រៅមេដែក។\n៣. វ៉ិចទ័រដែនម៉ាញេទិច B៖ មានខ្នាតគិតជា តេស្លា (T)។',
+                    content: 'សំណួររិះរក សម្មតិកម្ម លទ្ធផលស្រាវជ្រាវ និងសេចក្តីសន្និដ្ឋាននៃមេរៀន។',
                     teacher: '១. ចោទសំណួរបំផុស៖ បង្ហាញបាតុភូត ឬរូបភាព រួចជំរុញឱ្យសិស្សចោទសួរ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកក្រុមឱ្យសិស្សធ្វើពិសោធន៍ ឬអានឯកសារដើម្បីរកចម្លើយ។\n៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលការបកស្រាយលទ្ធផល រួចគ្រូបូកសរុបទ្រឹស្តីផ្លូវការ។',
                     student: '១. សង្កេតបាតុភូត ចោទសួរ និងទស្សន៍ទាយចម្លើយបឋម (សម្មតិកម្ម)។\n២. សហការក្នុងក្រុមធ្វើពិសោធន៍ ឬស្រាវជ្រាវទិន្នន័យក្នុងសៀវភៅពុម្ព។\n៣. វិភាគលទ្ធផល ឡើងបង្ហាញសេចក្តីសន្និដ្ឋាន និងកត់ត្រាមេរៀន។'
                 }
@@ -1159,13 +1261,79 @@
         };
 
         // =========================================================================
-        // 3. APPLICATION STATE & API KEY MANAGEMENT
+        // 3. APPLICATION STATE & GEMINI 4 ARGON API CONFIGURATION
         // =========================================================================
         const STORAGE_KEY = 'khmer_highschool_lesson_plans_v3';
         const API_KEY_STORAGE = 'khmer_lp_gemini_api_key';
+        const MODEL_STORAGE = 'khmer_lp_gemini_model';
         let currentLessonId = null;
         let uploadedLessonFiles = [];
         let aiChatHistory = [];
+
+        function getActiveModelId() {
+            const sel = document.getElementById('aiModelSelect')?.value;
+            return sel === 'gemini-4-argon' ? 'gemini-4-argon' : 'gemini-4-hydrogen';
+        }
+
+        function getActiveModelLabel() {
+            return getActiveModelId() === 'gemini-4-argon' ? 'Gemini 4 Argon' : 'Gemini 4 Hydrogen';
+        }
+
+        function getGeminiEndpoint(apiKey) {
+            return `https://generativelanguage.googleapis.com/v1beta/models/${getActiveModelId()}:generateContent?key=${apiKey}`;
+        }
+
+        function onAiModelChange() {
+            const modelId = getActiveModelId();
+            safeStorageSet(MODEL_STORAGE, modelId);
+            const xhighOpt = document.getElementById('xhighOption');
+            const thinkingSel = document.getElementById('argonThinkingLevel');
+            if (xhighOpt && thinkingSel) {
+                if (modelId === 'gemini-4-argon') {
+                    xhighOpt.disabled = true;
+                    xhighOpt.hidden = true;
+                    if (thinkingSel.value === 'XHIGH') thinkingSel.value = 'HIGH';
+                } else {
+                    xhighOpt.disabled = false;
+                    xhighOpt.hidden = false;
+                }
+            }
+            const btnLabel = document.getElementById('aiGenerateBtnLabel');
+            if (btnLabel) {
+                btnLabel.textContent = `វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ ${getActiveModelLabel()}`;
+            }
+        }
+
+        function getSelectedThinkingLevel() {
+            const val = document.getElementById('argonThinkingLevel')?.value || 'MEDIUM';
+            const allowed = getActiveModelId() === 'gemini-4-hydrogen'
+                ? ['LOW', 'MEDIUM', 'HIGH', 'XHIGH']
+                : ['LOW', 'MEDIUM', 'HIGH'];
+            return allowed.includes(val) ? val : 'MEDIUM';
+        }
+
+        function safeStorageGet(key, fallback = '') {
+            try {
+                return localStorage.getItem(key) || fallback;
+            } catch (_) {
+                return fallback;
+            }
+        }
+
+        function safeStorageSet(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function safeStorageRemove(key) {
+            try {
+                localStorage.removeItem(key);
+            } catch (_) {}
+        }
 
         function toggleApiKeyPanel() {
             const panel = document.getElementById('apiKeyPanel');
@@ -1173,7 +1341,7 @@
             panel.classList.toggle('hidden');
             const input = document.getElementById('geminiApiKeyInput');
             if (input && !panel.classList.contains('hidden')) {
-                input.value = localStorage.getItem(API_KEY_STORAGE) || '';
+                input.value = safeStorageGet(API_KEY_STORAGE, '');
             }
         }
 
@@ -1181,17 +1349,17 @@
             const input = document.getElementById('geminiApiKeyInput');
             const val = (input?.value || '').trim();
             if (val) {
-                localStorage.setItem(API_KEY_STORAGE, val);
-                showToast('បានរក្សាទុក Gemini API Key រួចរាល់!', 'success');
+                safeStorageSet(API_KEY_STORAGE, val);
+                showToast(`បានរក្សាទុក Gemini API Key សម្រាប់ ${getActiveModelLabel()} រួចរាល់!`, 'success');
             } else {
-                localStorage.removeItem(API_KEY_STORAGE);
+                safeStorageRemove(API_KEY_STORAGE);
                 showToast('បានលុប API Key ចេញពី Browser!', 'info');
             }
             document.getElementById('apiKeyPanel')?.classList.add('hidden');
         }
 
         function getActiveApiKey() {
-            return (localStorage.getItem(API_KEY_STORAGE) || '').trim();
+            return safeStorageGet(API_KEY_STORAGE, '').trim();
         }
 
         // =========================================================================
@@ -1265,45 +1433,25 @@
             });
         }
 
-        /**
-         * Normalizes broken Khmer Unicode order commonly produced by PDF.js text layers:
-         * - Reorders left-side vowels (េ, ែ, ៃ) that appear visually before consonants/clusters
-         * - Removes stray spaces around coeng (្), vowels, and diacritics
-         * - Splits combined vowels (េ + ា -> ោ, េ + ៅ -> ៅ) into canonical Khmer Unicode
-         */
         function normalizeExtractedKhmerText(rawText) {
             if (!rawText) return '';
             let text = String(rawText).normalize('NFC');
-
-            // 1. Remove spaces accidentally inserted between Khmer characters by PDF glyph positioning
             text = text.replace(/([\u1780-\u17FF])\s+(?=[\u1780-\u17FF])/g, '$1');
-
-            // 2. Fix broken coeng (subscript) spacing
             text = text.replace(/\s*\u17D2\s*/g, '\u17D2');
-
-            // 3. Reorder visual-order left vowels (េ \u17C1, ែ \u17C2, ៃ \u17C3) placed BEFORE consonant cluster
-            // Pattern: [េែៃ] followed by base consonant (+ optional coeng+consonant + optional shifter ៉/៊)
             text = text.replace(
                 /([\u17C1\u17C2\u17C3])([\u1780-\u17A2](?:\u17D2[\u1780-\u17A2])*[\u17C9\u17CA]?)/g,
                 '$2$1'
             );
-
-            // 4. Merge split two-part Khmer vowels into single canonical codepoints
             text = text
-                .replace(/\u17C1\u17B8/g, '\u17BE') // េ + ី -> ើ
-                .replace(/\u17C1\u17B6/g, '\u17C4') // េ + ា -> ោ
-                .replace(/\u17C1\u17C5/g, '\u17C5') // េ + ៅ -> ៅ
+                .replace(/\u17C1\u17B8/g, '\u17BE')
+                .replace(/\u17C1\u17B6/g, '\u17C4')
+                .replace(/\u17C1\u17C5/g, '\u17C5')
                 .replace(/\u17C4\u17C6/g, '\u17C4\u17C6');
-
-            // 5. Reorder dependent vowels placed after sign/nikahit (e.g., ំ + ា -> ាំ)
             text = text.replace(/\u17C6\u17B6/g, '\u17B6\u17C6');
-
-            // 6. Clean multiple spaces and normalize Khmer punctuation spacing
             text = text
                 .replace(/[ \t]{2,}/g, ' ')
                 .replace(/\s+([។៕៖])/g, '$1')
                 .trim();
-
             return text;
         }
 
@@ -1319,7 +1467,6 @@
                     totalPages = pdf.numPages;
                     const maxPages = Math.min(totalPages, 8);
 
-                    // Process pages in parallel for instant text extraction & fast thumbnail rendering
                     const pageIndices = Array.from({ length: maxPages }, (_, i) => i + 1);
                     const pageResults = await Promise.all(pageIndices.map(async (p) => {
                         const page = await pdf.getPage(p);
@@ -1340,7 +1487,6 @@
                         if (currentLine.length > 0) lines.push(currentLine.join(''));
                         const cleanedPageStr = normalizeExtractedKhmerText(lines.join('\n'));
 
-                        // Render first 2 pages at fast 1.35x scale for rapid AI Vision OCR
                         let imgBase64 = null;
                         if (p <= 2) {
                             const viewport = page.getViewport({ scale: 1.35 });
@@ -1406,7 +1552,7 @@
             if (!apiKey) {
                 pdfBox.value = normalizeExtractedKhmerText(currentText);
                 if (!silent) {
-                    showToast('បានតម្រៀបស្រៈ និងជើងអក្សរខ្មែរ! (បញ្ចូល API Key ដើម្បីឱ្យ AI ពិនិត្យអក្ខរាវិរុទ្ធ ១០០%)', 'info');
+                    showToast(`បានតម្រៀបស្រៈ និងជើងអក្សរខ្មែរ! (បញ្ចូល API Key ដើម្បីឱ្យ ${getActiveModelLabel()} ពិនិត្យអក្ខរាវិរុទ្ធ ១០០%)`, 'info');
                 }
                 return;
             }
@@ -1439,21 +1585,23 @@
                             { text: `កែអក្ខរាវិរុទ្ធអត្ថបទខ្មែរនេះឱ្យបានត្រឹមត្រូវ៖\n${currentText.slice(0, 10000)}` },
                             ...imageParts
                         ]
-                    }]
+                    }],
+                    generationConfig: {
+                        thinkingConfig: { thinkingLevel: 'LOW' }
+                    }
                 };
 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                const res = await fetchWithBackoff(url, payload, 1);
+                const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
                 const corrected = res?.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (corrected && corrected.trim()) {
                     pdfBox.value = corrected.trim();
                     uploadedLessonFiles.forEach(f => {
                         if (f.isPdf) f.extractedText = corrected.trim();
                     });
-                    if (!silent) showToast('AI បានកែអក្ខរាវិរុទ្ធអត្ថបទ PDF រួចរាល់!', 'success');
+                    if (!silent) showToast(`${getActiveModelLabel()} បានកែអក្ខរាវិរុទ្ធអត្ថបទ PDF រួចរាល់!`, 'success');
                 }
             } catch (_) {
-                if (!silent) showToast('មិនអាចភ្ជាប់ AI បានទេ សូមពិនិត្យ API Key!', 'error');
+                if (!silent) showToast(`មិនអាចភ្ជាប់ ${getActiveModelLabel()} បានទេ សូមពិនិត្យ API Key!`, 'error');
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -1501,6 +1649,15 @@
                 pdfBox.value = combined;
                 if (!combined) document.getElementById('extractedPdfTextWrapper')?.classList.add('hidden');
             }
+        }
+
+        function clearUploadedFiles() {
+            uploadedLessonFiles = [];
+            renderUploadedFilesList();
+            const pdfBox = document.getElementById('extractedPdfTextBox');
+            if (pdfBox) pdfBox.value = '';
+            document.getElementById('extractedPdfTextWrapper')?.classList.add('hidden');
+            showToast('បានលុបឯកសារមេរៀនទាំងអស់!', 'info');
         }
 
         function buildAttachedLessonParts(maxImages = 4) {
@@ -1581,7 +1738,7 @@
             const origHtml = btn ? btn.innerHTML : '';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-amber-900 border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>កំពុងស្កេនរហ័ស...</span>`;
+                btn.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-amber-900 border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>${getActiveModelLabel()} កំពុងស្កេន...</span>`;
             }
 
             const pdfBox = document.getElementById('extractedPdfTextBox');
@@ -1589,7 +1746,6 @@
             const apiKey = getActiveApiKey();
             let detected = null;
 
-            // Instant local regex extraction first so UI updates immediately
             if (pdfText) {
                 detected = parseMetadataLocallyFromText(pdfText);
                 if (detected) applyDetectedLessonMetadata(detected);
@@ -1600,7 +1756,7 @@
                     systemInstruction: {
                         parts: [{
                             text: `ស្រង់ព័ត៌មានពីរូបភាព/ឯកសារមេរៀនវិទ្យាល័យកម្ពុជាជា JSON យ៉ាងរហ័ស និងត្រឹមត្រូវអក្ខរាវិរុទ្ធខ្មែរ៖
-- grade: កម្រិតថ្នាក់ (ឧ. ទី១០, ទី១១ (ថ្នាក់វិទ្យាសាស្ត្រ), ទី១២ (ថ្នាក់វិទ្យាសាស្ត្រ))
+- grade: កម្រិតថ្នាក់ (ឧ. ទី១០, ទី១១, ទី១២)
 - subject: ឈ្មោះមុខវិជ្ជា (គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិវិទ្យា, ភូមិវិទ្យា...)
 - chapterNum: លេខជំពូកជាលេខខ្មែរ
 - chapterTitle: ឈ្មោះជំពូក
@@ -1615,7 +1771,7 @@
                         parts: [{ text: 'ស្រង់ព័ត៌មានមេរៀននេះ៖' }, ...buildAttachedLessonParts(2)]
                     }],
                     generationConfig: {
-                        thinkingConfig: { thinkingBudget: 0 },
+                        thinkingConfig: { thinkingLevel: 'LOW' },
                         responseMimeType: "application/json",
                         responseSchema: {
                             type: "OBJECT",
@@ -1634,8 +1790,7 @@
                 };
 
                 try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                    const res = await fetchWithBackoff(url, payload, 1);
+                    const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
                     const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (raw) {
                         detected = JSON.parse(raw);
@@ -1646,14 +1801,16 @@
                             });
                         }
                     }
-                } catch (_) {}
+                } catch (err) {
+                    apiFailedMsg = err?.message || 'API error';
+                }
             }
 
             if (detected) {
                 applyDetectedLessonMetadata(detected);
-                showToast('បានស្កេន និងស្រង់ព័ត៌មានមេរៀនរួចរាល់យ៉ាងរហ័ស!', 'success');
+                showToast(`${getActiveModelLabel()} បានស្កេន និងស្រង់ព័ត៌មានមេរៀនរួចរាល់!`, 'success');
             } else {
-                showToast('សូមបញ្ចូល API Key ដើម្បីឱ្យ AI ស្កេនរូបភាព ឬ PDF!', 'info');
+                showToast(`សូមបញ្ចូល API Key ដើម្បីឱ្យ ${getActiveModelLabel()} ស្កេនរូបភាព ឬ PDF!`, 'info');
             }
 
             if (btn) {
@@ -1919,7 +2076,7 @@
                 list.unshift(record);
             }
 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            safeStorageSet(STORAGE_KEY, JSON.stringify(list));
             updateSavedBadge();
             showToast('បានរក្សាទុកកិច្ចតែងការបង្រៀនរួចរាល់!', 'success');
         }
@@ -1975,7 +2132,7 @@
 
         function deleteSavedLesson(id) {
             const next = getSavedLessons().filter(item => item.id !== id);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+            safeStorageSet(STORAGE_KEY, JSON.stringify(next));
             if (currentLessonId === id) currentLessonId = null;
             updateSavedBadge();
             renderSavedList();
@@ -1999,7 +2156,7 @@
         }
 
         // =========================================================================
-        // 7. GEMINI AI GENERATION & PEDAGOGICAL ANALYSIS ENGINE
+        // 7. GEMINI 4 ARGON GENERATION & PEDAGOGICAL ANALYSIS ENGINE
         // =========================================================================
         async function fetchWithBackoff(url, payload, retries = 1) {
             let delay = 900;
@@ -2014,13 +2171,36 @@
                     await new Promise(r => setTimeout(r, delay));
                     delay *= 2;
                 } else {
-                    throw new Error(`API HTTP ${response.status}`);
+                    let errDetail = `HTTP ${response.status}`;
+                    try {
+                        const errJson = await response.json();
+                        if (errJson?.error?.message) errDetail = errJson.error.message;
+                    } catch (_) {}
+                    throw new Error(errDetail);
                 }
             }
         }
 
         function recommendMethodLocally(subject, title, subLessons, pdfText = '') {
             const combined = `${subject} ${title} ${subLessons} ${pdfText.slice(0, 1500)}`.toLowerCase();
+            if (subject === 'ព័ត៌មានវិទ្យា (ICT)' || /កុំព្យូទ័រ|កូដ|html|excel|word|powerpoint|អ៊ីមែល|អ៊ីនធឺណិត|បទបង្ហាញ|សៀវភៅបញ្ជី|កម្មវិធី/.test(combined)) {
+                if (/គម្រោង|ផលិតផល|ជំនួញ|បង្កើតគេហទំព័រ/.test(combined)) {
+                    return {
+                        methodKey: 'pbl',
+                        reason: 'មេរៀន ICT នេះផ្តោតលើការបង្កើតស្នាដៃជាក់ស្តែង ដូច្នេះវិធីសាស្ត្របែបគម្រោង (PBL) ជួយឱ្យសិស្សរៀបចំផែនការ និងផលិតលទ្ធផលបានពេញលេញ។'
+                    };
+                }
+                if (/អ៊ីនធឺណិត|ទំនាក់ទំនង|ក្រមសីលធម៌|លិខិត/.test(combined) && !/កូដ|គណនា|រូបមន្ត|កណ្ដុរ|ផ្ទៃតុ/.test(combined)) {
+                    return {
+                        methodKey: 'active',
+                        reason: 'មេរៀន ICT ផ្នែកទ្រឹស្តី និងទំនាក់ទំនងនេះស័ក្តិសមនឹងវិធីសាស្ត្រសិស្សមជ្ឈមណ្ឌល / ពិភាក្សាសកម្ម (Active Learning) ដើម្បីឱ្យសិស្សវិភាគ និងផ្លាស់ប្តូរយោបល់។'
+                    };
+                }
+                return {
+                    methodKey: 'demo',
+                    reason: 'មេរៀន ICT ទាមទារការអនុវត្តផ្ទាល់លើកុំព្យូទ័រ ដូច្នេះវិធីសាស្ត្របែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice) ជួយឱ្យសិស្សមើលគំរូពីគ្រូ រួចអនុវត្តតាមជំហានបានច្បាស់លាស់។'
+                };
+            }
             if (/ចំណោទ|លំហាត់|គណនា|សមីការ|អាំងតេក្រាល|ដេរីវេ/.test(combined) || subject === 'គណិតវិទ្យា') {
                 return {
                     methodKey: 'polya',
@@ -2054,6 +2234,8 @@
                 teacherTools = `- បន្ទាត់ ឈុតធរណីមាត្រ ក្តារក្រាហ្វិក សន្លឹកលំហាត់គំរូ និងក្រដាស A0។`;
             } else if (subject === 'ភូមិវិទ្យា' || subject === 'ប្រវត្តិវិទ្យា') {
                 teacherTools = `- ផែនទី តារាងស្ថិតិ ឯកសារប្រវត្តិសាស្ត្រពាក់ព័ន្ធនឹង "${title}" និងសន្លឹកកិច្ចការក្រុម។`;
+            } else if (subject === 'ព័ត៌មានវិទ្យា (ICT)') {
+                teacherTools = `- កុំព្យូទ័រ Projector កម្មវិធីអនុវត្ត (VS Code / Browser / IDE) ផ្ទាំងកូដគំរូ និងសន្លឹកកិច្ចការអនុវត្តសម្រាប់មេរៀន "${title}"។`;
             }
             const methodLabel = PEDAGOGICAL_METHODS[methodKey]?.label || '';
             return `• សម្រាប់គ្រូ៖\n${baseBook}\n${teacherTools} (រៀបចំតាមលំនាំ ${methodLabel})\n• សម្រាប់សិស្ស៖\n- សៀវភៅពុម្ព${subject} សៀវភៅសរសេរ ប៊ិច ខ្មៅដៃ និងសម្ភារសិក្សាផ្ទាល់ខ្លួន។`;
@@ -2086,7 +2268,6 @@
             const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
             const combinedContext = `${title} ${focusTopic} ${pdfText.slice(0, 2000)}`;
 
-            // Extract specific sub-points to weave directly into SMART behavioral objectives
             const subPoints = focusTopic
                 .split('\n')
                 .map(s => s.replace(/^[០-៩0-9]+\.\s*/, '').trim())
@@ -2095,7 +2276,6 @@
             const secondaryConcept = subPoints[1] ? ` និង ${subPoints[1]}` : '';
             const methodLabel = PEDAGOGICAL_METHODS[methodKey]?.label?.split('(')[0]?.trim() || 'ការពិភាក្សាក្រុម';
 
-            // Subject-specific pedagogical verbs & criteria (Bloom's Taxonomy + ABCD format)
             let skillVerb = 'វិភាគ បកស្រាយ និងអនុវត្តខ្លឹមសារ';
             let skillCriteria = 'បានត្រឹមត្រូវ និងច្បាស់លាស់តាមរយៈសន្លឹកកិច្ចការ';
             if (subject === 'គណិតវិទ្យា' || /គណនា|សមីការ|រូបមន្ត|អាំងតេក្រាល|ដេរីវេ|លំហាត់/.test(combinedContext)) {
@@ -2107,6 +2287,9 @@
             } else if (['អក្សរសាស្ត្រខ្មែរ', 'ប្រវត្តិវិទ្យា', 'ភូមិវិទ្យា', 'សីលធម៌-ពលរដ្ឋវិជ្ជា', 'សេដ្ឋកិច្ចវិទ្យា'].includes(subject)) {
                 skillVerb = 'វិភាគ ប្រៀបធៀប សំយោគគំនិត និងបកស្រាយអត្ថន័យនៃ';
                 skillCriteria = 'បានស៊ីជម្រៅ និងមានហេតុផលច្បាស់លាស់';
+            } else if (subject === 'ព័ត៌មានវិទ្យា (ICT)') {
+                skillVerb = 'អនុវត្តផ្ទាល់លើកុំព្យូទ័រ សរសេរកូដ និងដោះស្រាយបញ្ហាបច្ចេកទេសពាក់ព័ន្ធនឹង';
+                skillCriteria = 'បានត្រឹមត្រូវ និងដំណើរការល្អតាមលំដាប់បច្ចេកទេស';
             }
 
             return {
@@ -2136,9 +2319,9 @@
             const btn = document.getElementById('aiGenerateBtn');
             const origHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = `<span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>AI កំពុងវិភាគមេរៀន និងបង្កើតកិច្ចតែងការ...</span>`;
+            btn.innerHTML = `<span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin-fast inline-block"></span><span>${getActiveModelLabel()} កំពុងវិភាគមេរៀន និងបង្កើតកិច្ចតែងការ...</span>`;
 
-            const subject = document.getElementById('subjectInput')?.value || 'រូបវិទ្យា';
+            const subject = document.getElementById('subjectInput')?.value || 'ព័ត៌មានវិទ្យា (ICT)';
             const grade = document.getElementById('gradeInput')?.value || 'ទី១២';
             const title = document.getElementById('lessonTitleInput')?.value || 'មេរៀនថ្មី';
             const subLessons = document.getElementById('subLessonsInput')?.value || '';
@@ -2162,6 +2345,7 @@
 
             const apiKey = getActiveApiKey();
             let generated = null;
+            let apiFailedMsg = '';
 
             if (apiKey) {
                 const systemPrompt = `អ្នកគឺជាអ្នកជំនាញគរុកោសល្យក្រសួងអប់រំ យុវជន និងកីឡា នៃព្រះរាជាណាចក្រកម្ពុជា។
@@ -2173,7 +2357,7 @@
 3. objAttitude (ចរិយាសម្បទា)៖ ត្រូវបញ្ជាក់ពីឥរិយាបថសិក្សា ការសហការ និងការផ្សារភ្ជាប់ខ្លឹមសារមេរៀនជាក់ស្តែងនេះទៅក្នុងជីវភាពរស់នៅ។
 
 ត្រូវត្រឡប់មកវិញជា JSON ដែលមាន field ទាំងអស់ដូចខាងក្រោម៖
-- recommendedMethodKey: កូដវិធីសាស្ត្រ (jigsaw, polya, ibl, 5es, active, pbl, tps, gradual, flipped, kwl, conceptmap, gallerywalk)
+- recommendedMethodKey: កូដវិធីសាស្ត្រ (demo, inductive, jigsaw, polya, ibl, 5es, active, pbl, tps, gradual, flipped, kwl, conceptmap, gallerywalk)
 - methodReason: មូលហេតុគរុកោសល្យដែលគួរប្រើវិធីសាស្ត្រនេះ
 - pacingTitle: ចំណងជើងវិភាគពេលវេលា និងចំនួនចំណុចត្រូវបង្រៀន
 - pacingReason: ការពន្យល់ថាតើក្នុងរយៈពេល ${duration} គួរបង្រៀនប៉ុន្មានចំណុចទើបសមស្របតាមគោលបំណងមេរៀន
@@ -2206,6 +2390,7 @@
                     systemInstruction: { parts: [{ text: systemPrompt }] },
                     contents: [{ role: 'user', parts: userParts }],
                     generationConfig: {
+                        thinkingConfig: { thinkingLevel: getSelectedThinkingLevel() },
                         responseMimeType: "application/json",
                         responseSchema: {
                             type: "OBJECT",
@@ -2215,9 +2400,8 @@
                     }
                 };
 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
                 try {
-                    const res = await fetchWithBackoff(url, payload, 1);
+                    const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
                     const rawText = res?.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (rawText) {
                         generated = JSON.parse(rawText);
@@ -2266,7 +2450,13 @@
             }
 
             syncPreview();
-            showToast('បានវិភាគ និងបង្កើតកិច្ចតែងការបង្រៀនដោយ AI រួចរាល់!', 'success');
+            if (apiKey && !apiFailedMsg) {
+                showToast(`${getActiveModelLabel()} បានវិភាគ និងបង្កើតកិច្ចតែងការរួចរាល់!`, 'success');
+            } else if (apiFailedMsg) {
+                showToast(`មិនអាចភ្ជាប់ ${getActiveModelLabel()} (${apiFailedMsg}) — បានបង្កើតគំរូបម្រុងជំនួស!`, 'error');
+            } else {
+                showToast(`បានបង្កើតកិច្ចតែងការគំរូរួចរាល់ (បញ្ចូល API Key ដើម្បីប្រើ ${getActiveModelLabel()})!`, 'success');
+            }
 
             btn.disabled = false;
             btn.innerHTML = origHtml;
@@ -2319,7 +2509,7 @@
             const currentState = collectFormState();
 
             if (!apiKey) {
-                const reply = 'សូមបញ្ចូល Gemini API Key ជាមុនសិន ដើម្បីឱ្យ AI កែលម្អកិច្ចតែងការតាមសំណើរបស់អ្នក!';
+                const reply = `សូមបញ្ចូល Gemini API Key ជាមុនសិន ដើម្បីឱ្យ ${getActiveModelLabel()} កែលម្អកិច្ចតែងការតាមសំណើរបស់អ្នក!`;
                 appendAiChatBubble('ai', reply);
                 aiChatHistory.push({ role: 'ai', text: reply });
                 sendBtn.disabled = false;
@@ -2356,6 +2546,7 @@
                         ]
                     }],
                     generationConfig: {
+                        thinkingConfig: { thinkingLevel: getSelectedThinkingLevel() },
                         responseMimeType: "application/json",
                         responseSchema: {
                             type: "OBJECT",
@@ -2365,8 +2556,7 @@
                     }
                 };
 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                const res = await fetchWithBackoff(url, payload, 1);
+                const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
                 const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (raw) {
                     const updated = JSON.parse(raw);
@@ -2379,10 +2569,10 @@
                     const reply = updated.replyMessage || 'បានកែសម្រួលកិច្ចតែងការតាមសំណើរបស់អ្នករួចរាល់!';
                     appendAiChatBubble('ai', reply);
                     aiChatHistory.push({ role: 'ai', text: reply });
-                    showToast('បានធ្វើបច្ចុប្បន្នភាពកិច្ចតែងការរួចរាល់!', 'success');
+                    showToast(`${getActiveModelLabel()} បានធ្វើបច្ចុប្បន្នភាពកិច្ចតែងការរួចរាល់!`, 'success');
                 }
             } catch (_) {
-                const errMsg = 'មានបញ្ហាក្នុងការភ្ជាប់ AI សូមព្យាយាមម្តងទៀត!';
+                const errMsg = `មានបញ្ហាក្នុងការភ្ជាប់ ${getActiveModelLabel()} សូមព្យាយាមម្តងទៀត!`;
                 appendAiChatBubble('ai', errMsg);
                 aiChatHistory.push({ role: 'ai', text: errMsg });
             } finally {
@@ -2395,6 +2585,12 @@
         // 8. INITIALIZATION ON PAGE LOAD
         // =========================================================================
         window.addEventListener('DOMContentLoaded', () => {
+            const savedModel = safeStorageGet(MODEL_STORAGE, 'gemini-4-hydrogen');
+            const modelSel = document.getElementById('aiModelSelect');
+            if (modelSel && (savedModel === 'gemini-4-argon' || savedModel === 'gemini-4-hydrogen')) {
+                modelSel.value = savedModel;
+            }
+            onAiModelChange();
             const picker = document.getElementById('gregorianDatePicker');
             if (picker && !picker.value) {
                 picker.value = '2026-11-15';
