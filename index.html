@@ -21,14 +21,25 @@
     <style>
         /* Official Khmer Font Definitions prioritizing locally installed Khmer OS fonts */
         .font-moul {
-            font-family: 'Khmer OS Moul Light', 'Khmer OS Moul', 'Moul', serif;
-            font-weight: normal;
+            font-family: 'Moul', 'Khmer OS Muol Light', 'Khmer OS Moul Light', 'Khmer OS Muol', 'Khmer OS Moul', serif;
+            font-weight: 400 !important;
+            font-style: normal;
+            letter-spacing: 0 !important;
+            font-variant-ligatures: normal;
+            font-feature-settings: "liga" 1, "clig" 1, "kern" 1;
+            line-height: 1.8;
         }
         .font-siemreap {
-            font-family: 'Khmer OS Siemreap', 'Siemreap', 'Inter', sans-serif;
+            font-family: 'Siemreap', 'Khmer OS Siemreap', 'Inter', sans-serif;
+            letter-spacing: 0 !important;
+            font-variant-ligatures: normal;
+            font-feature-settings: "liga" 1, "clig" 1, "kern" 1;
         }
         body {
-            font-family: 'Khmer OS Siemreap', 'Siemreap', 'Inter', sans-serif;
+            font-family: 'Siemreap', 'Khmer OS Siemreap', 'Inter', sans-serif;
+            letter-spacing: 0 !important;
+            font-variant-ligatures: normal;
+            font-feature-settings: "liga" 1, "clig" 1, "kern" 1;
             background-color: #f1f5f9;
             color: #0f172a;
         }
@@ -61,6 +72,12 @@
             padding: 15mm 16mm;
             box-sizing: border-box;
             position: relative;
+            transition: max-width 0.2s ease;
+        }
+        .a4-paper.landscape {
+            max-width: 297mm;
+            min-height: 210mm;
+            padding: 12mm 15mm;
         }
 
         /* Official MoEYS Lesson Plan Table Styling */
@@ -143,6 +160,7 @@
             animation: spin 0.75s linear infinite;
         }
     </style>
+    <style id="dynamicPrintPageStyle">@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }</style>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -156,7 +174,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
                 </div>
-                <h1 class="font-moul text-sm sm:text-base md:text-lg tracking-wide text-amber-300">
+                <h1 class="font-moul text-sm sm:text-base md:text-lg leading-relaxed text-amber-300">
                     ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន
                 </h1>
             </div>
@@ -260,7 +278,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">កម្រិតថ្នាក់</label>
-                            <select id="gradeInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <select id="gradeInput" onchange="onGradeChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="ទី១០">ថ្នាក់ទី១០</option>
                                 <option value="ទី១១" selected>ថ្នាក់ទី១១</option>
                                 <option value="ទី១២">ថ្នាក់ទី១២</option>
@@ -268,7 +286,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">មុខវិជ្ជា</label>
-                            <select id="subjectInput" onchange="syncPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <select id="subjectInput" onchange="onSubjectChange()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="គណិតវិទ្យា">គណិតវិទ្យា</option>
                                 <option value="រូបវិទ្យា">រូបវិទ្យា</option>
                                 <option value="គីមីវិទ្យា">គីមីវិទ្យា</option>
@@ -285,34 +303,23 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-indigo-900 mb-1">📚 ជ្រើសមេរៀនរហ័ស (ICT ថ្នាក់ទី១១ តាមសៀវភៅក្រសួង / EBC)</label>
+                    <div id="moeysIctPresetWrapper">
+                        <label id="moeysIctPresetLabel" class="block text-xs font-semibold text-indigo-900 mb-1">📚 ជ្រើសមេរៀនរហ័ស (ICT ថ្នាក់ទី១១ តាមសៀវភៅក្រសួង / EBC)</label>
                         <select id="moeysIctPreset" onchange="applyMoeysIctPreset()" class="w-full px-3 py-2 rounded-xl border border-indigo-200 bg-white text-xs sm:text-sm text-indigo-950 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- ជ្រើសមេរៀនពីសៀវភៅសិក្សាគោលក្រសួង (ឬវាយបញ្ចូលដោយខ្លួនឯង) --</option>
-                            <optgroup label="ជំពូកទី១៖ ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា">
-                                <option value="c1l1" selected>ជំពូកទី១ មេរៀនទី១៖ ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា</option>
-                                <option value="c1l2">ជំពូកទី១ មេរៀនទី២៖ ប្រសិទ្ធភាពនៃទំនាក់ទំនង និងកុំព្យូទ័រ</option>
-                                <option value="c1l3">ជំពូកទី១ មេរៀនទី៣៖ កូដ មធ្យោបាយធ្វើទំនាក់ទំនង និងការរៀនវាយអក្សរខ្មែរ</option>
+                            <optgroup label="ជំពូកទី ១៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ">
+                                <option value="c1l1" selected>ជំពូកទី១ មេរៀនទី១៖ ការណែនាំអំពីបទបង្ហាញ</option>
+                                <option value="c1l2">ជំពូកទី១ មេរៀនទី២៖ ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ</option>
+                                <option value="c1l3">ជំពូកទី១ មេរៀនទី៣៖ ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ</option>
                             </optgroup>
-                            <optgroup label="ជំពូកទី២៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ">
-                                <option value="c2l1">ជំពូកទី២ មេរៀនទី១៖ លិខិតផ្ទាល់ខ្លួន និងលិខិតរបស់ស្ថាប័នរដ្ឋ</option>
-                                <option value="c2l2">ជំពូកទី២ មេរៀនទី២៖ លិខិតជំនួញ</option>
-                                <option value="c2l3">ជំពូកទី២ មេរៀនទី៣៖ ការកត់ត្រា និងរៀបចំព័ត៌មានឲ្យមានរចនាសម្ព័ន្ធ</option>
-                                <option value="c2l4">ជំពូកទី២ មេរៀនទី៤៖ ការស្វែងរកការងារ</option>
+                            <optgroup label="ជំពូកទី ២៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី">
+                                <option value="c2l1">ជំពូកទី២ មេរៀនទី១៖ ឯកសារពាណិជ្ជកម្ម</option>
+                                <option value="c2l2">ជំពូកទី២ មេរៀនទី២៖ ការគណនាប្រាក់ចំណេញនៃជំនួញ</option>
+                                <option value="c2l3">ជំពូកទី២ មេរៀនទី៣៖ ការធ្វើឱ្យជំនួញមានសក្ដានុពល</option>
                             </optgroup>
-                            <optgroup label="ជំពូកទី៣៖ អ៊ីនធឺណិត និងអ៊ីមែល">
-                                <option value="c3l1">ជំពូកទី៣ មេរៀនទី១៖ អ៊ីនធឺណិត</option>
-                                <option value="c3l2">ជំពូកទី៣ មេរៀនទី២៖ ទំនាក់ទំនងការងារផ្ទៃក្នុង និងសារអេឡិចត្រូនិក</option>
-                            </optgroup>
-                            <optgroup label="ជំពូកទី៤៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ">
-                                <option value="c4l1">ជំពូកទី៤ មេរៀនទី១៖ ការណែនាំអំពីបទបង្ហាញ</option>
-                                <option value="c4l2">ជំពូកទី៤ មេរៀនទី២៖ ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ</option>
-                                <option value="c4l3">ជំពូកទី៤ មេរៀនទី៣៖ ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ</option>
-                            </optgroup>
-                            <optgroup label="ជំពូកទី៥៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី">
-                                <option value="c5l1">ជំពូកទី៥ មេរៀនទី១៖ ឯកសារពាណិជ្ជកម្ម</option>
-                                <option value="c5l2">ជំពូកទី៥ មេរៀនទី២៖ ការគណនាប្រាក់ចំណេញនៃជំនួញ</option>
-                                <option value="c5l3">ជំពូកទី៥ មេរៀនទី៣៖ ការធ្វើឲ្យជំនួញមានសក្តានុពល</option>
+                            <optgroup label="ជំពូកទី ៣៖ សក្ដានុពលជំនួញនៅលើអ៊ីនធឺណិត">
+                                <option value="c3l1">ជំពូកទី៣ មេរៀនទី១៖ បណ្ដាញសង្គមសម្រាប់ជំនួញ</option>
+                                <option value="c3l2">ជំពូកទី៣ មេរៀនទី២៖ ការសិក្សាស្រាវជ្រាវ និងស្ទង់មតិនៅលើអ៊ីនធឺណិត</option>
                             </optgroup>
                         </select>
                     </div>
@@ -321,7 +328,7 @@
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ជំពូកទី (លេខជំពូក និងឈ្មោះជំពូក)</label>
                         <div class="flex gap-2">
                             <input type="text" id="chapterNumInput" oninput="syncPreview()" value="១" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <input type="text" id="chapterInput" oninput="syncPreview()" value="ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា" placeholder="............" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="chapterInput" oninput="syncPreview()" value="បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ" placeholder="............" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
@@ -329,16 +336,16 @@
                         <label class="block text-xs font-semibold text-slate-700 mb-1">មេរៀនទី (លេខមេរៀន និងឈ្មោះមេរៀន)</label>
                         <div class="flex gap-2">
                             <input type="text" id="lessonNumInput" oninput="syncPreview()" value="១" placeholder="..." class="w-20 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា" placeholder=".........." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="lessonTitleInput" oninput="syncPreview()" value="ការណែនាំអំពីបទបង្ហាញ" placeholder=".........." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ចំណងជើងរង</label>
-                        <textarea id="subLessonsInput" oninput="onSubLessonsEdited()" rows="2" placeholder="១. ...&#10;២. ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត
-២. ទំនាក់ទំនង និងបច្ចេកវិទ្យាព័ត៌មាន និងសារគមនាគមន៍
-៣. កុំព្យូទ័រ កម្មវិធីកុំព្យូទ័រ ឯកសារ និងថតឯកសារ
-៤. ការប្រើកណ្ដុរ ផ្ទៃតុ និងបង្អួចកម្មវិធី</textarea>
+                        <textarea id="subLessonsInput" oninput="onSubLessonsEdited()" rows="4" placeholder="១. ...&#10;២. ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. បទបង្ហាញ និងព័ត៌មាន
+២. ខ្លឹមសារ និងអ្នកធ្វើបទបង្ហាញ
+៣. ស្លាយ និងកម្មវិធីធ្វើបទបង្ហាញ
+៤. ប្លង់ស្លាយ (Slide Layout)</textarea>
                         <!-- Interactive Sub-topic Selector for 1h vs 2h Lesson Pacing -->
                         <div id="subTopicSelectorPanel" class="hidden mt-2 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1.5">
                             <div class="flex items-center justify-between gap-2">
@@ -361,7 +368,7 @@
                             <span class="font-semibold text-indigo-950">📖 សៀវភៅគោលក្រសួង (SalaDigital)៖</span>
                             <div class="flex flex-wrap gap-1">
                                 <a href="https://sala.moeys.gov.kh/kh/library/00001479" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១០</a>
-                                <a href="https://sala.moeys.gov.kh/kh/library/00004413" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១១</a>
+                                <a href="https://sala.moeys.gov.kh/kh/library/00003519" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១១</a>
                                 <a href="https://sala.moeys.gov.kh/kh/library/00004414" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold border border-indigo-200 transition">ទី១២</a>
                             </div>
                         </div>
@@ -533,7 +540,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs text-slate-600 mb-1">ទីតាំង/ខេត្ត-រាជធានី (សម្រាប់កាលបរិច្ឆេទហត្ថលេខា)</label>
-                            <input type="text" id="deptInput" oninput="updateKhmerLunarDate()" value="ស្រីសន្ឌរ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="deptInput" oninput="updateKhmerLunarDate()" value="ស្រីសន្ធរ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs text-slate-600 mb-1">កាលបរិច្ឆេទចន្ទគតិខ្មែរ (ផ្នែកហត្ថលេខា)</label>
@@ -564,15 +571,15 @@
                     </h3>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• វិជ្ជាសម្បទា (ចំណេះដឹង)</label>
-                        <textarea id="objKnowledge" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ពន្យល់ពីភាពខុសគ្នារវាងព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត ព្រមទាំងរៀបរាប់ពីផ្នែកមូលដ្ឋាននៃកុំព្យូទ័រ ឯកសារ និងថតឯកសារបានត្រឹមត្រូវតាមសៀវភៅសិក្សាគោល។</textarea>
+                        <textarea id="objKnowledge" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ពន្យល់ពីអត្ថន័យនៃបទបង្ហាញ តួនាទីនៃព័ត៌មាន ខ្លឹមសារ អ្នកធ្វើបទបង្ហាញ និងរៀបរាប់ពីមុខងារនៃស្លាយ និងប្លង់ស្លាយបានត្រឹមត្រូវតាមសៀវភៅសិក្សាគោល។</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• បំណិនសម្បទា (ជំនាញ)</label>
-                        <textarea id="objSkill" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ប្រើប្រាស់កណ្ដុរ (ចុចឆ្វេង ស្តាំ ទ្វេដង) គ្រប់គ្រងបង្អួចកម្មវិធីលើផ្ទៃតុ និងបង្កើត/រៀបចំឯកសារ និងថតឯកសារក្នុងកុំព្យូទ័របានត្រឹមត្រូវ។</textarea>
+                        <textarea id="objSkill" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">បង្កើតស្លាយថ្មី ជ្រើសរើសប្លង់ស្លាយ (Slide Layout) និងបញ្ចូលខ្លឹមសារសង្ខេបក្នុងកម្មវិធីធ្វើបទបង្ហាញលើកុំព្យូទ័របានត្រឹមត្រូវ។</textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-indigo-900 mb-1">• ចរិយាសម្បទា (ឥរិយាបថ)</label>
-                        <textarea id="objAttitude" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">មានស្មារតីសហការក្នុងក្រុម ប្រើប្រាស់កុំព្យូទ័រដោយប្រុងប្រយ័ត្ន និងរៀបចំឯកសារសិក្សាមានរបៀបរៀបរយ។</textarea>
+                        <textarea id="objAttitude" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">មានស្មារតីសហការក្នុងក្រុម ហ៊ានបញ្ចេញមតិ និងយល់ដឹងពីសារៈសំខាន់នៃការរៀបចំបទបង្ហាញប្រកបដោយវិជ្ជាជីវៈ។</textarea>
                     </div>
                 </div>
 
@@ -586,8 +593,8 @@
                     </h3>
                     <div>
                         <label class="block text-xs text-slate-600 mb-1">សម្ភារបង្រៀន និងរៀន</label>
-                        <textarea id="materialsInput" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">- សៀវភៅសិក្សាគោលព័ត៌មានវិទ្យា (ICT) កម្រិតវិទ្យាល័យ របស់ក្រសួងអប់រំ យុវជន និងកីឡា
-- កុំព្យូទ័រ Projector រូបភាពផ្នែករឹង-ទន់ និងសន្លឹកកិច្ចការក្រុម។</textarea>
+                        <textarea id="materialsInput" oninput="syncPreview()" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">- សៀវភៅសិក្សាគោលបច្ចេកវិទ្យាព័ត៌មាន និងសារគមនាគមន៍ ថ្នាក់ទី១១ របស់ក្រសួងអប់រំ យុវជន និងកីឡា
+- កុំព្យូទ័រ Projector កម្មវិធីធ្វើបទបង្ហាញ (Impress/PowerPoint/Slides) និងសន្លឹកកិច្ចការក្រុម។</textarea>
                     </div>
                 </div>
 
@@ -595,10 +602,19 @@
 
                 <!-- 5. 5-Step Pedagogical Process -->
                 <div class="space-y-4">
-                    <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 text-xs flex items-center justify-center">៤</span>
-                        III. ដំណើរការបង្រៀន (៥ ជំហាន)
-                    </h3>
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 text-xs flex items-center justify-center">៤</span>
+                            III. ដំណើរការបង្រៀន (៥ ជំហាន)
+                        </h3>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <select id="tableLayoutMode" onchange="onTableLayoutChange()" title="ប្ដូរទម្រង់តារាង ៣ ជួរ ឬ ៤ ជួរ" class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                <option value="3col">📋 ៣ ជួរ (ក្រសួង)</option>
+                                <option value="4col" selected>📊 ៤ ជួរ (មានជួរដំណាក់កាល)</option>
+                            </select>
+                            <span id="timeBalanceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">⏱️ សរុប៖ ៥០/៥០ នាទី ✓</span>
+                        </div>
+                    </div>
 
                     <!-- Step 1 -->
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
@@ -606,7 +622,7 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី១៖ លំនឹងថ្នាក់</span>
                             <input type="text" id="s1Time" oninput="syncPreview()" value="៣ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s1Content" oninput="syncPreview()" rows="1" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យអវត្តមាន អនាម័យ និងសណ្តាប់ធ្នាប់ក្នុងថ្នាក់</textarea>
+                        <textarea id="s1Content" oninput="syncPreview()" rows="1" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យអវត្តមាន អនាម័យ និងសណ្ដាប់ធ្នាប់ក្នុងថ្នាក់</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s1Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យវត្តមានសិស្ស ឯកសណ្ឋាន និងណែនាំឱ្យរក្សាភាពស្ងៀមស្ងាត់។</textarea>
                             <textarea id="s1Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ប្រធានថ្នាក់រាយការណ៍អវត្តមាន និងរៀបចំខ្លួនចូលរៀន។</textarea>
@@ -616,13 +632,13 @@
                     <!-- Step 2 -->
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="font-bold text-xs text-indigo-950">ជំហានទី២៖ រំលឹកមេរៀន</span>
+                            <span class="font-bold text-xs text-indigo-950">ជំហានទី២៖ រំឭកមេរៀន</span>
                             <input type="text" id="s2Time" oninput="syncPreview()" value="៥ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s2Content" oninput="syncPreview()" rows="2" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យកិច្ចការផ្ទះ និងសួរសំណួរបំផុសអំពីការប្រើប្រាស់ឧបករណ៍ទំនាក់ទំនងប្រចាំថ្ងៃ។</textarea>
+                        <textarea id="s2Content" oninput="syncPreview()" rows="2" placeholder="ខ្លឹមសារ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ពិនិត្យកិច្ចការផ្ទះ និងសួរសំណួរបំផុសអំពីបទពិសោធន៍របស់សិស្សក្នុងការធ្វើបទបង្ហាញមុខថ្នាក់។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s2Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ហៅសិស្សឡើងកែកិច្ចការផ្ទះ និងសួរសំណួរបំផុសភ្ជាប់ទៅមេរៀនថ្មី។</textarea>
-                            <textarea id="s2Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ឡើងកែកិច្ចការផ្ទះលើក្តារខៀន និងឆ្លើយសំណួររំលឹក។</textarea>
+                            <textarea id="s2Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ឡើងកែកិច្ចការផ្ទះលើក្ដារខៀន និងឆ្លើយសំណួររំឭក។</textarea>
                         </div>
                     </div>
 
@@ -632,16 +648,16 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី៣៖ ខ្លឹមសារមេរៀនថ្មី</span>
                             <input type="text" id="s3Time" oninput="syncPreview()" value="៣០ នាទី" class="w-24 px-2 py-1 rounded-lg border border-indigo-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s3Content" oninput="syncPreview()" rows="4" placeholder="ខ្លឹមសារមេរៀន" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត៖ ព័ត៌មានជាទិន្នន័យមានន័យ ចំណេះដឹងជាការយល់ដឹងតាមការសិក្សា និងគតិបណ្ឌិតជាការអនុវត្តចំណេះដឹង។
-២. ទំនាក់ទំនង និង ICT៖ ការផ្ទេរព័ត៌មាន និងបច្ចេកវិទ្យាអេឡិចត្រូនិកសម្រាប់ផ្ទុក ដំណើរការ និងទាក់ទង។
-៣. កុំព្យូទ័រ ឯកសារ និងថតឯកសារ៖ ការប្រើកណ្ដុរ ផ្ទៃតុ (Desktop) និងការរៀបចំឯកសារក្នុងថត (Folder)។</textarea>
+                        <textarea id="s3Content" oninput="syncPreview()" rows="4" placeholder="ខ្លឹមសារមេរៀន" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. គោលគំនិតវិជ្ជាជីវៈ៖ និយមន័យបទបង្ហាញ ព័ត៌មាន ខ្លឹមសារសំខាន់ៗ និងតួនាទីអ្នកធ្វើបទបង្ហាញ។
+២. គោលគំនិតបច្ចេកទេស៖ ស្លាយ កម្មវិធីធ្វើបទបង្ហាញ និងប្រភេទប្លង់ស្លាយ (Slide Layout)។
+៣. ការអនុវត្តបង្កើតស្លាយ៖ ការជ្រើសរើសប្លង់ស្លាយ និងបញ្ចូលខ្លឹមសារសាកល្បងក្នុងកម្មវិធីធ្វើបទបង្ហាញ។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <textarea id="s3Teacher" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ចោទសំណួរបំផុស៖ សួរសិស្សអំពីរបៀបធ្វើទំនាក់ទំនង និងភាពខុសគ្នារវាងព័ត៌មាន និងចំណេះដឹង។
-២. ស្រាវជ្រាវ និងអនុវត្ត៖ បែងចែកសិស្សជាក្រុមអានសៀវភៅសិក្សាគោល និងអនុវត្តផ្ទាល់លើកុំព្យូទ័របង្កើតថតឯកសារ (Folder) និងប្រើកណ្ដុរ។
-៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលក្រុមឡើងបង្ហាញលទ្ធផល រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។</textarea>
-                            <textarea id="s3Student" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. សង្កេត និងឆ្លើយសំណួរ៖ ពិភាក្សាបែងចែកទំនាក់ទំនងផ្ទាល់មាត់ សរសេរ និងកាយវិការ។
-២. អនុវត្តជាក់ស្តែង៖ សហការក្នុងក្រុមបង្កើតថតឯកសារថ្មី រៀបចំឯកសារ និងប្រើបង្អួចកម្មវិធីលើផ្ទៃតុ។
-៣. វិភាគ និងសន្និដ្ឋាន៖ តំណាងក្រុមឡើងបង្ហាញ និងកត់ត្រាខ្លឹមសារមេរៀនចូលសៀវភៅ។</textarea>
+                            <textarea id="s3Teacher" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. ពន្យល់ និងបង្ហាញគំរូ៖ ពន្យល់ពីគោលគំនិតបទបង្ហាញ និងបង្ហាញរបៀបជ្រើសរើសប្លង់ស្លាយលើ Projector។
+២. អនុវត្តផ្ទាល់៖ ឱ្យសិស្សបើកកម្មវិធីធ្វើបទបង្ហាញលើកុំព្យូទ័រ រើសប្លង់ស្លាយ និងបញ្ចូលអត្ថបទខ្លឹមសារសាកល្បង។
+៣. សង្ខេប និងផ្ទៀងផ្ទាត់៖ ពិនិត្យស្នាដៃសិស្ស និងបូកសរុបខ្លឹមសារមេរៀន។</textarea>
+                            <textarea id="s3Student" oninput="syncPreview()" rows="6" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-indigo-200 text-xs bg-white">១. សង្កេតការបង្ហាញគំរូរបស់គ្រូ និងកត់ត្រាចំណុចសំខាន់ៗ។
+២. អនុវត្តផ្ទាល់លើកុំព្យូទ័របង្កើតស្លាយ និងរៀបចំប្លង់ស្លាយតាមក្រុម។
+៣. បង្ហាញលទ្ធផលស្លាយរបស់ក្រុម និងកត់ត្រាខ្លឹមសារចូលសៀវភៅ។</textarea>
                         </div>
                     </div>
 
@@ -651,23 +667,23 @@
                             <span class="font-bold text-xs text-indigo-950">ជំហានទី៤៖ ពង្រឹងពុទ្ធិ</span>
                             <input type="text" id="s4Time" oninput="syncPreview()" value="៨ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s4Content" oninput="syncPreview()" rows="2" placeholder="សំណួរ ឬលំហាត់ពង្រឹង" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- សំណួរ៖ តើព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិតខុសគ្នាដូចម្តេច? តើថតឯកសារ (Folder) មាននាទីធ្វើអ្វី?</textarea>
+                        <textarea id="s4Content" oninput="syncPreview()" rows="2" placeholder="សំណួរ ឬលំហាត់ពង្រឹង" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- សំណួរ៖ តើបទបង្ហាញល្អត្រូវមានធាតុផ្សំអ្វីខ្លះ? តើប្លង់ស្លាយ (Slide Layout) មានប្រយោជន៍អ្វី?</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <textarea id="s4Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ចោទសំណួរវាយតម្លៃ និងដាក់លំហាត់អនុវត្តខ្លីៗដើម្បីវាស់ស្ទង់ការយល់ដឹង។</textarea>
-                            <textarea id="s4Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- គិត និងឆ្លើយសំណួរដោយឯករាជ្យ ព្រមទាំងដោះស្រាយលំហាត់លើក្តារខៀន។</textarea>
+                            <textarea id="s4Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- គិត និងឆ្លើយសំណួរដោយឯករាជ្យ ព្រមទាំងដោះស្រាយលំហាត់លើក្ដារខៀន។</textarea>
                         </div>
                     </div>
 
                     <!-- Step 5 -->
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="font-bold text-xs text-indigo-950">ជំហានទី៥៖ បណ្តាំផ្ញើ</span>
+                            <span class="font-bold text-xs text-indigo-950">ជំហានទី៥៖ បណ្ដាំផ្ញើ</span>
                             <input type="text" id="s5Time" oninput="syncPreview()" value="៤ នាទី" class="w-24 px-2 py-1 rounded-lg border border-slate-300 text-xs text-center bg-white">
                         </div>
-                        <textarea id="s5Content" oninput="syncPreview()" rows="2" placeholder="កិច្ចការផ្ទះ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- អានមេរៀនទី១ ឡើងវិញ និងអនុវត្តរៀបចំឯកសារសិក្សាក្នុងថតឯកសារតាមមុខវិជ្ជា និងត្រៀមមេរៀនទី២។</textarea>
+                        <textarea id="s5Content" oninput="syncPreview()" rows="2" placeholder="កិច្ចការផ្ទះ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- អានមេរៀនទី១ ឡើងវិញ រៀបចំគ្រោងស្លាយបទបង្ហាញខ្លី ១ និងត្រៀមមេរៀនទី២៖ ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ។</textarea>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <textarea id="s5Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំលឹកមេរៀនឡើងវិញនៅផ្ទះ។</textarea>
-                            <textarea id="s5Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- កត់ត្រាកិច្ចការផ្ទះ និងស្តាប់ការណែនាំរបស់គ្រូ។</textarea>
+                            <textarea id="s5Teacher" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពគ្រូ" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំឭកមេរៀនឡើងវិញនៅផ្ទះ។</textarea>
+                            <textarea id="s5Student" oninput="syncPreview()" rows="2" placeholder="សកម្មភាពសិស្ស" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">- កត់ត្រាកិច្ចការផ្ទះ និងស្ដាប់ការណែនាំរបស់គ្រូ។</textarea>
                         </div>
                     </div>
 
@@ -679,10 +695,10 @@
         <section id="previewPanel" class="print-only-container lg:col-span-7 flex flex-col items-center">
             
             <!-- Preview Toolbar -->
-            <div class="no-print w-full max-w-[210mm] mb-3 flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
+            <div id="previewToolbar" class="no-print w-full max-w-[297mm] mb-3 flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-2 text-xs text-slate-600">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                    <span>ទម្រង់បង្ហាញផ្ទាល់ (A4) • ពុម្ពអក្សរ៖ <strong>Khmer OS Moul Light</strong> & <strong>Siemreap</strong></span>
+                    <span>ទម្រង់បង្ហាញផ្ទាល់ (<span id="previewOrientationLabel">A4 ផ្ដេក</span>) • ពុម្ពអក្សរ៖ <strong>Khmer OS Moul Light</strong> & <strong>Siemreap</strong></span>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="exportToWord()" class="text-xs font-semibold text-sky-700 hover:text-sky-900 px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 transition cursor-pointer">
@@ -724,7 +740,7 @@
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">មុខវិជ្ជា</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevSubject">រូបវិទ្យា</td>
+                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevSubject">ព័ត៌មានវិទ្យា (ICT)</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">កម្រិតថ្នាក់</td>
@@ -732,23 +748,25 @@
                         <td style="vertical-align: top; padding: 1px 0;" id="prevGrade">ទី១១</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevChapterLabel">ជំពូកទី២</td>
+                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevChapterLabel">ជំពូកទី១</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevChapter">អគ្គិសនី និងម៉ាញេទិច</td>
+                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevChapter">បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;" id="prevLessonLabel">មេរៀនទី១</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevLessonTitle">ដែនម៉ាញេទិច</td>
+                        <td style="vertical-align: top; padding: 1px 0; font-weight: bold;" id="prevLessonTitle">ការណែនាំអំពីបទបង្ហាញ</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">ចំណងជើងរង</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
-                        <td style="vertical-align: top; padding: 1px 0; white-space: pre-line;" id="prevSubLessons">១. និយមន័យដែនម៉ាញេទិច និងខ្សែដែនម៉ាញេទិច
-២. វ៉ិចទ័រដែនម៉ាញេទិច និងអាំងឌុចស្យុងម៉ាញេទិច</td>
+                        <td style="vertical-align: top; padding: 1px 0; white-space: pre-line;" id="prevSubLessons">១. បទបង្ហាញ និងព័ត៌មាន
+២. ខ្លឹមសារ និងអ្នកធ្វើបទបង្ហាញ
+៣. ស្លាយ និងកម្មវិធីធ្វើបទបង្ហាញ
+៤. ប្លង់ស្លាយ (Slide Layout)</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">គោលវិធី/វិធីសាស្រ្ត</td>
+                        <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">គោលវិធី/វិធីសាស្ត្រ</td>
                         <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
                         <td style="vertical-align: top; padding: 1px 0;" id="prevMethod">បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)</td>
                     </tr>
@@ -786,14 +804,17 @@
                     <table class="moeys-table">
                         <thead>
                             <tr>
-                                <th style="width: 34%;">សកម្មភាពគ្រូ</th>
-                                <th style="width: 32%;">ខ្លឹមសារមេរៀន</th>
-                                <th style="width: 34%;">សកម្មភាពសិស្ស</th>
+                                <th id="prevThStep" class="hidden" style="width: 11%;">ដំណាក់កាល</th>
+                                <th id="prevThTeacher" style="width: 34%;">សកម្មភាពគ្រូ</th>
+                                <th id="prevThContent" style="width: 32%;">ខ្លឹមសារមេរៀន</th>
+                                <th id="prevThStudent" style="width: 34%;">សកម្មភាពសិស្ស</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Step 1 -->
-                            <tr class="step-header-row">
+                            <!-- Step 1 (Engage Part 1) -->
+                            <tr class="step-header-row" id="prevStepRow1">
+                                <td id="prevS1StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="4" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Engage
+(៨នាទី)</td>
                                 <td colspan="3" style="text-align: center;">ជំហានទី១៖ លំនឹងថ្នាក់ (<span id="prevS1HeaderTime">៣ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -802,9 +823,9 @@
                                 <td class="whitespace-pre-line" id="prevS1Student"></td>
                             </tr>
 
-                            <!-- Step 2 -->
-                            <tr class="step-header-row">
-                                <td colspan="3" style="text-align: center;">ជំហានទី២៖ រំលឹកមេរៀន (<span id="prevS2HeaderTime">៥ នាទី</span>)</td>
+                            <!-- Step 2 (Engage Part 2) -->
+                            <tr class="step-header-row" id="prevStepRow2">
+                                <td colspan="3" style="text-align: center;">ជំហានទី២៖ រំឭកមេរៀន (<span id="prevS2HeaderTime">៥ នាទី</span>)</td>
                             </tr>
                             <tr>
                                 <td class="whitespace-pre-line" id="prevS2Teacher"></td>
@@ -812,8 +833,10 @@
                                 <td class="whitespace-pre-line" id="prevS2Student"></td>
                             </tr>
 
-                            <!-- Step 3 -->
-                            <tr class="step-header-row">
+                            <!-- Step 3 (Explore, Explain, Elaborate) -->
+                            <tr class="step-header-row" id="prevStepRow3">
+                                <td id="prevS2StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="2" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Explore
+(១០នាទី)</td>
                                 <td colspan="3" style="text-align: center;">ជំហានទី៣៖ ខ្លឹមសារមេរៀនថ្មី (<span id="prevS3HeaderTime">៣០ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -821,9 +844,25 @@
                                 <td class="whitespace-pre-line" id="prevS3Content"></td>
                                 <td class="whitespace-pre-line" id="prevS3Student"></td>
                             </tr>
+                            <tr id="prevStep3ExplainRow" class="hidden">
+                                <td id="prevS3StepCell" class="step-col-cell font-bold text-center whitespace-pre-line" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Explain
+(១០នាទី)</td>
+                                <td class="whitespace-pre-line" id="prevS3ExplainTeacher"></td>
+                                <td class="whitespace-pre-line" id="prevS3ExplainContent"></td>
+                                <td class="whitespace-pre-line" id="prevS3ExplainStudent"></td>
+                            </tr>
+                            <tr id="prevStep3ElaborateRow" class="hidden">
+                                <td id="prevS4StepCell" class="step-col-cell font-bold text-center whitespace-pre-line" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Elaborate
+(១០នាទី)</td>
+                                <td class="whitespace-pre-line" id="prevS3ElaborateTeacher"></td>
+                                <td class="whitespace-pre-line" id="prevS3ElaborateContent"></td>
+                                <td class="whitespace-pre-line" id="prevS3ElaborateStudent"></td>
+                            </tr>
 
-                            <!-- Step 4 -->
-                            <tr class="step-header-row">
+                            <!-- Step 4 (Evaluate) -->
+                            <tr class="step-header-row" id="prevStepRow4">
+                                <td id="prevS5StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="2" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Evaluate
+(៨នាទី)</td>
                                 <td colspan="3" style="text-align: center;">ជំហានទី៤៖ ពង្រឹងពុទ្ធិ (<span id="prevS4HeaderTime">៨ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -832,11 +871,13 @@
                                 <td class="whitespace-pre-line" id="prevS4Student"></td>
                             </tr>
 
-                            <!-- Step 5 -->
-                            <tr class="step-header-row">
-                                <td colspan="3" style="text-align: center;">ជំហានទី៥៖ បណ្តាំផ្ញើ (<span id="prevS5HeaderTime">៤ នាទី</span>)</td>
+                            <!-- Step 5 (Homework / Closing) -->
+                            <tr class="step-header-row" id="prevStepRow5">
+                                <td id="prevStageStep5HeaderCell" class="step-col-cell hidden" style="background-color: #ffffff;"></td>
+                                <td colspan="3" style="text-align: center;">ជំហានទី៥៖ បណ្ដាំផ្ញើ (<span id="prevS5HeaderTime">៤ នាទី</span>)</td>
                             </tr>
                             <tr>
+                                <td id="prevStageStep5ContentCell" class="step-col-cell hidden" style="background-color: #ffffff;"></td>
                                 <td class="whitespace-pre-line" id="prevS5Teacher"></td>
                                 <td class="whitespace-pre-line" id="prevS5Content"></td>
                                 <td class="whitespace-pre-line" id="prevS5Student"></td>
@@ -853,7 +894,7 @@
                     </div>
                     <div class="text-center">
                         <div id="prevLunarDate">ថ្ងៃអាទិត្យ ៦កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ព.ស. ២៥៧០</div>
-                        <div id="prevSolarDateText">ស្រីសន្ឌរ ថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦</div>
+                        <div id="prevSolarDateText">ស្រីសន្ធរ ថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦</div>
                         <div class="font-moul text-[12px] mt-1">គ្រូបង្រៀន</div>
                         <div class="mt-12 font-bold" id="prevTeacher">លោកគ្រូ រ៉ាន កក្កដា</div>
                     </div>
@@ -934,7 +975,7 @@
 
         function updateKhmerLunarDate() {
             const picker = document.getElementById('gregorianDatePicker');
-            const deptVal = document.getElementById('deptInput')?.value || 'ស្រីសន្ឌរ';
+            const deptVal = document.getElementById('deptInput')?.value || 'ស្រីសន្ធរ';
             let dateObj = new Date(2026, 10, 15);
             if (picker && picker.value) {
                 const parts = picker.value.split('-').map(Number);
@@ -1005,7 +1046,7 @@
                     selectedLines,
                     pacingTitle: `វិភាគពេលវេលា (១០០ នាទី / ២ ម៉ោងសិក្សា)៖ គួរបង្រៀន ${toKhmerNumerals(recommendedCount)} ចំណុចគោល`,
                     pacingReason: totalSubs > recommendedCount
-                        ? `មេរៀន "${title}" មាន ${toKhmerNumerals(totalSubs)} ចំណុច។ ទោះបីមានរយៈពេល ១០០ នាទី (ជំហានទី៣ មាន ៦៥ នាទី) ក៏ដោយ ដើម្បីឱ្យសិស្សមានពេលពិភាក្សាសកម្ម និងធ្វើលំហាត់អនុវត្ត គ្រូគួរផ្តោតលើ ${toKhmerNumerals(recommendedCount)} ចំណុចគោល (${selectedSummary}) ជាមុនសិន។`
+                        ? `មេរៀន "${title}" មាន ${toKhmerNumerals(totalSubs)} ចំណុច។ ទោះបីមានរយៈពេល ១០០ នាទី (ជំហានទី៣ មាន ៦៥ នាទី) ក៏ដោយ ដើម្បីឱ្យសិស្សមានពេលពិភាក្សាសកម្ម និងធ្វើលំហាត់អនុវត្ត គ្រូគួរផ្ដោតលើ ${toKhmerNumerals(recommendedCount)} ចំណុចគោល (${selectedSummary}) ជាមុនសិន។`
                         : `ក្នុងរយៈពេល ១០០ នាទី (ជំហានទី៣ មាន ៦៥ នាទី) គ្រូអាចបង្រៀនបានពេញលេញទាំង ${toKhmerNumerals(recommendedCount)} ចំណុច (${selectedSummary}) ព្រមទាំងមានពេលគ្រប់គ្រាន់សម្រាប់ការងារក្រុម និងដោះស្រាយលំហាត់គំរូ។`
                 };
             }
@@ -1088,27 +1129,176 @@
             return chosen.length > 0 ? chosen.join('\n') : lines.join('\n');
         }
 
-        const MOEYS_ICT_CURRICULUM = {
-            c1l1: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '១', lTitle: 'ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា', subs: '១. ព័ត៌មាន ចំណេះដឹង និងគតិបណ្ឌិត\n២. ទំនាក់ទំនង និងបច្ចេកវិទ្យាព័ត៌មាន និងសារគមនាគមន៍\n៣. កុំព្យូទ័រ កម្មវិធីកុំព្យូទ័រ ឯកសារ និងថតឯកសារ\n៤. ការប្រើកណ្ដុរ ផ្ទៃតុ និងបង្អួចកម្មវិធី' },
-            c1l2: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '២', lTitle: 'ប្រសិទ្ធភាពនៃទំនាក់ទំនង និងកុំព្យូទ័រ', subs: '១. ការទំនាក់ទំនងប្រកបដោយប្រសិទ្ធភាព\n២. តួនាទីកុំព្យូទ័រក្នុងការងារទំនាក់ទំនង' },
-            c1l3: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '៣', lTitle: 'កូដ មធ្យោបាយធ្វើទំនាក់ទំនង និងការរៀនវាយអក្សរខ្មែរ', subs: '១. កូដ និងមធ្យោបាយធ្វើទំនាក់ទំនង\n២. ការរៀនវាយអក្សរខ្មែរយូនីកូដ (Khmer Unicode)' },
-            c2l1: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '១', lTitle: 'លិខិតផ្ទាល់ខ្លួន និងលិខិតរបស់ស្ថាប័នរដ្ឋ', subs: '១. រចនាសម្ព័ន្ធលិខិតផ្ទាល់ខ្លួន\n២. ទម្រង់លិខិតរដ្ឋបាល និងស្ថាប័នរដ្ឋ' },
-            c2l2: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '២', lTitle: 'លិខិតជំនួញ', subs: '១. គោលការណ៍សរសេរលិខិតជំនួញ\n២. ការរចនាលិខិតជំនួញក្នុងកម្មវិធីអត្ថបទ' },
-            c2l3: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '៣', lTitle: 'ការកត់ត្រា និងរៀបចំព័ត៌មានឲ្យមានរចនាសម្ព័ន្ធ', subs: '១. ការប្រើប្រាស់តារាង និងបញ្ជី\n២. ការរៀបចំទម្រង់ឯកសារឱ្យមានសណ្តាប់ធ្នាប់' },
-            c2l4: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំឯកសារអត្ថបទ', lNum: '៤', lTitle: 'ការស្វែងរកការងារ', subs: '១. ការរៀបចំប្រវត្តិរូបសង្ខេប (CV)\n២. លិខិតស្នើសុំការងារ (Cover Letter)' },
-            c3l1: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '១', lTitle: 'អ៊ីនធឺណិត', subs: '១. សញ្ញាណអ៊ីនធឺណិត និងកម្មវិធីរុករក (Web Browser)\n២. ការស្វែងរកព័ត៌មាន និងសុវត្ថិភាពលើអ៊ីនធឺណិត' },
-            c3l2: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '២', lTitle: 'ទំនាក់ទំនងការងារផ្ទៃក្នុង និងសារអេឡិចត្រូនិក', subs: '១. ការបង្កើត និងប្រើប្រាស់អ៊ីមែល (Email)\n២. ក្រមសីលធម៌ក្នុងការផ្ញើសារអេឡិចត្រូនិក' },
-            c4l1: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '១', lTitle: 'ការណែនាំអំពីបទបង្ហាញ', subs: '១. គោលបំណង និងកម្មវិធីបង្កើតបទបង្ហាញ\n២. ការបង្កើតស្លាយ (Slide) មូលដ្ឋាន' },
-            c4l2: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '២', lTitle: 'ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ', subs: '១. ការបញ្ចូលរូបភាព តារាង និងក្រាហ្វិក\n២. ការប្រើចលនា (Animations & Transitions)' },
-            c4l3: { chNum: '៤', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '៣', lTitle: 'ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ', subs: '១. ការរៀបចំលំដាប់ខ្លឹមសារបទបង្ហាញ\n២. បច្ចេកទេសធ្វើបទបង្ហាញប្រកបដោយប្រសិទ្ធភាព' },
-            c5l1: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '១', lTitle: 'ឯកសារពាណិជ្ជកម្ម', subs: '១. ការណែនាំអំពីកម្មវិធីសៀវភៅបញ្ជី (Spreadsheet)\n២. ការរៀបចំតារាងវិក្កយបត្រ និងបញ្ជីទំនិញ' },
-            c5l2: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '២', lTitle: 'ការគណនាប្រាក់ចំណេញនៃជំនួញ', subs: '១. ការប្រើប្រាស់រូបមន្តគណនា (SUM, AVERAGE, IF)\n២. ការវិភាគចំណូល ចំណាយ និងប្រាក់ចំណេញ' },
-            c5l3: { chNum: '៥', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '៣', lTitle: 'ការធ្វើឲ្យជំនួញមានសក្តានុពល', subs: '១. ការបង្កើតគំនូសតាង (Charts) វិភាគទិន្នន័យ\n២. ការតម្រៀប និងចម្រោះទិន្នន័យ (Sort & Filter)' }
+        const MOEYS_ICT_BY_GRADE = {
+            'ទី១០': {
+                label: 'ICT ថ្នាក់ទី១០ (SalaDigital ២០២៣)',
+                chapters: [
+                    {
+                        group: 'ជំពូកទី ១៖ ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា',
+                        items: {
+                            g10_c1l1: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '១', lTitle: 'ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា', subs: '១. វគ្គសិក្សាទី១៖ ព័ត៌មាន ទំនាក់ទំនង និងបច្ចេកវិទ្យា\n២. វគ្គសិក្សាទី២៖ កុំព្យូទ័រ និងសមាសភាគផ្សំ\n៣. វគ្គសិក្សាទី៣៖ ផ្ទៃតុ និងបង្អួច' },
+                            g10_c1l2: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '២', lTitle: 'ប្រសិទ្ធភាពនៃកុំព្យូទ័រ និងទំនាក់ទំនង', subs: '១. វគ្គសិក្សាទី១៖ ប្រសិទ្ធភាពនៃទំនាក់ទំនង\n២. វគ្គសិក្សាទី២៖ ប្រព័ន្ធប្រតិបត្តិការ និងកម្មវិធីកុំព្យូទ័រ\n៣. វគ្គសិក្សាទី៣៖ ប្រព័ន្ធឯកសារ និងការគ្រប់គ្រងឯកសារ' },
+                            g10_c1l3: { chNum: '១', chTitle: 'ការណែនាំអំពីទំនាក់ទំនង និងបច្ចេកវិទ្យា', lNum: '៣', lTitle: 'កូដ មធ្យោបាយ និងការវាយអក្សរខ្មែរ', subs: '១. វគ្គសិក្សាទី១៖ បរិបទ កូដ និងមធ្យោបាយ\n២. វគ្គសិក្សាទី២៖ កម្មវិធីរៀបចំអត្ថបទ\n៣. វគ្គសិក្សាទី៣៖ ការវាយអក្សរខ្មែរ' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ២៖ ចំណេះដឹង និងជំនាញក្នុងការរៀបចំអត្ថបទ',
+                        items: {
+                            g10_c2l1: { chNum: '២', chTitle: 'ចំណេះដឹង និងជំនាញក្នុងការរៀបចំអត្ថបទ', lNum: '១', lTitle: 'លិខិតផ្ទាល់ខ្លួន និងផ្លូវការ', subs: '១. វគ្គសិក្សាទី១៖ លិខិតផ្ទាល់ខ្លួន\n២. វគ្គសិក្សាទី២៖ លិខិតផ្លូវការ\n៣. វគ្គសិក្សាទី៣៖ កម្មវិធី OpenOffice Writer I' },
+                            g10_c2l2: { chNum: '២', chTitle: 'ចំណេះដឹង និងជំនាញក្នុងការរៀបចំអត្ថបទ', lNum: '២', lTitle: 'លិខិតអាជីវកម្ម', subs: '១. វគ្គសិក្សាទី១៖ ទំនាក់ទំនងវិជ្ជាជីវៈ\n២. វគ្គសិក្សាទី២៖ លិខិតអាជីវកម្ម\n៣. វគ្គសិក្សាទី៣៖ កម្មវិធី OpenOffice Writer II' },
+                            g10_c2l3: { chNum: '២', chTitle: 'ចំណេះដឹង និងជំនាញក្នុងការរៀបចំអត្ថបទ', lNum: '៣', lTitle: 'ការស្វែងរកការងារ', subs: '១. វគ្គសិក្សាទី១៖ ការជ្រើសរើសបុគ្គលិក និងការប្រកាសស្វែងរក\n២. វគ្គសិក្សាទី២៖ ពាក្យស្នើសុំការងារ\n៣. វគ្គសិក្សាទី៣៖ OpenOffice Writer III' },
+                            g10_c2l4: { chNum: '២', chTitle: 'ចំណេះដឹង និងជំនាញក្នុងការរៀបចំអត្ថបទ', lNum: '៤', lTitle: 'ការកត់ត្រា និងរចនាសម្ព័ន្ធព័ត៌មាន', subs: '១. វគ្គសិក្សាទី១៖ ការកត់ត្រា\n២. វគ្គសិក្សាទី២៖ OpenOffice Writer IV\n៣. វគ្គសិក្សាទី៣៖ OpenOffice Writer V' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៣៖ អ៊ីនធឺណិត និងអ៊ីមែល',
+                        items: {
+                            g10_c3l1: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '១', lTitle: 'អ៊ីនធឺណិត', subs: '១. វគ្គសិក្សាទី១៖ ការណែនាំអំពីអ៊ីនធឺណិត\n២. វគ្គសិក្សាទី២៖ ការរុករកអ៊ីនធឺណិត\n៣. វគ្គសិក្សាទី៣៖ ការស្វែងរកព័ត៌មាន ការផ្ទុកទិន្នន័យ និងសុវត្ថិភាពអ៊ីនធឺណិត' },
+                            g10_c3l2: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '២', lTitle: 'ទំនាក់ទំនងផ្ទៃក្នុង និងអ៊ីមែល', subs: '១. វគ្គសិក្សាទី១៖ ឥរិយាបថវិជ្ជាជីវៈ\n២. វគ្គសិក្សាទី២៖ សំបុត្រអេឡិចត្រូនិក (អ៊ីមែល)\n៣. វគ្គសិក្សាទី៣៖ អ៊ីមែល (ត)' },
+                            g10_c3l3: { chNum: '៣', chTitle: 'អ៊ីនធឺណិត និងអ៊ីមែល', lNum: '៣', lTitle: 'ការប្រើប្រាស់បច្ចេកវិទ្យាឱ្យបានសមរម្យ', subs: '១. វគ្គសិក្សាទី១៖ សេរីភាពនៃការបញ្ចេញមតិលើអ៊ីនធឺណិត\n២. វគ្គសិក្សាទី២៖ បណ្ដាញសង្គម និងទូរសព្ទឆ្លាតវៃ\n៣. វគ្គសិក្សាទី៣៖ ការសហការនៅលើអ៊ីនធឺណិត' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៤៖ ស្ទែម និងការសិក្សាតាមរយៈអេឡិចត្រូនិក',
+                        items: {
+                            g10_c4l1: { chNum: '៤', chTitle: 'ស្ទែម និងការសិក្សាតាមរយៈអេឡិចត្រូនិក', lNum: '១', lTitle: 'ស្វែងយល់អំពី STEM (ស្ទែម)', subs: '១. វគ្គសិក្សាទី១៖ តើស្ទែមជាអ្វី?\n២. វគ្គសិក្សាទី២៖ ឱកាសការងារសម្រាប់អ្នកសិក្សាស្ទែម' },
+                            g10_c4l2: { chNum: '៤', chTitle: 'ស្ទែម និងការសិក្សាតាមរយៈអេឡិចត្រូនិក', lNum: '២', lTitle: 'ការសិក្សាតាមរយៈអេឡិចត្រូនិក', subs: '១. វគ្គសិក្សាទី១៖ ការណែនាំអំពីការសិក្សាតាមរយៈអេឡិចត្រូនិក\n២. វគ្គសិក្សាទី២៖ គេហទំព័រអប់រំ និងធនធានសិក្សាតាមអ៊ីនធឺណិត\n៣. វគ្គសិក្សាទី៣៖ ការសិក្សាផ្អែកលើពហុមេឌៀ' }
+                        }
+                    }
+                ]
+            },
+            'ទី១១': {
+                label: 'ICT ថ្នាក់ទី១១ (SalaDigital ២០២០)',
+                chapters: [
+                    {
+                        group: 'ជំពូកទី ១៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ',
+                        items: {
+                            c1l1: { chNum: '១', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '១', lTitle: 'ការណែនាំអំពីបទបង្ហាញ', subs: '១. បទបង្ហាញ និងព័ត៌មាន\n២. ខ្លឹមសារ និងអ្នកធ្វើបទបង្ហាញ\n៣. ស្លាយ និងកម្មវិធីធ្វើបទបង្ហាញ\n៤. ប្លង់ស្លាយ (Slide Layout)' },
+                            c1l2: { chNum: '១', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '២', lTitle: 'ទិដ្ឋភាពជំនួយសម្រាប់បទបង្ហាញ', subs: '១. ទិដ្ឋភាពជំនួយ រូបភាព និងស្លាយ\n២. ការរចនាស្លាយ ផ្ទៃខាងក្រោយ និងទំព័រមេ\n៣. ការបញ្ចូលរូបភាព អត្ថបទ និងចលនាផ្ទាល់ខ្លួន\n៤. ចំណាំ ប្លង់បោះពុម្ព និងរបៀបរៀបចំបទបង្ហាញ' },
+                            c1l3: { chNum: '១', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំបទបង្ហាញ', lNum: '៣', lTitle: 'ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ', subs: '១. ការរៀបចំរចនាសម្ព័ន្ធបទបង្ហាញ និងការត្រៀមរៀបចំ\n២. មេស្លាយ និងដំណើរការផ្លាស់ប្ដូរស្លាយ\n៣. អន្តរកម្ម គ្រោងបទបង្ហាញ និងការបោះពុម្ពទិដ្ឋភាពពិសេស' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ២៖ បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី',
+                        items: {
+                            c2l1: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '១', lTitle: 'ឯកសារពាណិជ្ជកម្ម', subs: '១. ឯកសារទាក់ទងកិច្ចការជំនួញ (វិក្កយបត្រ បង្កាន់ដៃ)\n២. ការផ្ដល់សិទ្ធិឱ្យចំណាយ និងរបាយការណ៍ចំណាយ\n៣. កម្មវិធីសៀវភៅបញ្ជី រូបមន្តគណនា និងអនុគមន៍\n៤. ការធ្វើទ្រង់ទ្រាយក្រឡា និងបន្ទាត់ខណ្ឌចែកក្រឡា' },
+                            c2l2: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '២', lTitle: 'ការគណនាប្រាក់ចំណេញនៃជំនួញ', subs: '១. សាច់ប្រាក់ក្នុងដៃ និងប្រាក់ចំណេញនៃជំនួញ\n២. ប្រភេទចំណាយ និងថវិកា\n៣. អាសយដ្ឋានក្រឡាទាក់ទង និងដាច់ខាត\n៤. ការគណនាតាមខែនីមួយៗ' },
+                            c2l3: { chNum: '២', chTitle: 'បំណិនវិជ្ជាជីវៈ និងបច្ចេកទេសក្នុងការរៀបចំសៀវភៅបញ្ជី', lNum: '៣', lTitle: 'ការធ្វើឱ្យជំនួញមានសក្ដានុពល', subs: '១. ធនាគារ (ការដាក់ប្រាក់ និងការខ្ចីប្រាក់)\n២. ការផ្សព្វផ្សាយពាណិជ្ជកម្ម និងលក្ខខណ្ឌ 4Ps\n៣. ខិត្តប័ណ្ណ និងប័ណ្ណផ្សព្វផ្សាយ\n៤. ការប្រើទិន្នន័យសន្លឹកផ្សេង សិល្បៈអក្សរ និងឧបករណ៍គំនូរ' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៣៖ សក្ដានុពលជំនួញនៅលើអ៊ីនធឺណិត',
+                        items: {
+                            c3l1: { chNum: '៣', chTitle: 'សក្ដានុពលជំនួញនៅលើអ៊ីនធឺណិត', lNum: '១', lTitle: 'បណ្ដាញសង្គមសម្រាប់ជំនួញ', subs: '១. វិធីសាស្ត្រផ្សព្វផ្សាយផលិតផលលើបណ្ដាញសង្គម និងកម្មសិទ្ធិបញ្ញា\n២. ផ្លេតហ្វម (Platform) និងបច្ចេកទេសលក់អនឡាញ\n៣. វិធីបង់ប្រាក់ និងសុវត្ថិភាពពាក្យសម្ងាត់/គណនី' },
+                            c3l2: { chNum: '៣', chTitle: 'សក្ដានុពលជំនួញនៅលើអ៊ីនធឺណិត', lNum: '២', lTitle: 'ការសិក្សាស្រាវជ្រាវ និងស្ទង់មតិនៅលើអ៊ីនធឺណិត', subs: '១. ណែនាំអំពីការស្រាវជ្រាវ និងវិធីសាស្ត្រស្រាវជ្រាវ\n២. ទិន្នន័យ ព័ត៌មាន និងដំណើរការស្រាវជ្រាវ\n៣. កម្មវិធីស្ទង់មតិ និងកម្រងសំណួរអនឡាញ\n៤. ការវិភាគទិន្នន័យតាមកម្មវិធីបច្ចេកវិទ្យា' }
+                        }
+                    }
+                ]
+            },
+            'ទី១២': {
+                label: 'ICT ថ្នាក់ទី១២ (SalaDigital)',
+                chapters: [
+                    {
+                        group: 'ជំពូកទី ១៖ ការងារនៅក្នុងសម័យបច្ចេកវិទ្យា',
+                        items: {
+                            g12_c1l1: { chNum: '១', chTitle: 'ការងារនៅក្នុងសម័យបច្ចេកវិទ្យា', lNum: '១', lTitle: 'ការពង្រីកព្រំដែនចំណេះដឹង', subs: '១. ផ្នែក ក៖ ការងារនៅក្នុងសង្គមព័ត៌មានវិទ្យា និងគន្លងការងារ IT\n២. ផ្នែក ខ៖ ការប្រើប្រាស់បច្ចេកវិទ្យាឱ្យបានត្រឹមត្រូវ (អ៊ីនធឺណិត បណ្ដាញសង្គម សហការ)' },
+                            g12_c1l2: { chNum: '១', chTitle: 'ការងារនៅក្នុងសម័យបច្ចេកវិទ្យា', lNum: '២', lTitle: 'បំណិនទំនាក់ទំនងក្នុងសម័យកាលឌីជីថល', subs: '១. ផ្នែក ក៖ ទម្រង់នៃទំនាក់ទំនង (វាចា និងមិនវាចា)\n២. ផ្នែក ខ៖ ការស្ដាប់សកម្ម ការផ្ដល់មតិយោបល់ និងការបង្កើតក្រុម' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ២៖ ប្រព័ន្ធ',
+                        items: {
+                            g12_c2l3: { chNum: '២', chTitle: 'ប្រព័ន្ធ', lNum: '៣', lTitle: 'ការគ្រប់គ្រងប្រព័ន្ធ និងបណ្ដាញ', subs: '១. ការណែនាំអំពីការគ្រប់គ្រងប្រព័ន្ធ និងបណ្ដាញ\n២. តម្រូវការការងារ និងបរិស្ថានការងារ' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៣៖ ការសរសេរកូដកម្មវិធី',
+                        items: {
+                            g12_c3l4: { chNum: '៣', chTitle: 'ការសរសេរកូដកម្មវិធី', lNum: '៤', lTitle: 'ការអភិវឌ្ឍកម្មវិធីបច្ចេកវិទ្យា', subs: '១. ផ្នែក ក៖ ការងារជាអ្នកអភិវឌ្ឍកម្មវិធី\n២. ផ្នែក ខ៖ ការគិតតាមលំដាប់លំដោយ និងគំនូសតាងលំហូរ (Flowchart)' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៤៖ ការរចនា',
+                        items: {
+                            g12_c4l5: { chNum: '៤', chTitle: 'ការរចនា', lNum: '៥', lTitle: 'ការងារក្នុងការរចនារូបភាព', subs: '១. ផ្នែក ក៖ ការងារជាអ្នករចនារូបភាព\n២. ផ្នែក ខ៖ ប្លង់ សុខដុម និងទ្រឹស្ដីពណ៌ក្នុងការរចនារូបភាព' },
+                            g12_c4l6: { chNum: '៤', chTitle: 'ការរចនា', lNum: '៦', lTitle: 'ការរចនាវេបសាយ', subs: '១. ផ្នែក ក៖ ការងារនៅក្នុងការរចនា និងថែទាំវេបសាយ\n២. ផ្នែក ខ៖ អក្ខរកម្មមេឌៀ និងអ៊ីនធឺណិត' },
+                            g12_c4l7: { chNum: '៤', chTitle: 'ការរចនា', lNum: '៧', lTitle: 'ការអភិវឌ្ឍវេបសាយ', subs: '១. ផ្នែក ក៖ ទំព័របណ្ដាញឌីណាមិក មូលដ្ឋានទិន្នន័យ និង CMS\n២. ផ្នែក ខ៖ ទំនាក់ទំនងឌីជីថល ភាពឯកជន និងការចែករំលែក' },
+                            g12_c4l8: { chNum: '៤', chTitle: 'ការរចនា', lNum: '៨', lTitle: 'ការងារនៅក្នុងផ្នែកប្រព័ន្ធផ្សព្វផ្សាយព័ត៌មានសង្គម', subs: '១. ផ្នែក ក៖ ការងារផ្នែកប្រព័ន្ធផ្សព្វផ្សាយព័ត៌មានសង្គម\n២. ផ្នែក ខ៖ ការប្រើប្រាស់ប្រព័ន្ធផ្សព្វផ្សាយសង្គម និងកំណត់ហេតុបណ្ដាញ (Blog)' }
+                        }
+                    },
+                    {
+                        group: 'ជំពូកទី ៥៖ បំណិនបង្រៀន ការលក់ និងការងារ',
+                        items: {
+                            g12_c5l9: { chNum: '៥', chTitle: 'បំណិនបង្រៀន ការលក់ និងការងារ', lNum: '៩', lTitle: 'ការងារបង្រៀនកុំព្យូទ័រ', subs: '១. ផ្នែក ក៖ ការងារក្នុងការបង្រៀនកុំព្យូទ័រ\n២. ផ្នែក ខ៖ គរុកោសល្យ ការវាយតម្លៃ និងបច្ចេកវិទ្យាក្នុងថ្នាក់រៀន' },
+                            g12_c5l10: { chNum: '៥', chTitle: 'បំណិនបង្រៀន ការលក់ និងការងារ', lNum: '១០', lTitle: 'បំណិនលក់កុំព្យូទ័រ និងការងារ', subs: '១. ផ្នែក ក៖ ការងារនៅក្នុងផ្នែកលក់ និងថែទាំកុំព្យូទ័រ\n២. ផ្នែក ខ៖ ការជ្រើសរើសសាកលវិទ្យាល័យសម្រាប់ជំនាញព័ត៌មានវិទ្យា' }
+                        }
+                    }
+                ]
+            }
         };
 
-        function applyMoeysIctPreset() {
+        function populatePresetDropdownForGrade(grade, selectFirst = false) {
+            const sel = document.getElementById('moeysIctPreset');
+            const labelEl = document.getElementById('moeysIctPresetLabel');
+            const gradeData = MOEYS_ICT_BY_GRADE[grade];
+            if (!sel || !gradeData) return;
+
+            if (labelEl) {
+                labelEl.textContent = `📚 ជ្រើសមេរៀនរហ័ស (${gradeData.label} តាមសៀវភៅក្រសួង / EBC)`;
+            }
+
+            let html = `<option value="">-- ជ្រើសមេរៀន${escapeHtml(gradeData.label)} (ឬវាយបញ្ចូលដោយខ្លួនឯង) --</option>`;
+            let firstKey = '';
+            for (const ch of gradeData.chapters) {
+                html += `<optgroup label="${escapeHtml(ch.group)}">`;
+                for (const [k, item] of Object.entries(ch.items)) {
+                    if (!firstKey) firstKey = k;
+                    html += `<option value="${escapeHtml(k)}">ជំពូកទី${escapeHtml(item.chNum)} មេរៀនទី${escapeHtml(item.lNum)}៖ ${escapeHtml(item.lTitle)}</option>`;
+                }
+                html += `</optgroup>`;
+            }
+            sel.innerHTML = html;
+
+            if (selectFirst && firstKey) {
+                sel.value = firstKey;
+                applyMoeysIctPreset(true);
+            }
+        }
+
+        function findCurriculumItem(grade, key) {
+            const gradeData = MOEYS_ICT_BY_GRADE[grade];
+            if (!gradeData || !key) return null;
+            for (const ch of gradeData.chapters) {
+                if (ch.items[key]) return ch.items[key];
+            }
+            return null;
+        }
+
+        function onSubjectChange() {
+            const subject = document.getElementById('subjectInput')?.value || '';
+            const wrapper = document.getElementById('moeysIctPresetWrapper');
+            if (wrapper) {
+                wrapper.classList.toggle('hidden', subject !== 'ព័ត៌មានវិទ្យា (ICT)');
+            }
+            syncPreview();
+        }
+
+        function onGradeChange() {
+            const grade = document.getElementById('gradeInput')?.value || 'ទី១១';
+            const subject = document.getElementById('subjectInput')?.value || '';
+            const isIct = subject === 'ព័ត៌មានវិទ្យា (ICT)';
+            document.getElementById('aiRecommendationCard')?.classList.add('hidden');
+            populatePresetDropdownForGrade(grade, isIct);
+            syncPreview();
+            if (isIct) {
+                showToast(`បានប្ដូរមេរៀនទៅតាមសៀវភៅ ICT ${grade} ដោយស្វ័យប្រវត្តិ!`, 'info');
+            }
+        }
+
+        function applyMoeysIctPreset(silent = false) {
+            const grade = document.getElementById('gradeInput')?.value || 'ទី១១';
             const key = document.getElementById('moeysIctPreset')?.value;
-            const item = MOEYS_ICT_CURRICULUM[key];
+            const item = findCurriculumItem(grade, key);
             if (!item) return;
             document.getElementById('subjectInput').value = 'ព័ត៌មានវិទ្យា (ICT)';
             document.getElementById('chapterNumInput').value = item.chNum;
@@ -1116,10 +1306,13 @@
             document.getElementById('lessonNumInput').value = item.lNum;
             document.getElementById('lessonTitleInput').value = item.lTitle;
             document.getElementById('subLessonsInput').value = item.subs;
+            document.getElementById('aiRecommendationCard')?.classList.add('hidden');
             selectedSubTopicIndices = null;
             renderSubTopicCheckboxes();
             syncPreview();
-            showToast(`បានជ្រើសមេរៀន "${item.lTitle}" តាមសៀវភៅក្រសួងអប់រំ!`, 'info');
+            if (!silent) {
+                showToast(`បានជ្រើសមេរៀន "${item.lTitle}" (${grade})!`, 'info');
+            }
         }
 
         function onSubLessonsEdited() {
@@ -1136,9 +1329,9 @@
                 label: 'បែបសហការ (Cooperative Learning - Jigsaw)',
                 description: 'ក្រុមដើម (Home Group) ➔ ក្រុមអ្នកជំនាញ (Expert Group) ➔ ត្រឡប់មកបង្រៀនសមាជិកក្រុមដើមវិញ។',
                 step3Template: {
-                    content: 'ខ្លឹមសារមេរៀនបែងចែកជា ៣ ផ្នែកសម្រាប់ក្រុមអ្នកជំនាញ៖\n- ផ្នែកទី១៖ និយមន័យ និងគោលគំនិតគ្រឹះ\n- ផ្នែកទី២៖ រូបមន្ត ឬលក្ខណៈសំខាន់ៗ\n- ផ្នែកទី៣៖ ការអនុវត្ត និងឧទាហរណ៍ជាក់ស្តែង',
-                    teacher: '១. រៀបចំក្រុមដើម (Home Groups)៖ បែងចែកសិស្សជាក្រុម ៣-៤ នាក់ និងផ្តល់ប្រធានបទរងផ្សេងៗគ្នា។\n២. បង្កើតក្រុមអ្នកជំនាញ (Expert Groups)៖ ឱ្យសិស្សដែលទទួលបានប្រធានបទដូចគ្នាមកពិភាក្សាស្រាវជ្រាវរួមគ្នា។\n៣. បង្រៀនត្រឡប់ក្រុមដើម៖ ឱ្យអ្នកជំនាញត្រឡប់ទៅពន្យល់មិត្តរួមក្រុមដើមវិញ រួចគ្រូសង្ខេបខ្លឹមសាររួម។',
-                    student: '១. ទទួលប្រធានបទរងរៀងៗខ្លួននៅក្នុងក្រុមដើម។\n២. ចូលរួមក្នុងក្រុមអ្នកជំនាញ ពិភាក្សា ស្រាវជ្រាវ និងកត់ត្រាចំណុចសំខាន់ៗ។\n៣. ត្រឡប់ទៅក្រុមដើម ប្តូរវេនគ្នាពន្យល់ និងសួរ-ឆ្លើយដើម្បីយល់មេរៀនទាំងមូល។'
+                    content: 'ខ្លឹមសារមេរៀនបែងចែកជា ៣ ផ្នែកសម្រាប់ក្រុមអ្នកជំនាញ៖\n- ផ្នែកទី១៖ និយមន័យ និងគោលគំនិតគ្រឹះ\n- ផ្នែកទី២៖ រូបមន្ត ឬលក្ខណៈសំខាន់ៗ\n- ផ្នែកទី៣៖ ការអនុវត្ត និងឧទាហរណ៍ជាក់ស្ដែង',
+                    teacher: '១. រៀបចំក្រុមដើម (Home Groups)៖ បែងចែកសិស្សជាក្រុម ៣-៤ នាក់ និងផ្ដល់ប្រធានបទរងផ្សេងៗគ្នា។\n២. បង្កើតក្រុមអ្នកជំនាញ (Expert Groups)៖ ឱ្យសិស្សដែលទទួលបានប្រធានបទដូចគ្នាមកពិភាក្សាស្រាវជ្រាវរួមគ្នា។\n៣. បង្រៀនត្រឡប់ក្រុមដើម៖ ឱ្យអ្នកជំនាញត្រឡប់ទៅពន្យល់មិត្តរួមក្រុមដើមវិញ រួចគ្រូសង្ខេបខ្លឹមសាររួម។',
+                    student: '១. ទទួលប្រធានបទរងរៀងៗខ្លួននៅក្នុងក្រុមដើម។\n២. ចូលរួមក្នុងក្រុមអ្នកជំនាញ ពិភាក្សា ស្រាវជ្រាវ និងកត់ត្រាចំណុចសំខាន់ៗ។\n៣. ត្រឡប់ទៅក្រុមដើម ប្ដូរវេនគ្នាពន្យល់ និងសួរ-ឆ្លើយដើម្បីយល់មេរៀនទាំងមូល។'
                 }
             },
             polya: {
@@ -1146,13 +1339,13 @@
                 description: 'ដំណាក់កាលទាំង ៤ របស់ Polya៖ យល់បញ្ហា ➔ រៀបចំផែនការ ➔ អនុវត្តផែនការ ➔ ពិនិត្យឡើងវិញ។',
                 step3Template: {
                     content: 'ស្ថានភាពបញ្ហា / ចំណោទគំរូ និងដំណោះស្រាយតាម ៤ ជំហានរបស់ Polya។',
-                    teacher: '១. យល់ពីបញ្ហា៖ លើកស្ថានភាពបញ្ហា ឬចំណោទ រួចសួរសិស្សឱ្យកំណត់បម្រាប់ និងសំណួរ។\n២. រៀបចំផែនការ៖ ណែនាំសិស្សឱ្យស្វែងរករូបមន្ត ឬទ្រឹស្តីដែលពាក់ព័ន្ធដើម្បីដោះស្រាយ។\n៣. អនុវត្តផែនការ៖ សម្របសម្រួលសិស្សគណនា និងដោះស្រាយតាមជំហាន។\n៤. ពិនិត្យឡើងវិញ៖ ផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃចម្លើយ និងបូកសរុបខ្លឹមសារមេរៀន។',
-                    student: '១. អាន និងវិភាគបញ្ហា កំណត់អ្វីដែលស្គាល់ និងអ្វីដែលត្រូវរក។\n២. ពិភាក្សាជ្រើសរើសរូបមន្ត ឬវិធីសាស្ត្រដោះស្រាយ។\n៣. អនុវត្តការគណនា និងសរសេរដំណោះស្រាយលម្អិត។\n៤. ផ្ទៀងផ្ទាត់លទ្ធផល ខ្នាត និងឡើងបង្ហាញលើក្តារខៀន។'
+                    teacher: '១. យល់ពីបញ្ហា៖ លើកស្ថានភាពបញ្ហា ឬចំណោទ រួចសួរសិស្សឱ្យកំណត់បម្រាប់ និងសំណួរ។\n២. រៀបចំផែនការ៖ ណែនាំសិស្សឱ្យស្វែងរករូបមន្ត ឬទ្រឹស្ដីដែលពាក់ព័ន្ធដើម្បីដោះស្រាយ។\n៣. អនុវត្តផែនការ៖ សម្របសម្រួលសិស្សគណនា និងដោះស្រាយតាមជំហាន។\n៤. ពិនិត្យឡើងវិញ៖ ផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវនៃចម្លើយ និងបូកសរុបខ្លឹមសារមេរៀន។',
+                    student: '១. អាន និងវិភាគបញ្ហា កំណត់អ្វីដែលស្គាល់ និងអ្វីដែលត្រូវរក។\n២. ពិភាក្សាជ្រើសរើសរូបមន្ត ឬវិធីសាស្ត្រដោះស្រាយ។\n៣. អនុវត្តការគណនា និងសរសេរដំណោះស្រាយលម្អិត។\n៤. ផ្ទៀងផ្ទាត់លទ្ធផល ខ្នាត និងឡើងបង្ហាញលើក្ដារខៀន។'
                 }
             },
             demo: {
                 label: 'បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)',
-                description: 'ស័ក្តិសមបំផុតសម្រាប់មេរៀន ICT៖ គ្រូបង្ហាញជំហានគំរូលើអេក្រង់ ➔ សិស្សអនុវត្តផ្ទាល់លើកុំព្យូទ័រ ➔ គ្រូដើរសម្របសម្រួល និងសង្ខេប។',
+                description: 'ស័ក្ដិសមបំផុតសម្រាប់មេរៀន ICT៖ គ្រូបង្ហាញជំហានគំរូលើអេក្រង់ ➔ សិស្សអនុវត្តផ្ទាល់លើកុំព្យូទ័រ ➔ គ្រូដើរសម្របសម្រួល និងសង្ខេប។',
                 step3Template: {
                     content: 'ខ្លឹមសារគោល និងជំហានអនុវត្តបច្ចេកទេសផ្ទាល់លើកុំព្យូទ័រ/កម្មវិធី។',
                     teacher: '១. ពន្យល់ និងបង្ហាញគំរូ (Demonstration)៖ ពន្យល់គោលគំនិតសំខាន់ៗ រួចបង្ហាញជំហានអនុវត្តផ្ទាល់តាម Projector យ៉ាងច្បាស់លាស់។\n២. អនុវត្តផ្ទាល់ (Hands-on Practice)៖ ឱ្យសិស្សអនុវត្តតាមជំហានលើកុំព្យូទ័ររៀងៗខ្លួន ឬជាគូ ដោយគ្រូដើរពិនិត្យ និងជួយកែតម្រូវ។\n៣. សង្ខេប និងផ្ទៀងផ្ទាត់៖ ជ្រើសស្នាដៃសិស្សមកបង្ហាញ រួចគ្រូបូកសរុបចំណុចគន្លឹះ។',
@@ -1161,20 +1354,20 @@
             },
             inductive: {
                 label: 'បែបឧបមាន-អនុមាន និងសំណួរ-ចម្លើយ (Inductive-Deductive)',
-                description: 'វិធីសាស្ត្រផ្លូវការក្រសួងអប់រំ៖ ចាប់ពីឧទាហរណ៍ជាក់ស្តែងទាញរកនិយមន័យ/ក្បួនរួម រួចអនុវត្តទៅកាន់លំហាត់ថ្មី។',
+                description: 'វិធីសាស្ត្រផ្លូវការក្រសួងអប់រំ៖ ចាប់ពីឧទាហរណ៍ជាក់ស្ដែងទាញរកនិយមន័យ/ក្បួនរួម រួចអនុវត្តទៅកាន់លំហាត់ថ្មី។',
                 step3Template: {
-                    content: 'ឧទាហរណ៍ជាក់ស្តែង និយមន័យ/គោលការណ៍រួម និងការអនុវត្ត។',
-                    teacher: '១. ឧបមាន (Inductive)៖ លើកឧទាហរណ៍ជាក់ស្តែង និងចោទសំណួរឱ្យសិស្សសង្កេតទាញរកនិយមន័យ ឬក្បួនរួម។\n២. បញ្ជាក់ទ្រឹស្តី៖ សម្របសម្រួលចម្លើយសិស្ស រួចបូកសរុបជានិយមន័យ ឬគោលការណ៍ផ្លូវការ។\n៣. អនុមាន (Deductive)៖ ឱ្យសិស្សយកក្បួននោះទៅអនុវត្តដោះស្រាយករណី ឬលំហាត់ថ្មី។',
-                    student: '១. សង្កេតឧទាហរណ៍ គិត និងឆ្លើយសំណួររបស់គ្រូដើម្បីទាញរកគោលការណ៍រួម។\n២. កត់ត្រានិយមន័យ និងក្បួនផ្លូវការចូលសៀវភៅ។\n៣. អនុវត្តទ្រឹស្តីទៅដោះស្រាយលំហាត់ ឬស្ថានភាពថ្មី។'
+                    content: 'ឧទាហរណ៍ជាក់ស្ដែង និយមន័យ/គោលការណ៍រួម និងការអនុវត្ត។',
+                    teacher: '១. ឧបមាន (Inductive)៖ លើកឧទាហរណ៍ជាក់ស្ដែង និងចោទសំណួរឱ្យសិស្សសង្កេតទាញរកនិយមន័យ ឬក្បួនរួម។\n២. បញ្ជាក់ទ្រឹស្ដី៖ សម្របសម្រួលចម្លើយសិស្ស រួចបូកសរុបជានិយមន័យ ឬគោលការណ៍ផ្លូវការ។\n៣. អនុមាន (Deductive)៖ ឱ្យសិស្សយកក្បួននោះទៅអនុវត្តដោះស្រាយករណី ឬលំហាត់ថ្មី។',
+                    student: '១. សង្កេតឧទាហរណ៍ គិត និងឆ្លើយសំណួររបស់គ្រូដើម្បីទាញរកគោលការណ៍រួម។\n២. កត់ត្រានិយមន័យ និងក្បួនផ្លូវការចូលសៀវភៅ។\n៣. អនុវត្តទ្រឹស្ដីទៅដោះស្រាយលំហាត់ ឬស្ថានភាពថ្មី។'
                 }
             },
             ibl: {
                 label: 'បែបរិះរក (Inquiry-Based Learning - IBL)',
                 description: 'លើកទឹកចិត្តសិស្សឱ្យចោទសួរ បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវរកចម្លើយដោយខ្លួនឯង។',
                 step3Template: {
-                    content: 'សំណួររិះរក សម្មតិកម្ម លទ្ធផលស្រាវជ្រាវ និងសេចក្តីសន្និដ្ឋាននៃមេរៀន។',
-                    teacher: '១. ចោទសំណួរបំផុស៖ បង្ហាញបាតុភូត ឬរូបភាព រួចជំរុញឱ្យសិស្សចោទសួរ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកក្រុមឱ្យសិស្សធ្វើពិសោធន៍ ឬអានឯកសារដើម្បីរកចម្លើយ។\n៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលការបកស្រាយលទ្ធផល រួចគ្រូបូកសរុបទ្រឹស្តីផ្លូវការ។',
-                    student: '១. សង្កេតបាតុភូត ចោទសួរ និងទស្សន៍ទាយចម្លើយបឋម (សម្មតិកម្ម)។\n២. សហការក្នុងក្រុមធ្វើពិសោធន៍ ឬស្រាវជ្រាវទិន្នន័យក្នុងសៀវភៅពុម្ព។\n៣. វិភាគលទ្ធផល ឡើងបង្ហាញសេចក្តីសន្និដ្ឋាន និងកត់ត្រាមេរៀន។'
+                    content: 'សំណួររិះរក សម្មតិកម្ម លទ្ធផលស្រាវជ្រាវ និងសេចក្ដីសន្និដ្ឋាននៃមេរៀន។',
+                    teacher: '១. ចោទសំណួរបំផុស៖ បង្ហាញបាតុភូត ឬរូបភាព រួចជំរុញឱ្យសិស្សចោទសួរ។\n២. បង្កើតសម្មតិកម្ម និងស្រាវជ្រាវ៖ បែងចែកក្រុមឱ្យសិស្សធ្វើពិសោធន៍ ឬអានឯកសារដើម្បីរកចម្លើយ។\n៣. វិភាគ និងសន្និដ្ឋាន៖ សម្របសម្រួលការបកស្រាយលទ្ធផល រួចគ្រូបូកសរុបទ្រឹស្ដីផ្លូវការ។',
+                    student: '១. សង្កេតបាតុភូត ចោទសួរ និងទស្សន៍ទាយចម្លើយបឋម (សម្មតិកម្ម)។\n២. សហការក្នុងក្រុមធ្វើពិសោធន៍ ឬស្រាវជ្រាវទិន្នន័យក្នុងសៀវភៅពុម្ព។\n៣. វិភាគលទ្ធផល ឡើងបង្ហាញសេចក្ដីសន្និដ្ឋាន និងកត់ត្រាមេរៀន។'
                 }
             },
             '5es': {
@@ -1183,24 +1376,24 @@
                 step3Template: {
                     content: 'ខ្លឹមសារមេរៀនសង្ខេបតាមដំណាក់កាលទាំង ៥ នៃលំនាំបង្រៀន 5Es។',
                     teacher: '១. Engage (ទាក់ទាញ)៖ បង្ហាញវីដេអូ ឬសំណួរប្លែកៗផ្សារភ្ជាប់ជីវភាពរស់នៅ។\n២. Explore (រុករក)៖ ចែកសន្លឹកកិច្ចការឱ្យសិស្សពិភាក្សា និងសង្កេតរកគោលការណ៍។\n៣. Explain (ពន្យល់)៖ ឱ្យសិស្សបកស្រាយ រួចគ្រូបំពេញបន្ថែមនិយមន័យ និងរូបមន្ត។\n៤. Elaborate (ពង្រីក)៖ ដាក់លំហាត់ ឬករណីសិក្សាថ្មីឱ្យសិស្សអនុវត្តបន្ថែម។\n៥. Evaluate (វាយតម្លៃ)៖ សង្កេត និងសួរសំណួរផ្ទៀងផ្ទាត់ការយល់ដឹង។',
-                    student: '១. Engage៖ សង្កេត និងឆ្លើយសំណួរបំផុសដោយចំណាប់អារម្មណ៍។\n២. Explore៖ រុករក សាកល្បង និងកត់ត្រាការរកឃើញក្នុងក្រុម។\n៣. Explain៖ ពន្យល់គំនិតដោយប្រើពាក្យពេចន៍ផ្ទាល់ខ្លួន និងស្តាប់ការបំពេញបន្ថែម។\n៤. Elaborate៖ អនុវត្តចំណេះដឹងថ្មីទៅដោះស្រាយបញ្ហាប្រហាក់ប្រហែល។\n៥. Evaluate៖ ឆ្លើយសំណួរវាយតម្លៃ និងឆ្លុះបញ្ចាំងការសិក្សា។'
+                    student: '១. Engage៖ សង្កេត និងឆ្លើយសំណួរបំផុសដោយចំណាប់អារម្មណ៍។\n២. Explore៖ រុករក សាកល្បង និងកត់ត្រាការរកឃើញក្នុងក្រុម។\n៣. Explain៖ ពន្យល់គំនិតដោយប្រើពាក្យពេចន៍ផ្ទាល់ខ្លួន និងស្ដាប់ការបំពេញបន្ថែម។\n៤. Elaborate៖ អនុវត្តចំណេះដឹងថ្មីទៅដោះស្រាយបញ្ហាប្រហាក់ប្រហែល។\n៥. Evaluate៖ ឆ្លើយសំណួរវាយតម្លៃ និងឆ្លុះបញ្ចាំងការសិក្សា។'
                 }
             },
             active: {
                 label: 'បែបសិស្សមជ្ឈមណ្ឌល / សកម្ម (Active Learning)',
-                description: 'ផ្តោតលើការចូលរួមអនុវត្តផ្ទាល់ ការពិភាក្សា ការជជែកដេញដោល និងការធ្វើសកម្មភាពជាក់ស្តែងរបស់សិស្ស។',
+                description: 'ផ្ដោតលើការចូលរួមអនុវត្តផ្ទាល់ ការពិភាក្សា ការជជែកដេញដោល និងការធ្វើសកម្មភាពជាក់ស្ដែងរបស់សិស្ស។',
                 step3Template: {
                     content: 'ខ្លឹមសារមេរៀនគោល និងសកម្មភាពអនុវត្តផ្ទាល់ក្នុងថ្នាក់។',
-                    teacher: '១. បង្ហាញគោលបំណង និងណែនាំសកម្មភាពអនុវត្តជាក់ស្តែង។\n២. ចែកសម្ភារ និងសន្លឹកកិច្ចការឱ្យសិស្សអនុវត្តជាក្រុមតូចៗ ដោយគ្រូដើរសម្របសម្រួល។\n៣. រៀបចំវេទិកាបង្ហាញលទ្ធផល និងបូកសរុបខ្លឹមសារមេរៀនសំខាន់ៗ។',
-                    student: '១. ស្តាប់ការណែនាំ និងរៀបចំក្រុមពិភាក្សា។\n២. ចូលរួមអនុវត្តសកម្មភាព វិភាគទិន្នន័យ និងផ្លាស់ប្តូរយោបល់យ៉ាងសកម្ម។\n៣. ឡើងធ្វើបទបង្ហាញ ឆ្លើយសំណួរមិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
+                    teacher: '១. បង្ហាញគោលបំណង និងណែនាំសកម្មភាពអនុវត្តជាក់ស្ដែង។\n២. ចែកសម្ភារ និងសន្លឹកកិច្ចការឱ្យសិស្សអនុវត្តជាក្រុមតូចៗ ដោយគ្រូដើរសម្របសម្រួល។\n៣. រៀបចំវេទិកាបង្ហាញលទ្ធផល និងបូកសរុបខ្លឹមសារមេរៀនសំខាន់ៗ។',
+                    student: '១. ស្ដាប់ការណែនាំ និងរៀបចំក្រុមពិភាក្សា។\n២. ចូលរួមអនុវត្តសកម្មភាព វិភាគទិន្នន័យ និងផ្លាស់ប្ដូរយោបល់យ៉ាងសកម្ម។\n៣. ឡើងធ្វើបទបង្ហាញ ឆ្លើយសំណួរមិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
                 }
             },
             pbl: {
                 label: 'បែបគម្រោង (Project-Based Learning - PBL)',
-                description: 'ជំរុញឱ្យសិស្សស្រាវជ្រាវ រចនា និងបង្កើតជាផលិតផល ឬដំណោះស្រាយជាក់ស្តែងផ្សារភ្ជាប់នឹងជីវភាព។',
+                description: 'ជំរុញឱ្យសិស្សស្រាវជ្រាវ រចនា និងបង្កើតជាផលិតផល ឬដំណោះស្រាយជាក់ស្ដែងផ្សារភ្ជាប់នឹងជីវភាព។',
                 step3Template: {
-                    content: 'ប្រធានបទគម្រោងខ្នាតតូច និងខ្លឹមសារទ្រឹស្តីគាំទ្រការអនុវត្តគម្រោង។',
-                    teacher: '១. ចោទសំណួរគន្លឹះ (Driving Question) និងកំណត់គោលដៅគម្រោង។\n២. ណែនាំទ្រឹស្តីមូលដ្ឋាន និងចែកក្រុមរៀបចំផែនការស្រាវជ្រាវ/ផលិតគំរូ។\n៣. តាមដាន ផ្តល់ប្រឹក្សា និងវាយតម្លៃបទបង្ហាញលទ្ធផលគម្រោងរបស់សិស្ស។',
+                    content: 'ប្រធានបទគម្រោងខ្នាតតូច និងខ្លឹមសារទ្រឹស្ដីគាំទ្រការអនុវត្តគម្រោង។',
+                    teacher: '១. ចោទសំណួរគន្លឹះ (Driving Question) និងកំណត់គោលដៅគម្រោង។\n២. ណែនាំទ្រឹស្ដីមូលដ្ឋាន និងចែកក្រុមរៀបចំផែនការស្រាវជ្រាវ/ផលិតគំរូ។\n៣. តាមដាន ផ្ដល់ប្រឹក្សា និងវាយតម្លៃបទបង្ហាញលទ្ធផលគម្រោងរបស់សិស្ស។',
                     student: '១. វិភាគសំណួរគន្លឹះ និងបែងចែកតួនាទីក្នុងក្រុមគម្រោង។\n២. ស្រាវជ្រាវឯកសារ ប្រមូលទិន្នន័យ និងរៀបចំផលិតផល/ផ្ទាំងបង្ហាញ។\n៣. ធ្វើបទបង្ហាញលទ្ធផលគម្រោង និងទទួលយកមតិកែលម្អ។'
                 }
             },
@@ -1217,18 +1410,18 @@
                 label: 'លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)',
                 description: 'គ្រូបង្ហាញគំរូ (I Do) ➔ គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do) ➔ សិស្សអនុវត្តដោយឯករាជ្យ (You Do)។',
                 step3Template: {
-                    content: 'ទ្រឹស្តី រូបមន្ត ឧទាហរណ៍គំរូ និងលំហាត់អនុវត្តតាមលំដាប់កម្រិត។',
-                    teacher: '១. គ្រូធ្វើ (I Do)៖ ពន្យល់ទ្រឹស្តី រូបមន្ត និងបង្ហាញវិធីដោះស្រាយឧទាហរណ៍គំរូយ៉ាងលម្អិត។\n២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do)៖ ដាក់លំហាត់ទី២ ហើយសម្របសម្រួលសិស្សឱ្យចូលរួមដោះស្រាយជាមួយគ្រូ។\n៣. សិស្សធ្វើ (You Do)៖ ដាក់លំហាត់អនុវត្តឱ្យសិស្សធ្វើដោយខ្លួនឯង រួចដើរពិនិត្យជួយសិស្សយឺត។',
-                    student: '១. ស្តាប់ សង្កេត និងកត់ត្រាជំហានដោះស្រាយគំរូរបស់គ្រូ។\n២. ចូលរួមឆ្លើយ និងសហការដោះស្រាយលំហាត់ទី២ ជាមួយគ្រូ។\n៣. អនុវត្តដោះស្រាយលំហាត់ដោយឯករាជ្យ និងឡើងកែលើក្តារខៀន។'
+                    content: 'ទ្រឹស្ដី រូបមន្ត ឧទាហរណ៍គំរូ និងលំហាត់អនុវត្តតាមលំដាប់កម្រិត។',
+                    teacher: '១. គ្រូធ្វើ (I Do)៖ ពន្យល់ទ្រឹស្ដី រូបមន្ត និងបង្ហាញវិធីដោះស្រាយឧទាហរណ៍គំរូយ៉ាងលម្អិត។\n២. គ្រូ និងសិស្សធ្វើរួមគ្នា (We Do)៖ ដាក់លំហាត់ទី២ ហើយសម្របសម្រួលសិស្សឱ្យចូលរួមដោះស្រាយជាមួយគ្រូ។\n៣. សិស្សធ្វើ (You Do)៖ ដាក់លំហាត់អនុវត្តឱ្យសិស្សធ្វើដោយខ្លួនឯង រួចដើរពិនិត្យជួយសិស្សយឺត។',
+                    student: '១. ស្ដាប់ សង្កេត និងកត់ត្រាជំហានដោះស្រាយគំរូរបស់គ្រូ។\n២. ចូលរួមឆ្លើយ និងសហការដោះស្រាយលំហាត់ទី២ ជាមួយគ្រូ។\n៣. អនុវត្តដោះស្រាយលំហាត់ដោយឯករាជ្យ និងឡើងកែលើក្ដារខៀន។'
                 }
             },
             flipped: {
                 label: 'ថ្នាក់រៀនត្រឡប់ (Flipped Classroom)',
-                description: 'សិស្សសិក្សាទ្រឹស្តី ឬមើលវីដេអូមុននៅផ្ទះ ហើយប្រើពេលក្នុងថ្នាក់សម្រាប់ពិភាក្សា និងដោះស្រាយលំហាត់ស៊ីជម្រៅ។',
+                description: 'សិស្សសិក្សាទ្រឹស្ដី ឬមើលវីដេអូមុននៅផ្ទះ ហើយប្រើពេលក្នុងថ្នាក់សម្រាប់ពិភាក្សា និងដោះស្រាយលំហាត់ស៊ីជម្រៅ។',
                 step3Template: {
-                    content: 'សេចក្តីសង្ខេបទ្រឹស្តី និងកម្រងលំហាត់/ករណីសិក្សាស៊ីជម្រៅក្នុងថ្នាក់។',
-                    teacher: '១. ត្រួតពិនិត្យការរៀបចំមុនចូលថ្នាក់៖ សួរសំណួរផ្ទៀងផ្ទាត់អំពីឯកសារ/វីដេអូដែលបានផ្តល់ឱ្យអាននៅផ្ទះ។\n២. បំភ្លឺចំណុចឆ្ងល់៖ ពន្យល់បន្ថែមលើចំណុចស្មុគស្មាញដែលសិស្សមិនទាន់យល់ច្បាស់។\n៣. អនុវត្តស៊ីជម្រៅ៖ ចែកក្រុមឱ្យដោះស្រាយលំហាត់កម្រិតខ្ពស់ និងពិភាក្សាវែកញែក។',
-                    student: '១. បង្ហាញកំណត់ត្រាដែលបានសិក្សានៅផ្ទះ និងលើកឡើងពីចំណុចឆ្ងល់។\n២. ស្តាប់ការបំភ្លឺបន្ថែមរបស់គ្រូ។\n៣. សហការដោះស្រាយលំហាត់ស៊ីជម្រៅ និងឡើងបកស្រាយក្នុងថ្នាក់។'
+                    content: 'សេចក្ដីសង្ខេបទ្រឹស្ដី និងកម្រងលំហាត់/ករណីសិក្សាស៊ីជម្រៅក្នុងថ្នាក់។',
+                    teacher: '១. ត្រួតពិនិត្យការរៀបចំមុនចូលថ្នាក់៖ សួរសំណួរផ្ទៀងផ្ទាត់អំពីឯកសារ/វីដេអូដែលបានផ្ដល់ឱ្យអាននៅផ្ទះ។\n២. បំភ្លឺចំណុចឆ្ងល់៖ ពន្យល់បន្ថែមលើចំណុចស្មុគស្មាញដែលសិស្សមិនទាន់យល់ច្បាស់។\n៣. អនុវត្តស៊ីជម្រៅ៖ ចែកក្រុមឱ្យដោះស្រាយលំហាត់កម្រិតខ្ពស់ និងពិភាក្សាវែកញែក។',
+                    student: '១. បង្ហាញកំណត់ត្រាដែលបានសិក្សានៅផ្ទះ និងលើកឡើងពីចំណុចឆ្ងល់។\n២. ស្ដាប់ការបំភ្លឺបន្ថែមរបស់គ្រូ។\n៣. សហការដោះស្រាយលំហាត់ស៊ីជម្រៅ និងឡើងបកស្រាយក្នុងថ្នាក់។'
                 }
             },
             kwl: {
@@ -1237,7 +1430,7 @@
                 step3Template: {
                     content: 'តារាង K-W-L និងខ្លឹមសារមេរៀនសំខាន់ៗដែលសិស្សបានរកឃើញ។',
                     teacher: '១. Know (ដឹងស្រាប់)៖ សួរសិស្សថាតើពួកគេធ្លាប់ដឹងអ្វីខ្លះអំពីប្រធានបទមេរៀននេះ។\n២. Want to know (ចង់ដឹង)៖ ឱ្យសិស្សបង្កើតសំណួរដែលចង់ដឹង និងស្រាវជ្រាវក្នុងសៀវភៅពុម្ព។\n៣. Learned (បានរៀន)៖ សម្របសម្រួលសិស្សបំពេញចម្លើយដែលរកឃើញ និងបូកសរុបមេរៀន។',
-                    student: '១. រំលឹក និងប្រាប់ចំណេះដឹងដែលមានស្រាប់ចូលក្នុងជួរ K។\n២. សរសេរសំណួរចង់ដឹងចូលក្នុងជួរ W និងអានឯកសារស្វែងរកចម្លើយ។\n៣. កត់ត្រាចំណេះដឹងថ្មីចូលក្នុងជួរ L និងឡើងបង្ហាញ។'
+                    student: '១. រំឭក និងប្រាប់ចំណេះដឹងដែលមានស្រាប់ចូលក្នុងជួរ K។\n២. សរសេរសំណួរចង់ដឹងចូលក្នុងជួរ W និងអានឯកសារស្វែងរកចម្លើយ។\n៣. កត់ត្រាចំណេះដឹងថ្មីចូលក្នុងជួរ L និងឡើងបង្ហាញ។'
                 }
             },
             conceptmap: {
@@ -1245,17 +1438,17 @@
                 description: 'រៀបចំទំនាក់ទំនងគោលគំនិត និយមន័យ និងរូបមន្តជាដ្យាក្រាម ឬផែនទីគំនិតងាយយល់ និងចងចាំ។',
                 step3Template: {
                     content: 'ផែនទីគំនិត (Concept Map) បង្ហាញពីទំនាក់ទំនងរវាងគោលគំនិតសំខាន់ៗនៃមេរៀន។',
-                    teacher: '១. បង្ហាញគោលគំនិតមេ (Central Concept) នៅកណ្តាលក្តារខៀន។\n២. ចែកក្រុមឱ្យសិស្សអានមេរៀន រួចគូរមែកធាងភ្ជាប់និយមន័យ លក្ខណៈ និងរូបមន្តលើផ្ទាំងក្រដាសធំ។\n៣. ពិនិត្យ កែលម្អផែនទីគំនិតរបស់ក្រុមនីមួយៗ និងសង្ខេបមេរៀន។',
+                    teacher: '១. បង្ហាញគោលគំនិតមេ (Central Concept) នៅកណ្ដាលក្ដារខៀន។\n២. ចែកក្រុមឱ្យសិស្សអានមេរៀន រួចគូរមែកធាងភ្ជាប់និយមន័យ លក្ខណៈ និងរូបមន្តលើផ្ទាំងក្រដាសធំ។\n៣. ពិនិត្យ កែលម្អផែនទីគំនិតរបស់ក្រុមនីមួយៗ និងសង្ខេបមេរៀន។',
                     student: '១. កំណត់ពាក្យគន្លឹះ និងគោលគំនិតរងចេញពីមេរៀន។\n២. សហការគូរផែនទីគំនិតបង្ហាញទំនាក់ទំនងមេរៀនយ៉ាងមានរបៀប។\n៣. ឡើងពន្យល់ផែនទីគំនិតរបស់ក្រុម និងកត់ត្រាចូលសៀវភៅ។'
                 }
             },
             gallerywalk: {
                 label: 'យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)',
-                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរពិនិត្យ និងផ្តល់មតិកែលម្អឆ្លងក្រុម ➔ បូកសរុបខ្លឹមសាររួម។',
+                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរពិនិត្យ និងផ្ដល់មតិកែលម្អឆ្លងក្រុម ➔ បូកសរុបខ្លឹមសាររួម។',
                 step3Template: {
                     content: 'ប្រធានបទពិភាក្សាតាមស្ថានីយក្រុម និងខ្លឹមសារសំយោគនៃមេរៀន។',
                     teacher: '១. បែងចែកក្រុម និងប្រធានបទរង ឱ្យសិស្សសរសេរលទ្ធផលលើផ្ទាំងក្រដាសធំ (Poster)។\n២. រៀបចំ Gallery Walk៖ ឱ្យក្រុមនីមួយៗដើរពិនិត្យស្នាដៃក្រុមផ្សេង និងបិទក្រដាសមតិយោបល់។\n៣. ឱ្យក្រុមដើមឆ្លើយតបមតិយោបល់ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។',
-                    student: '១. ពិភាក្សា និងរៀបចំផ្ទាំងបង្ហាញលទ្ធផលរបស់ក្រុម។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមស្ថានីយ កត់ត្រា និងផ្តល់មតិកែលម្អ។\n៣. បកស្រាយបំភ្លឺសំណួររបស់មិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
+                    student: '១. ពិភាក្សា និងរៀបចំផ្ទាំងបង្ហាញលទ្ធផលរបស់ក្រុម។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមស្ថានីយ កត់ត្រា និងផ្ដល់មតិកែលម្អ។\n៣. បកស្រាយបំភ្លឺសំណួររបស់មិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
                 }
             }
         };
@@ -1449,6 +1642,23 @@
                 .replace(/\u17C4\u17C6/g, '\u17C4\u17C6');
             text = text.replace(/\u17C6\u17B6/g, '\u17B6\u17C6');
             text = text
+                .replace(/\u179F\u17D2\u179A\u17D2\u178F/g, '\u179F\u17D2\u178F\u17D2\u179A')
+                .replace(/\u17B2\u17D2\u1799/g, '\u17B1\u17D2\u1799')
+                .replace(/ណ្ត/g, 'ណ្ដ')
+                .replace(/ក្តារ/g, 'ក្ដារ')
+                .replace(/សេចក្តី/g, 'សេចក្ដី')
+                .replace(/សក្តានុពល/g, 'សក្ដានុពល')
+                .replace(/ស័ក្តិសម/g, 'ស័ក្ដិសម')
+                .replace(/ផ្តល់/g, 'ផ្ដល់')
+                .replace(/ផ្តោត/g, 'ផ្ដោត')
+                .replace(/ប្តូរ/g, 'ប្ដូរ')
+                .replace(/ម្តង/g, 'ម្ដង')
+                .replace(/ស្តាប់/g, 'ស្ដាប់')
+                .replace(/ជាក់ស្តែង/g, 'ជាក់ស្ដែង')
+                .replace(/ទ្រឹស្តី/g, 'ទ្រឹស្ដី')
+                .replace(/សុខុដុម/g, 'សុខដុម')
+                .replace(/អេឡិចត្រូនិច/g, 'អេឡិចត្រូនិក');
+            text = text
                 .replace(/[ \t]{2,}/g, ' ')
                 .replace(/\s+([។៕៖])/g, '$1')
                 .trim();
@@ -1537,7 +1747,7 @@
 
                 showToast(`បានអានឯកសារ PDF "${file.name}" រួចរាល់!`, 'success');
             } catch (err) {
-                showToast('មានបញ្ហាក្នុងការអាន PDF សូមសាកល្បងម្តងទៀត!', 'error');
+                showToast('មានបញ្ហាក្នុងការអាន PDF សូមសាកល្បងម្ដងទៀត!', 'error');
             }
         }
 
@@ -1699,14 +1909,16 @@
                     if (matchOpt) subjSel.value = matchOpt.value;
                 }
             }
+            const presetSel = document.getElementById('moeysIctPreset');
+            if (presetSel) presetSel.value = '';
             if (meta.chapterNum !== undefined && document.getElementById('chapterNumInput')) {
-                document.getElementById('chapterNumInput').value = meta.chapterNum;
+                document.getElementById('chapterNumInput').value = toKhmerNumerals(meta.chapterNum);
             }
             if (meta.chapterTitle && document.getElementById('chapterInput')) {
                 document.getElementById('chapterInput').value = meta.chapterTitle;
             }
             if (meta.lessonNum !== undefined && document.getElementById('lessonNumInput')) {
-                document.getElementById('lessonNumInput').value = meta.lessonNum;
+                document.getElementById('lessonNumInput').value = toKhmerNumerals(meta.lessonNum);
             }
             if (meta.lessonTitle && document.getElementById('lessonTitleInput')) {
                 document.getElementById('lessonTitleInput').value = meta.lessonTitle;
@@ -1745,6 +1957,7 @@
             const pdfText = (pdfBox?.value || '').trim();
             const apiKey = getActiveApiKey();
             let detected = null;
+            let apiFailedMsg = '';
 
             if (pdfText) {
                 detected = parseMetadataLocallyFromText(pdfText);
@@ -1809,6 +2022,8 @@
             if (detected) {
                 applyDetectedLessonMetadata(detected);
                 showToast(`${getActiveModelLabel()} បានស្កេន និងស្រង់ព័ត៌មានមេរៀនរួចរាល់!`, 'success');
+            } else if (apiFailedMsg) {
+                showToast(`មិនអាចភ្ជាប់ ${getActiveModelLabel()} (${apiFailedMsg})!`, 'error');
             } else {
                 showToast(`សូមបញ្ចូល API Key ដើម្បីឱ្យ ${getActiveModelLabel()} ស្កេនរូបភាព ឬ PDF!`, 'info');
             }
@@ -1897,12 +2112,12 @@
 
             const chapNum = getVal('chapterNumInput').trim();
             const chapTitle = getVal('chapterInput').trim();
-            setTxt('prevChapterLabel', `ជំពូកទី${chapNum || '...'}`);
+            setTxt('prevChapterLabel', `ជំពូកទី${chapNum ? toKhmerNumerals(chapNum) : '...'}`);
             setTxt('prevChapter', chapTitle || '............');
 
             const lessNum = getVal('lessonNumInput').trim();
             const lessTitle = getVal('lessonTitleInput').trim();
-            setTxt('prevLessonLabel', `មេរៀនទី${lessNum || '...'}`);
+            setTxt('prevLessonLabel', `មេរៀនទី${lessNum ? toKhmerNumerals(lessNum) : '...'}`);
             setTxt('prevLessonTitle', lessTitle || '..........');
 
             setTxt('prevSubLessons', getActiveSelectedSubLessonsText());
@@ -1922,14 +2137,203 @@
             setTxt('prevMaterials', getVal('materialsInput'));
 
             for (let i = 1; i <= 5; i++) {
-                setTxt(`prevS${i}HeaderTime`, getVal(`s${i}Time`));
-                setTxt(`prevS${i}Teacher`, getVal(`s${i}Teacher`));
-                setTxt(`prevS${i}Content`, getVal(`s${i}Content`));
-                setTxt(`prevS${i}Student`, getVal(`s${i}Student`));
+                const t = getVal(`s${i}Time`);
+                setTxt(`prevS${i}HeaderTime`, t);
+                if (i !== 3) {
+                    setTxt(`prevS${i}Teacher`, getVal(`s${i}Teacher`));
+                    setTxt(`prevS${i}Content`, getVal(`s${i}Content`));
+                    setTxt(`prevS${i}Student`, getVal(`s${i}Student`));
+                }
             }
+
+            // Compute 5Es stage times from Step 1..4 times
+            const s1Min = parseKhmerOrArabicMinutes(getVal('s1Time')) || 3;
+            const s2Min = parseKhmerOrArabicMinutes(getVal('s2Time')) || 5;
+            const s3Min = parseKhmerOrArabicMinutes(getVal('s3Time')) || 30;
+            const s4Min = parseKhmerOrArabicMinutes(getVal('s4Time')) || 8;
+
+            const engageMin = s1Min + s2Min;
+            const exploreMin = Math.floor(s3Min / 3);
+            const explainMin = Math.round(s3Min / 3);
+            const elaborateMin = Math.max(1, s3Min - exploreMin - explainMin);
+
+            setTxt('prevS1StepCell', `Engage\n(${toKhmerNumerals(engageMin)}នាទី)`);
+            setTxt('prevS2StepCell', `Explore\n(${toKhmerNumerals(exploreMin)}នាទី)`);
+            setTxt('prevS3StepCell', `Explain\n(${toKhmerNumerals(explainMin)}នាទី)`);
+            setTxt('prevS4StepCell', `Elaborate\n(${toKhmerNumerals(elaborateMin)}នាទី)`);
+            setTxt('prevS5StepCell', `Evaluate\n(${toKhmerNumerals(s4Min)}នាទី)`);
+
+            onTableLayoutChange();
+            updateTimeBalanceBadge();
 
             setTxt('prevLunarDate', getVal('lunarDateInput'));
             setTxt('prevSolarDateText', getVal('solarDateTextInput'));
+        }
+
+        function splitStep3IntoThreeStages(rawText) {
+            const text = String(rawText || '').trim();
+            if (!text) return ['', '', ''];
+
+            // Check if text explicitly mentions Explore / Explain / Elaborate
+            const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+            const exploreLines = [];
+            const explainLines = [];
+            const elaborateLines = [];
+            let has5EsKeywords = false;
+            let currentBucket = null;
+
+            for (const line of lines) {
+                if (/explore|រុករក/i.test(line)) {
+                    has5EsKeywords = true;
+                    currentBucket = exploreLines;
+                } else if (/explain|ពន្យល់/i.test(line) && has5EsKeywords) {
+                    currentBucket = explainLines;
+                } else if (/elaborate|ពង្រីក/i.test(line) && has5EsKeywords) {
+                    currentBucket = elaborateLines;
+                } else if (/engage|evaluate/i.test(line) && has5EsKeywords) {
+                    currentBucket = null;
+                    continue;
+                }
+                if (currentBucket) currentBucket.push(line);
+            }
+
+            if (has5EsKeywords && (exploreLines.length || explainLines.length || elaborateLines.length)) {
+                return [
+                    exploreLines.join('\n') || lines[0] || '',
+                    explainLines.join('\n') || lines[1] || '',
+                    elaborateLines.join('\n') || lines.slice(2).join('\n') || ''
+                ];
+            }
+
+            // Otherwise split by numbered items (១., ២., ៣., ...) or paragraphs
+            const numberedBlocks = text
+                .split(/\n(?=[១-៩1-9]+\.)/)
+                .map(b => b.trim())
+                .filter(Boolean);
+
+            if (numberedBlocks.length >= 3) {
+                return [
+                    numberedBlocks[0],
+                    numberedBlocks[1],
+                    numberedBlocks.slice(2).join('\n')
+                ];
+            }
+
+            if (lines.length >= 3) {
+                const third = Math.ceil(lines.length / 3);
+                return [
+                    lines.slice(0, third).join('\n'),
+                    lines.slice(third, third * 2).join('\n'),
+                    lines.slice(third * 2).join('\n')
+                ];
+            }
+
+            if (lines.length === 2) {
+                return [lines[0], lines[1], ''];
+            }
+
+            return [text, '', ''];
+        }
+
+        function onTableLayoutChange() {
+            const mode = document.getElementById('tableLayoutMode')?.value || '3col';
+            const is4 = mode === '4col';
+            const a4El = document.getElementById('a4Document');
+            const toolbarEl = document.getElementById('previewToolbar');
+            const orientLabelEl = document.getElementById('previewOrientationLabel');
+            const printPageStyleEl = document.getElementById('dynamicPrintPageStyle');
+            if (a4El) a4El.classList.toggle('landscape', is4);
+            if (toolbarEl) {
+                toolbarEl.classList.toggle('max-w-[297mm]', is4);
+                toolbarEl.classList.toggle('max-w-[210mm]', !is4);
+            }
+            if (orientLabelEl) {
+                orientLabelEl.textContent = is4 ? 'A4 ផ្ដេក' : 'A4 បញ្ឈរ';
+            }
+            if (printPageStyleEl) {
+                printPageStyleEl.textContent = is4
+                    ? '@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }'
+                    : '@media print { @page { size: A4 portrait; margin: 12mm 14mm; } }';
+            }
+            const thStep = document.getElementById('prevThStep');
+            const thTeacher = document.getElementById('prevThTeacher');
+            const thContent = document.getElementById('prevThContent');
+            const thStudent = document.getElementById('prevThStudent');
+            if (thStep) thStep.classList.toggle('hidden', !is4);
+            if (thTeacher) thTeacher.style.width = is4 ? '32%' : '34%';
+            if (thContent) thContent.style.width = is4 ? '28%' : '32%';
+            if (thStudent) thStudent.style.width = is4 ? '29%' : '34%';
+
+            const stageCells = [
+                'prevS1StepCell',
+                'prevS2StepCell',
+                'prevS5StepCell',
+                'prevStageStep5HeaderCell',
+                'prevStageStep5ContentCell'
+            ];
+            for (const id of stageCells) {
+                document.getElementById(id)?.classList.toggle('hidden', !is4);
+            }
+
+            const explainRow = document.getElementById('prevStep3ExplainRow');
+            const elaborateRow = document.getElementById('prevStep3ElaborateRow');
+            if (explainRow) explainRow.classList.toggle('hidden', !is4);
+            if (elaborateRow) elaborateRow.classList.toggle('hidden', !is4);
+
+            const s3T = document.getElementById('s3Teacher')?.value || '';
+            const s3C = document.getElementById('s3Content')?.value || '';
+            const s3S = document.getElementById('s3Student')?.value || '';
+
+            const setTxt = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            };
+
+            if (is4) {
+                const [tExplore, tExplain, tElaborate] = splitStep3IntoThreeStages(s3T);
+                const [cExplore, cExplain, cElaborate] = splitStep3IntoThreeStages(s3C);
+                const [sExplore, sExplain, sElaborate] = splitStep3IntoThreeStages(s3S);
+
+                setTxt('prevS3Teacher', tExplore);
+                setTxt('prevS3Content', cExplore);
+                setTxt('prevS3Student', sExplore);
+
+                setTxt('prevS3ExplainTeacher', tExplain);
+                setTxt('prevS3ExplainContent', cExplain);
+                setTxt('prevS3ExplainStudent', sExplain);
+
+                setTxt('prevS3ElaborateTeacher', tElaborate);
+                setTxt('prevS3ElaborateContent', cElaborate);
+                setTxt('prevS3ElaborateStudent', sElaborate);
+            } else {
+                setTxt('prevS3Teacher', s3T);
+                setTxt('prevS3Content', s3C);
+                setTxt('prevS3Student', s3S);
+            }
+        }
+
+        function parseKhmerOrArabicMinutes(str) {
+            const khToAr = String(str || '').replace(/[០-៩]/g, d => String('០១២៣៤៥៦៧៨៩'.indexOf(d)));
+            const m = khToAr.match(/\d+/);
+            return m ? parseInt(m[0], 10) : 0;
+        }
+
+        function updateTimeBalanceBadge() {
+            const badge = document.getElementById('timeBalanceBadge');
+            if (!badge) return;
+            const dur = document.getElementById('durationInput')?.value || '';
+            const target = dur.startsWith('៥០') ? 50 : 100;
+            let total = 0;
+            for (let i = 1; i <= 5; i++) {
+                total += parseKhmerOrArabicMinutes(document.getElementById(`s${i}Time`)?.value);
+            }
+            if (total === target) {
+                badge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold';
+                badge.textContent = `⏱️ សរុប៖ ${toKhmerNumerals(total)}/${toKhmerNumerals(target)} នាទី ✓`;
+            } else {
+                badge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold';
+                badge.textContent = `⚠️ សរុប៖ ${toKhmerNumerals(total)}/${toKhmerNumerals(target)} នាទី`;
+            }
         }
 
         function switchMobileTab(tab) {
@@ -1971,7 +2375,17 @@
         }
 
         function exportToWord() {
-            const docContent = document.getElementById('a4Document')?.innerHTML || '';
+            const a4El = document.getElementById('a4Document');
+            let docContent = '';
+            if (a4El) {
+                const clone = a4El.cloneNode(true);
+                clone.querySelectorAll('.hidden').forEach(el => el.remove());
+                docContent = clone.innerHTML;
+            }
+            const is4 = (document.getElementById('tableLayoutMode')?.value || '3col') === '4col';
+            const wordPageCss = is4
+                ? `@page Section1 { size: 29.7cm 21.0cm; mso-page-orientation: landscape; margin: 1.2cm 1.4cm; } div.Section1 { page: Section1; } @page { size: A4 landscape; margin: 1.2cm 1.4cm; }`
+                : `@page Section1 { size: 21.0cm 29.7cm; mso-page-orientation: portrait; margin: 1.5cm; } div.Section1 { page: Section1; } @page { size: A4 portrait; margin: 1.5cm; }`;
             const lessonTitle = document.getElementById('lessonTitleInput')?.value || 'កិច្ចតែងការបង្រៀន';
             const htmlWord = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -1979,7 +2393,7 @@
                     <meta charset='utf-8'>
                     <title>${escapeHtml(lessonTitle)}</title>
                     <style>
-                        @page { size: A4 portrait; margin: 1.5cm; }
+                        ${wordPageCss}
                         body { font-family: 'Khmer OS Siemreap', 'Siemreap', sans-serif; font-size: 11pt; line-height: 1.6; color: #000; }
                         .font-moul { font-family: 'Khmer OS Moul Light', 'Moul', serif; font-weight: normal; }
                         table.moeys-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
@@ -1988,7 +2402,7 @@
                         .step-header-row td { background-color: #eef2ff; font-weight: bold; text-align: center; }
                     </style>
                 </head>
-                <body>${docContent}</body>
+                <body><div class="Section1">${docContent}</div></body>
                 </html>
             `;
             const blob = new Blob(['\ufeff', htmlWord], { type: 'application/msword' });
@@ -2007,7 +2421,7 @@
         // 6. LOCAL STORAGE & SAVED LESSONS MANAGEMENT
         // =========================================================================
         const FORM_FIELD_IDS = [
-            'schoolInput', 'headerDateInput', 'durationInput', 'gregorianDatePicker',
+            'schoolInput', 'headerDateInput', 'tableLayoutMode', 'durationInput', 'gregorianDatePicker',
             'deptInput', 'lunarDateInput', 'solarDateTextInput', 'teacherInput', 'principalInput',
             'gradeInput', 'subjectInput', 'chapterNumInput', 'chapterInput', 'lessonNumInput',
             'lessonTitleInput', 'subLessonsInput', 'teachingMethod',
@@ -2035,8 +2449,10 @@
                 const el = document.getElementById(id);
                 if (el && data[id] !== undefined) el.value = data[id];
             }
+            populatePresetDropdownForGrade(data.gradeInput || 'ទី១១', false);
             selectedSubTopicIndices = Array.isArray(data.selectedSubTopicIndices) ? data.selectedSubTopicIndices : null;
             renderSubTopicCheckboxes(selectedSubTopicIndices);
+            onSubjectChange();
             onMethodChange();
             syncPreview();
         }
@@ -2141,6 +2557,8 @@
 
         function createNewLesson() {
             currentLessonId = null;
+            const presetSel = document.getElementById('moeysIctPreset');
+            if (presetSel) presetSel.value = '';
             document.getElementById('chapterNumInput').value = '';
             document.getElementById('chapterInput').value = '';
             document.getElementById('lessonNumInput').value = '';
@@ -2187,13 +2605,13 @@
                 if (/គម្រោង|ផលិតផល|ជំនួញ|បង្កើតគេហទំព័រ/.test(combined)) {
                     return {
                         methodKey: 'pbl',
-                        reason: 'មេរៀន ICT នេះផ្តោតលើការបង្កើតស្នាដៃជាក់ស្តែង ដូច្នេះវិធីសាស្ត្របែបគម្រោង (PBL) ជួយឱ្យសិស្សរៀបចំផែនការ និងផលិតលទ្ធផលបានពេញលេញ។'
+                        reason: 'មេរៀន ICT នេះផ្ដោតលើការបង្កើតស្នាដៃជាក់ស្ដែង ដូច្នេះវិធីសាស្ត្របែបគម្រោង (PBL) ជួយឱ្យសិស្សរៀបចំផែនការ និងផលិតលទ្ធផលបានពេញលេញ។'
                     };
                 }
                 if (/អ៊ីនធឺណិត|ទំនាក់ទំនង|ក្រមសីលធម៌|លិខិត/.test(combined) && !/កូដ|គណនា|រូបមន្ត|កណ្ដុរ|ផ្ទៃតុ/.test(combined)) {
                     return {
                         methodKey: 'active',
-                        reason: 'មេរៀន ICT ផ្នែកទ្រឹស្តី និងទំនាក់ទំនងនេះស័ក្តិសមនឹងវិធីសាស្ត្រសិស្សមជ្ឈមណ្ឌល / ពិភាក្សាសកម្ម (Active Learning) ដើម្បីឱ្យសិស្សវិភាគ និងផ្លាស់ប្តូរយោបល់។'
+                        reason: 'មេរៀន ICT ផ្នែកទ្រឹស្ដី និងទំនាក់ទំនងនេះស័ក្ដិសមនឹងវិធីសាស្ត្រសិស្សមជ្ឈមណ្ឌល / ពិភាក្សាសកម្ម (Active Learning) ដើម្បីឱ្យសិស្សវិភាគ និងផ្លាស់ប្ដូរយោបល់។'
                     };
                 }
                 return {
@@ -2204,13 +2622,13 @@
             if (/ចំណោទ|លំហាត់|គណនា|សមីការ|អាំងតេក្រាល|ដេរីវេ/.test(combined) || subject === 'គណិតវិទ្យា') {
                 return {
                     methodKey: 'polya',
-                    reason: 'មេរៀននេះផ្តោតលើការវិភាគ និងដោះស្រាយលំហាត់គណនា ដូច្នេះវិធីសាស្ត្របែបដោះស្រាយបញ្ហា (Polya) ជួយឱ្យសិស្សចេះវិភាគបម្រាប់ រៀបចំផែនការរូបមន្ត និងផ្ទៀងផ្ទាត់ចម្លើយបានច្បាស់លាស់។'
+                    reason: 'មេរៀននេះផ្ដោតលើការវិភាគ និងដោះស្រាយលំហាត់គណនា ដូច្នេះវិធីសាស្ត្របែបដោះស្រាយបញ្ហា (Polya) ជួយឱ្យសិស្សចេះវិភាគបម្រាប់ រៀបចំផែនការរូបមន្ត និងផ្ទៀងផ្ទាត់ចម្លើយបានច្បាស់លាស់។'
                 };
             }
             if (/ពិសោធន៍|បាតុភូត|ប្រតិកម្ម|កោសិកា|ដែន|ចរន្ត|រូបវិទ្យា|គីមីវិទ្យា|ជីវវិទ្យា/.test(combined)) {
                 return {
                     methodKey: 'ibl',
-                    reason: 'មេរៀនវិទ្យាសាស្ត្រនេះពាក់ព័ន្ធនឹងបាតុភូត និងគោលការណ៍ធម្មជាតិ ដូច្នេះវិធីសាស្ត្របែបរិះរក (IBL) ជំរុញឱ្យសិស្សចោទសួរ បង្កើតសម្មតិកម្ម និងសង្កេតរកសេចក្តីសន្និដ្ឋានដោយខ្លួនឯង។'
+                    reason: 'មេរៀនវិទ្យាសាស្ត្រនេះពាក់ព័ន្ធនឹងបាតុភូត និងគោលការណ៍ធម្មជាតិ ដូច្នេះវិធីសាស្ត្របែបរិះរក (IBL) ជំរុញឱ្យសិស្សចោទសួរ បង្កើតសម្មតិកម្ម និងសង្កេតរកសេចក្ដីសន្និដ្ឋានដោយខ្លួនឯង។'
                 };
             }
             if (/អត្ថបទ|កំណាព្យ|ប្រវត្តិ|ភូមិ|សេដ្ឋកិច្ច|សីលធម៌/.test(combined)) {
@@ -2231,7 +2649,7 @@
             if (subject === 'រូបវិទ្យា' || subject === 'គីមីវិទ្យា') {
                 teacherTools = `- ឧបករណ៍ពិសោធន៍ពាក់ព័ន្ធនឹងមេរៀន "${title}" ផ្ទាំងរូបភាពដ្យាក្រាម សន្លឹកកិច្ចការពិសោធន៍ ក្រដាស A0 និងហ្វឺត។`;
             } else if (subject === 'គណិតវិទ្យា') {
-                teacherTools = `- បន្ទាត់ ឈុតធរណីមាត្រ ក្តារក្រាហ្វិក សន្លឹកលំហាត់គំរូ និងក្រដាស A0។`;
+                teacherTools = `- បន្ទាត់ ឈុតធរណីមាត្រ ក្ដារក្រាហ្វិក សន្លឹកលំហាត់គំរូ និងក្រដាស A0។`;
             } else if (subject === 'ភូមិវិទ្យា' || subject === 'ប្រវត្តិវិទ្យា') {
                 teacherTools = `- ផែនទី តារាងស្ថិតិ ឯកសារប្រវត្តិសាស្ត្រពាក់ព័ន្ធនឹង "${title}" និងសន្លឹកកិច្ចការក្រុម។`;
             } else if (subject === 'ព័ត៌មានវិទ្យា (ICT)') {
@@ -2280,9 +2698,9 @@
             let skillCriteria = 'បានត្រឹមត្រូវ និងច្បាស់លាស់តាមរយៈសន្លឹកកិច្ចការ';
             if (subject === 'គណិតវិទ្យា' || /គណនា|សមីការ|រូបមន្ត|អាំងតេក្រាល|ដេរីវេ|លំហាត់/.test(combinedContext)) {
                 skillVerb = 'កំណត់បម្រាប់ សរសេររូបមន្ត និងគណនាលំហាត់ពាក់ព័ន្ធនឹង';
-                skillCriteria = 'បានត្រឹមត្រូវតាមជំហាន និងខ្នាតស្តង់ដារ';
+                skillCriteria = 'បានត្រឹមត្រូវតាមជំហាន និងខ្នាតស្ដង់ដារ';
             } else if (['រូបវិទ្យា', 'គីមីវិទ្យា', 'ជីវវិទ្យា', 'ផែនដី និងបរិស្ថានវិទ្យា'].includes(subject)) {
-                skillVerb = 'សង្កេត ពិសោធន៍ វិភាគបាតុភូត និងដោះស្រាយបញ្ហាពាក់ព័ន្ធនឹង';
+                skillVerb = 'សង្កេត ពិសោធ វិភាគបាតុភូត និងដោះស្រាយបញ្ហាពាក់ព័ន្ធនឹង';
                 skillCriteria = 'បានត្រឹមត្រូវតាមគោលការណ៍វិទ្យាសាស្ត្រ';
             } else if (['អក្សរសាស្ត្រខ្មែរ', 'ប្រវត្តិវិទ្យា', 'ភូមិវិទ្យា', 'សីលធម៌-ពលរដ្ឋវិជ្ជា', 'សេដ្ឋកិច្ចវិទ្យា'].includes(subject)) {
                 skillVerb = 'វិភាគ ប្រៀបធៀប សំយោគគំនិត និងបកស្រាយអត្ថន័យនៃ';
@@ -2297,21 +2715,21 @@
                 objSkill: `${skillVerb} "${primaryConcept}${secondaryConcept}" ${skillCriteria}ក្នុងរយៈពេល ${duration}។`,
                 objAttitude: `បង្ហាញស្មារតីទទួលខុសត្រូវ ការសហការយ៉ាងសកម្មក្នុងក្រុម ហ៊ានបញ្ចេញមតិ និងចេះផ្សារភ្ជាប់ចំណេះដឹងអំពី "${primaryConcept}" ទៅអនុវត្តប្រកបដោយប្រសិទ្ធភាពក្នុងជីវភាពរស់នៅប្រចាំថ្ងៃ។`,
                 materialsInput: inferSubjectMaterialsLocally(subject, title, activeSubs, methodKey),
-                s1Content: '- ពិនិត្យវត្តមាន អនាម័យ និងសណ្តាប់ធ្នាប់ក្នុងថ្នាក់',
+                s1Content: '- ពិនិត្យវត្តមាន អនាម័យ និងសណ្ដាប់ធ្នាប់ក្នុងថ្នាក់',
                 s1Teacher: '- ពិនិត្យវត្តមានសិស្ស ឯកសណ្ឋាន និងណែនាំឱ្យរក្សាភាពស្ងៀមស្ងាត់។',
                 s1Student: '- ប្រធានថ្នាក់រាយការណ៍អវត្តមាន និងរៀបចំខ្លួនចូលរៀន។',
-                s2Content: `- រំលឹកចំណេះដឹងមូលដ្ឋានពាក់ព័ន្ធនឹងមេរៀន "${title}"។`,
-                s2Teacher: '- សួរសំណួររំលឹកមេរៀនចាស់ និងភ្ជាប់ទំនាក់ទំនងទៅមេរៀនថ្មី។',
-                s2Student: '- ស្តាប់ ពិចារណា និងឆ្លើយសំណួររំលឹករបស់គ្រូ។',
+                s2Content: `- រំឭកចំណេះដឹងមូលដ្ឋានពាក់ព័ន្ធនឹងមេរៀន "${title}"។`,
+                s2Teacher: '- សួរសំណួររំឭកមេរៀនចាស់ និងភ្ជាប់ទំនាក់ទំនងទៅមេរៀនថ្មី។',
+                s2Student: '- ស្ដាប់ ពិចារណា និងឆ្លើយសំណួររំឭករបស់គ្រូ។',
                 s3Content: `ខ្លឹមសារគោលសម្រាប់ម៉ោងសិក្សានេះ (${duration})៖\n${focusTopic}\n\n${mTemplate.content}`,
                 s3Teacher: mTemplate.teacher,
                 s3Student: mTemplate.student,
                 s4Content: `- សំណួរពង្រឹង៖ ចូរសង្ខេបចំណុចសំខាន់ៗនៃ "${focusTopic}" ដែលបានរៀនក្នុងម៉ោងនេះ។`,
                 s4Teacher: '- ចោទសំណួរវាយតម្លៃ និងដាក់លំហាត់ខ្លីៗដើម្បីផ្ទៀងផ្ទាត់ការយល់ដឹងរបស់សិស្ស។',
-                s4Student: '- គិត ឆ្លើយសំណួរ និងអនុវត្តដោះស្រាយលំហាត់លើក្តារខៀន។',
+                s4Student: '- គិត ឆ្លើយសំណួរ និងអនុវត្តដោះស្រាយលំហាត់លើក្ដារខៀន។',
                 s5Content: `- ធ្វើលំហាត់អនុវត្តក្នុងសៀវភៅពុម្ពមុខវិជ្ជា ${subject} និងអានចំណុចបន្ទាប់នៃមេរៀន "${title}"។`,
-                s5Teacher: '- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំលឹកមេរៀនឡើងវិញនៅផ្ទះ។',
-                s5Student: '- កត់ត្រាកិច្ចការផ្ទះ និងស្តាប់ការណែនាំរបស់គ្រូ។'
+                s5Teacher: '- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំឭកមេរៀនឡើងវិញនៅផ្ទះ។',
+                s5Student: '- កត់ត្រាកិច្ចការផ្ទះ និងស្ដាប់ការណែនាំរបស់គ្រូ។'
             };
         }
 
@@ -2351,10 +2769,15 @@
                 const systemPrompt = `អ្នកគឺជាអ្នកជំនាញគរុកោសល្យក្រសួងអប់រំ យុវជន និងកីឡា នៃព្រះរាជាណាចក្រកម្ពុជា។
 ចូរវិភាគខ្លឹមសារមេរៀន (រួមទាំងឯកសារ PDF ឬរូបភាពដែលបានភ្ជាប់) និងបង្កើតកិច្ចតែងការបង្រៀន ៥ ជំហានជាភាសាខ្មែរផ្លូវការ ត្រឹមត្រូវតាមរយៈពេលសិក្សា (${duration})។
 
-គោលការណ៍តឹងរ៉ឹងសម្រាប់ការវិភាគ និងសរសេរ「I. វត្ថុបំណង」(ត្រូវប្រើរូបមន្ត SMART & ABCD + Bloom's Taxonomy ផ្អែកលើខ្លឹមសារមេរៀនជាក់លាក់ និងចំណុចដែលបានជ្រើសរើសបង្រៀន)៖
-1. objKnowledge (វិជ្ជាសម្បទា)៖ ត្រូវបញ្ជាក់កិរិយាស័ព្ទសកម្មភាពវាស់វែងបាន (កំណត់និយមន័យ, រៀបរាប់, ពន្យល់, ប្រាប់រូបមន្ត...) ភ្ជាប់ជាមួយបញ្ញត្តិជាក់លាក់នៃចំណុចដែលបង្រៀន + លក្ខខណ្ឌសិក្សា (តាមរយៈ...) + កម្រិតភាពត្រឹមត្រូវ។
-2. objSkill (បំណិនសម្បទា)៖ ត្រូវបញ្ជាក់ជំនាញអនុវត្តជាក់លាក់តាមមុខវិជ្ជា (គណនា, ស្រាយបញ្ជាក់, គូសដ្យាក្រាម, ពិសោធន៍, វិភាគ, ប្រៀបធៀប...) + លក្ខខណ្ឌ + កម្រិតស្តង់ដារច្បាស់លាស់។
-3. objAttitude (ចរិយាសម្បទា)៖ ត្រូវបញ្ជាក់ពីឥរិយាបថសិក្សា ការសហការ និងការផ្សារភ្ជាប់ខ្លឹមសារមេរៀនជាក់ស្តែងនេះទៅក្នុងជីវភាពរស់នៅ។
+គោលការណ៍តឹងរ៉ឹងសម្រាប់គុណភាពកិច្ចតែងការ (MoEYS Standard)៖
+1. ភាពស៊ីចង្វាក់ប្រធានបទ (Topic Alignment)៖ វត្ថុបំណង សម្ភារ និងជំហានទាំង ៥ ត្រូវតែឆ្លើយតប ១០០% ទៅនឹងចំណងជើងមេរៀន និងចំណុចរងដែលបានជ្រើសរើស (ហាមលោតទៅប្រធានបទផ្សេង)។
+2. I. វត្ថុបំណង (SMART & ABCD + Bloom's Taxonomy)៖
+   - objKnowledge (វិជ្ជាសម្បទា)៖ ប្រើកិរិយាស័ព្ទវាស់វែងបាន (កំណត់និយមន័យ, រៀបរាប់, ពន្យល់...) ភ្ជាប់បញ្ញត្តិជាក់លាក់ + លក្ខខណ្ឌ + កម្រិតត្រឹមត្រូវ។
+   - objSkill (បំណិនសម្បទា)៖ បញ្ជាក់ជំនាញអនុវត្តជាក់លាក់ (សរសេរកូដ, គូសដ្យាក្រាម, គណនា, បង្កើត...) ហើយត្រូវមានសកម្មភាពអនុវត្តផ្ទាល់នោះនៅក្នុងជំហានទី៣ (s3Teacher/s3Student)។
+   - objAttitude (ចរិយាសម្បទា)៖ ផ្ដោតលើឥរិយាបថ ការសហការក្រុម ក្រមសីលធម៌ឌីជីថល និងការអនុវត្តក្នុងជីវភាព (ហាមសរសេរដូចជំនាញបច្ចេកទេស)។
+3. II. សម្ភារឧបទេស (materialsInput)៖ បែងចែក «សម្រាប់គ្រូ» និង «សម្រាប់សិស្ស» ដោយប្រើសៀវភៅសិក្សាគោល និងឧបករណ៍ពិត (ហាមដាក់ «កិច្ចតែងការបង្រៀន» ជាសម្ភារឧបទេស)។
+4. ជំហានទី៤ (s4Content, s4Student)៖ ហាម Copy-Paste និយមន័យវែងៗពីជំហានទី៣ មកដាក់ដដែលៗ។ ត្រូវដាក់តែសំណួរ/លំហាត់វាយតម្លៃខ្លីៗ និងចម្លើយសង្ខេបរបស់សិស្ស។
+5. អក្ខរាវិរុទ្ធខ្មែរ៖ សរសេរឱ្យត្រូវតាមវចនានុក្រមខ្មែរ ១០០% (ឧ. ឥទ្ធិពល, សេវាកម្ម, បច្ចេកវិទ្យា) ដោយគ្មានដកឃ្លាខុស។
 
 ត្រូវត្រឡប់មកវិញជា JSON ដែលមាន field ទាំងអស់ដូចខាងក្រោម៖
 - recommendedMethodKey: កូដវិធីសាស្ត្រ (demo, inductive, jigsaw, polya, ibl, 5es, active, pbl, tps, gradual, flipped, kwl, conceptmap, gallerywalk)
@@ -2406,7 +2829,9 @@
                     if (rawText) {
                         generated = JSON.parse(rawText);
                     }
-                } catch (_) {}
+                } catch (err) {
+                    apiFailedMsg = err?.message || 'API error';
+                }
             }
 
             if (!generated) {
@@ -2572,7 +2997,7 @@
                     showToast(`${getActiveModelLabel()} បានធ្វើបច្ចុប្បន្នភាពកិច្ចតែងការរួចរាល់!`, 'success');
                 }
             } catch (_) {
-                const errMsg = `មានបញ្ហាក្នុងការភ្ជាប់ ${getActiveModelLabel()} សូមព្យាយាមម្តងទៀត!`;
+                const errMsg = `មានបញ្ហាក្នុងការភ្ជាប់ ${getActiveModelLabel()} សូមព្យាយាមម្ដងទៀត!`;
                 appendAiChatBubble('ai', errMsg);
                 aiChatHistory.push({ role: 'ai', text: errMsg });
             } finally {
@@ -2595,11 +3020,31 @@
             if (picker && !picker.value) {
                 picker.value = '2026-11-15';
             }
+            populatePresetDropdownForGrade(document.getElementById('gradeInput')?.value || 'ទី១១', false);
+            const presetInit = document.getElementById('moeysIctPreset');
+            if (presetInit) presetInit.value = 'c1l1';
             updateKhmerLunarDate();
             onMethodChange();
             renderSubTopicCheckboxes();
             updateSavedBadge();
             syncPreview();
+
+            const dropZone = document.getElementById('fileDropZone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-indigo-600', 'bg-indigo-50');
+                });
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('border-indigo-600', 'bg-indigo-50');
+                });
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-indigo-600', 'bg-indigo-50');
+                    const files = Array.from(e.dataTransfer?.files || []);
+                    if (files.length > 0) processSelectedFiles(files);
+                });
+            }
         });
     </script>
 </body>
