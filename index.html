@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធបង្កើត និងគ្រប់គ្រងកិច្ចតែងការបង្រៀនកម្រិតវិទ្យាល័យ</title>
+    <title>CG System - ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- PDF.js for reliable PDF text extraction & page rendering -->
@@ -40,8 +40,107 @@
             letter-spacing: 0 !important;
             font-variant-ligatures: normal;
             font-feature-settings: "liga" 1, "clig" 1, "kern" 1;
-            background-color: #f1f5f9;
+            background-color: #eef2f6;
             color: #0f172a;
+        }
+        .preview-desk {
+            background-color: var(--desk-bg, #eef2f6);
+            background-image: radial-gradient(var(--desk-dot, #cbd5e1) 1px, transparent 1px);
+            background-size: 18px 18px;
+            transition: background-color 0.25s ease;
+        }
+
+        /* Theme System */
+        :root, [data-theme="indigo"] {
+            --header-grad: linear-gradient(to right, #020617, #1e1b4b, #172554);
+            --desk-bg: #eef2f6;
+            --desk-dot: #cbd5e1;
+            --accent-bg: #4338ca;
+            --accent-hover: #3730a3;
+            --step-row-bg: #eef2ff;
+            --step-row-text: #1e1b4b;
+        }
+        [data-theme="emerald"] {
+            --header-grad: linear-gradient(to right, #022c22, #064e3b, #115e59);
+            --desk-bg: #ecfdf5;
+            --desk-dot: #a7f3d0;
+            --accent-bg: #059669;
+            --accent-hover: #047857;
+            --step-row-bg: #ecfdf5;
+            --step-row-text: #064e3b;
+        }
+        [data-theme="royal"] {
+            --header-grad: linear-gradient(to right, #450a0a, #7f1d1d, #991b1b);
+            --desk-bg: #fefce8;
+            --desk-dot: #fde68a;
+            --accent-bg: #b45309;
+            --accent-hover: #92400e;
+            --step-row-bg: #fef3c7;
+            --step-row-text: #78350f;
+        }
+        [data-theme="sky"] {
+            --header-grad: linear-gradient(to right, #082f49, #0c4a6e, #0369a1);
+            --desk-bg: #f0f9ff;
+            --desk-dot: #bae6fd;
+            --accent-bg: #0284c7;
+            --accent-hover: #0369a1;
+            --step-row-bg: #e0f2fe;
+            --step-row-text: #0c4a6e;
+        }
+        [data-theme="dark"] {
+            --header-grad: linear-gradient(to right, #09090b, #18181b, #1e293b);
+            --desk-bg: #0f172a;
+            --desk-dot: #334155;
+            --accent-bg: #4f46e5;
+            --accent-hover: #4338ca;
+            --step-row-bg: #eef2ff;
+            --step-row-text: #1e1b4b;
+        }
+
+        #appHeader {
+            background: var(--header-grad) !important;
+        }
+        body {
+            background-color: var(--desk-bg);
+            transition: background-color 0.25s ease;
+        }
+        .step-header-row td {
+            background-color: var(--step-row-bg);
+            color: var(--step-row-text);
+        }
+
+        /* Dark Mode Panel Overrides (keeping A4 paper crisp white) */
+        [data-theme="dark"] #editorPanel,
+        [data-theme="dark"] #previewToolbar {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        [data-theme="dark"] #editorPanel label,
+        [data-theme="dark"] #editorPanel h2,
+        [data-theme="dark"] #editorPanel h3,
+        [data-theme="dark"] #editorPanel span:not(.text-white),
+        [data-theme="dark"] #previewToolbar span {
+            color: #e2e8f0 !important;
+        }
+        [data-theme="dark"] #editorPanel input,
+        [data-theme="dark"] #editorPanel select,
+        [data-theme="dark"] #editorPanel textarea {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        [data-theme="dark"] #edSectionAi,
+        [data-theme="dark"] #editorPanel .bg-slate-50,
+        [data-theme="dark"] #editorPanel .bg-white,
+        [data-theme="dark"] #editorPanel .bg-white\/90,
+        [data-theme="dark"] #editorPanel .bg-white\/80 {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        [data-theme="dark"] #editorPanel .bg-indigo-50\/70 {
+            background: #1e1b4b !important;
+            border-color: #3730a3 !important;
         }
 
         /* Custom Scrollbar */
@@ -74,11 +173,6 @@
             position: relative;
             transition: max-width 0.2s ease;
         }
-        .a4-paper.landscape {
-            max-width: 297mm;
-            min-height: 210mm;
-            padding: 12mm 15mm;
-        }
 
         /* Official MoEYS Lesson Plan Table Styling */
         .moeys-table {
@@ -104,6 +198,221 @@
             font-weight: 700;
             color: #1e1b4b;
             text-align: center;
+        }
+
+        /* Output Design Styles, Color Variables & Typography */
+        #a4Document {
+            --out-font-size: 13px;
+            --out-accent: var(--accent-bg, #4338ca);
+            --out-tint: var(--step-row-bg, #eef2ff);
+            --out-text: var(--step-row-text, #1e1b4b);
+            --out-card-bg: #f8fafc;
+        }
+        #a4Document .out-meta-table,
+        #a4Document .out-section-body,
+        #a4Document .moeys-table {
+            font-size: var(--out-font-size);
+        }
+        .out-accent-bar {
+            display: none;
+            height: 5px;
+            background: var(--out-accent);
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        .out-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 3px auto 6px;
+            color: #64748b;
+            font-size: 11px;
+        }
+        .out-divider::before,
+        .out-divider::after {
+            content: '';
+            width: 48px;
+            height: 1px;
+            background: #94a3b8;
+        }
+        .out-section-title {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .out-obj-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .out-obj-label {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Global Output Color Application on Table Step Rows */
+        #a4Document .step-header-row td {
+            background-color: var(--out-tint);
+            color: var(--out-text);
+        }
+
+        /* Style 1: Modern Accented */
+        #a4Document[data-output-style="modern"] .out-accent-bar {
+            display: block;
+        }
+        #a4Document[data-output-style="modern"] .out-title-text,
+        #a4Document[data-output-style="modern"] .out-divider {
+            color: var(--out-text);
+        }
+        #a4Document[data-output-style="modern"] .out-meta-card {
+            background-color: var(--out-card-bg);
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--out-accent);
+            border-radius: 8px;
+            padding: 9px 12px;
+            margin-bottom: 12px;
+        }
+        #a4Document[data-output-style="modern"] .out-section-title {
+            border-left: 4px solid var(--out-accent);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 2px 0 3px 8px;
+            color: var(--out-text);
+            background: linear-gradient(to right, var(--out-tint), transparent);
+        }
+        #a4Document[data-output-style="modern"] .moeys-table th {
+            background-color: var(--out-tint);
+            color: var(--out-text);
+            border-color: #475569;
+        }
+        #a4Document[data-output-style="modern"] .moeys-table td {
+            border-color: #64748b;
+        }
+        #a4Document[data-output-style="modern"] .out-sig-box {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 14px;
+        }
+
+        /* Style 2: Banner Header */
+        #a4Document[data-output-style="banner"] .out-title-wrap {
+            background: var(--out-accent);
+            color: #ffffff;
+            padding: 7px 14px;
+            border-radius: 6px;
+            margin: 10px 0 12px;
+        }
+        #a4Document[data-output-style="banner"] .out-title-text {
+            color: #ffffff !important;
+            text-decoration: none !important;
+        }
+        #a4Document[data-output-style="banner"] .out-meta-card {
+            background-color: var(--out-tint);
+            border: 1px solid var(--out-accent);
+            border-radius: 6px;
+            padding: 9px 12px;
+            margin-bottom: 12px;
+        }
+        #a4Document[data-output-style="banner"] .out-section-title {
+            background-color: var(--out-accent);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        #a4Document[data-output-style="banner"] .moeys-table th {
+            background-color: var(--out-accent);
+            color: #ffffff;
+            border-color: var(--out-accent);
+        }
+        #a4Document[data-output-style="banner"] .moeys-table td {
+            border-color: #475569;
+        }
+
+        /* Style 3: Formal Framed */
+        #a4Document[data-output-style="framed"] {
+            border: 1px solid #cbd5e1;
+            box-shadow: inset 0 0 0 8mm #ffffff, inset 0 0 0 8.7mm var(--out-accent), inset 0 0 0 9.6mm #ffffff, inset 0 0 0 10mm var(--out-text), 0 10px 30px -5px rgba(15, 23, 42, 0.12);
+        }
+        #a4Document[data-output-style="framed"] .out-title-text {
+            color: var(--out-text);
+        }
+        #a4Document[data-output-style="framed"] .out-meta-card {
+            border-top: 1.5px solid var(--out-accent);
+            border-bottom: 1.5px solid var(--out-accent);
+            padding: 8px 4px;
+            margin-bottom: 12px;
+        }
+        #a4Document[data-output-style="framed"] .out-section-title {
+            border-bottom: 1.5px solid var(--out-accent);
+            color: var(--out-text);
+            padding-bottom: 2px;
+            display: inline-block;
+            min-width: 180px;
+        }
+        #a4Document[data-output-style="framed"] .moeys-table th {
+            background-color: var(--out-tint);
+            color: var(--out-text);
+        }
+
+        /* Style 4: Academic Book */
+        #a4Document[data-output-style="academic"] .out-accent-bar {
+            display: block;
+            height: 3px;
+        }
+        #a4Document[data-output-style="academic"] .out-title-text {
+            color: var(--out-text);
+            letter-spacing: 0 !important;
+        }
+        #a4Document[data-output-style="academic"] .out-meta-card {
+            border: 1.5px solid #cbd5e1;
+            border-top: 3px solid var(--out-accent);
+            padding: 9px 12px;
+            margin-bottom: 12px;
+            background: #ffffff;
+        }
+        #a4Document[data-output-style="academic"] .out-section-title {
+            color: var(--out-text);
+            border-bottom: 2px solid var(--out-accent);
+            padding-bottom: 2px;
+            margin-bottom: 6px;
+        }
+        #a4Document[data-output-style="academic"] .out-obj-item {
+            border-left: 2px solid var(--out-tint);
+            padding-left: 8px;
+        }
+        #a4Document[data-output-style="academic"] .moeys-table th {
+            background-color: var(--out-tint);
+            color: var(--out-text);
+            border-bottom: 2px solid var(--out-accent);
+        }
+
+        /* Style 5: Minimal Clean */
+        #a4Document[data-output-style="minimal"] .out-title-text {
+            color: var(--out-text);
+            text-decoration: none !important;
+            border-bottom: 2px solid var(--out-accent);
+            padding-bottom: 4px;
+            display: inline-block;
+        }
+        #a4Document[data-output-style="minimal"] .out-meta-card {
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        #a4Document[data-output-style="minimal"] .out-section-title {
+            color: var(--out-accent);
+            margin-bottom: 4px;
+        }
+        #a4Document[data-output-style="minimal"] .moeys-table th {
+            background-color: #f8fafc;
+            color: var(--out-text);
+        }
+
+        /* Style 6: Classic MoEYS (neutral) */
+        #a4Document[data-output-style="classic"] .step-header-row td {
+            background-color: #f1f5f9;
+            color: #0f172a;
         }
 
         /* Print Media Query for Clean A4 Export */
@@ -142,10 +451,18 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            .step-header-row td {
-                background-color: #eef2ff !important;
+            .step-header-row td,
+            .out-accent-bar,
+            .out-title-wrap,
+            .out-meta-card,
+            .out-section-title {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+            }
+            #a4Document[data-output-style="framed"] {
+                box-shadow: none !important;
+                border: 3px double #1e293b !important;
+                padding: 8mm 10mm !important;
             }
             tr {
                 page-break-inside: avoid;
@@ -160,56 +477,96 @@
             animation: spin 0.75s linear infinite;
         }
     </style>
-    <style id="dynamicPrintPageStyle">@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }</style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar (Clean Header) -->
-    <header class="no-print bg-gradient-to-r from-indigo-950 via-blue-900 to-indigo-900 text-white shadow-lg sticky top-0 z-30 border-b border-indigo-700/50">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-            <!-- Brand Title -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-300/40 flex items-center justify-center shadow-inner shrink-0">
-                    <svg class="w-6 h-6 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
+    <!-- Top Navigation Bar (Premium Brand Header) -->
+    <header id="appHeader" class="no-print text-white shadow-xl sticky top-0 z-30 border-b border-amber-300/25 relative overflow-hidden">
+        <!-- Top Gold Accent Shimmer Line -->
+        <div class="h-[3px] w-full bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 opacity-90"></div>
+        <div class="max-w-[1720px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center gap-3.5">
+                <!-- Custom CG System Emblem Logo -->
+                <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-[1.5px] shadow-lg shadow-black/25 shrink-0">
+                    <div class="w-full h-full rounded-[14px] bg-slate-950/90 flex items-center justify-center relative overflow-hidden">
+                        <svg class="w-10 h-10" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="cgGoldGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#FDE68A"/>
+                                    <stop offset="50%" stop-color="#F59E0B"/>
+                                    <stop offset="100%" stop-color="#D97706"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Hexagonal Tech Shield -->
+                            <path d="M32 5L55 17.5V46.5L32 59L9 46.5V17.5L32 5Z" stroke="url(#cgGoldGrad)" stroke-width="2.5" fill="rgba(245, 158, 11, 0.1)"/>
+                            <!-- Academic Open Book Base -->
+                            <path d="M18 44C23 41.5 28 42.5 32 45C36 42.5 41 41.5 46 44" stroke="#FDE68A" stroke-width="2" stroke-linecap="round"/>
+                            <!-- Bold CG Monogram -->
+                            <text x="32" y="36" text-anchor="middle" fill="url(#cgGoldGrad)" font-family="Inter, sans-serif" font-weight="900" font-size="19" letter-spacing="-0.5">CG</text>
+                            <!-- Top Education Star Spark -->
+                            <circle cx="32" cy="13" r="2" fill="#FEF08A"/>
+                        </svg>
+                    </div>
                 </div>
-                <h1 class="font-moul text-sm sm:text-base md:text-lg leading-relaxed text-amber-300">
-                    ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន
-                </h1>
+
+                <!-- Brand Text Block -->
+                <div class="flex flex-col">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h1 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent drop-shadow-sm">
+                            CG SYSTEM
+                        </h1>
+                        <span class="px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-300/35 text-amber-200 font-moul text-[10px] sm:text-[11px] leading-relaxed">
+                            ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                        <p class="text-[11px] sm:text-xs text-amber-100/95 font-medium">
+                            ដោយលោកគ្រូ <strong class="text-white font-bold">រ៉ាន កក្កដា</strong> • អគ្គនាយក <span class="text-amber-300 font-bold">Team CG</span>
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="openSavedDrawer()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium transition flex items-center gap-1.5 border border-white/15 cursor-pointer">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <select id="themeSelect" onchange="applyTheme(this.value)" title="ប្ដូរពណ៌ផ្ទៃកម្មវិធី (Theme)" class="px-2.5 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-[13px] font-medium border border-white/15 focus:outline-none cursor-pointer transition">
+                    <option value="indigo" class="text-slate-900">🎨 ខៀវអប់រំ</option>
+                    <option value="emerald" class="text-slate-900">🌿 បៃតងត្បូង</option>
+                    <option value="royal" class="text-slate-900">👑 ក្រហមមាស</option>
+                    <option value="sky" class="text-slate-900">☁️ ផ្ទៃមេឃ</option>
+                    <option value="dark" class="text-slate-900">🌙 ងងឹត (Dark)</option>
+                </select>
+                <button onclick="openSavedDrawer()" class="px-3 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-[13px] font-medium transition flex items-center gap-1.5 border border-white/15 cursor-pointer">
                     <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
                     </svg>
                     <span>បញ្ជីកិច្ចតែងការ (<span id="savedCountBadge">0</span>)</span>
                 </button>
 
-                <button onclick="createNewLesson()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium transition flex items-center gap-1.5 border border-white/15 cursor-pointer">
+                <button onclick="createNewLesson()" class="px-3 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-[13px] font-medium transition flex items-center gap-1.5 border border-white/15 cursor-pointer">
                     <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
                     <span class="hidden sm:inline">បង្កើតថ្មី</span>
                 </button>
 
-                <button onclick="saveCurrentLesson()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                <button onclick="saveCurrentLesson()" class="px-3.5 py-1.5 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-[13px] font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
                     </svg>
                     <span>រក្សាទុក</span>
                 </button>
 
-                <button onclick="exportToWord()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                <button onclick="exportToWord()" class="px-3.5 py-1.5 sm:py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-[13px] font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     <span>Word (.doc)</span>
                 </button>
 
-                <button onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                <button onclick="window.print()" class="px-3.5 py-1.5 sm:py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-[13px] font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
                     </svg>
@@ -233,21 +590,37 @@
     </div>
 
     <!-- Main Workspace Grid -->
-    <main class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <main class="flex-1 max-w-[1720px] w-full mx-auto px-3 sm:px-5 py-4 sm:py-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         <!-- LEFT PANEL: Editor & Gemini 4 Argon Generator -->
-        <section id="editorPanel" class="no-print lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden flex flex-col">
+        <section id="editorPanel" class="no-print lg:col-span-5 xl:col-span-4 bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden flex flex-col lg:sticky lg:top-[76px] lg:max-h-[calc(100vh-94px)]">
             
-            <!-- AI Generator Box -->
-            <div class="bg-gradient-to-br from-indigo-50 via-blue-50 to-amber-50/40 p-4 sm:p-5 border-b border-indigo-100">
+            <!-- Editor Section Switcher Tabs -->
+            <div class="bg-slate-50 border-b border-slate-200 p-2 grid grid-cols-3 gap-1.5 shrink-0">
+                <button type="button" id="edTabAiBtn" onclick="switchEditorSectionTab('ai')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1">
+                    <span>✨</span><span>មេរៀន & AI</span>
+                </button>
+                <button type="button" id="edTabMetaBtn" onclick="switchEditorSectionTab('meta')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1">
+                    <span>🏫</span><span>រដ្ឋបាល & វត្ថុបំណង</span>
+                </button>
+                <button type="button" id="edTabStepsBtn" onclick="switchEditorSectionTab('steps')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1">
+                    <span>📝</span><span>៥ ជំហាន</span>
+                </button>
+            </div>
+
+            <!-- Scrollable Editor Body -->
+            <div class="overflow-y-auto flex-1">
+            <!-- TAB 1: AI Generator Box -->
+            <div id="edSectionAi" class="bg-gradient-to-br from-indigo-50/70 via-white to-amber-50/30 p-4 sm:p-5">
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <div class="flex items-center gap-2">
                         <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm shadow-sm">✨</span>
                         <h2 class="font-bold text-indigo-950 text-sm sm:text-base">ជំនួយការ AI បង្កើតកិច្ចតែងការ</h2>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="toggleApiKeyPanel()" class="px-2 py-0.5 rounded-full bg-white hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-semibold cursor-pointer transition" title="កំណត់ Google Gemini API Key">
-                            🔑 API Key
+                        <button type="button" id="apiKeyToggleBtn" onclick="toggleApiKeyPanel()" class="px-2 py-0.5 rounded-full bg-white hover:bg-indigo-100 border border-indigo-200 text-indigo-800 text-[11px] font-semibold cursor-pointer transition flex items-center gap-1" title="កំណត់ API Key (Gemini / ChatGPT / Claude AI)">
+                            <span id="apiKeyStatusDot" class="w-1.5 h-1.5 rounded-full bg-slate-300 inline-block"></span>
+                            <span>🔑 API Key</span>
                         </button>
                         <select id="argonThinkingLevel" title="កម្រិតគិតវិភាគរបស់ AI" class="px-2 py-0.5 rounded-full bg-white border border-indigo-200 text-indigo-900 text-[11px] font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer">
                             <option value="LOW">លឿន (LOW)</option>
@@ -258,19 +631,40 @@
                         <select id="aiModelSelect" onchange="onAiModelChange()" title="ជ្រើសរើសម៉ូដែល AI" class="px-2.5 py-0.5 rounded-full bg-indigo-100 hover:bg-indigo-200 border border-indigo-200 text-indigo-900 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer transition">
                             <option value="gemini-4-hydrogen" selected>⚡ Gemini 4 Hydrogen</option>
                             <option value="gemini-4-argon">🎯 Gemini 4 Argon</option>
+                            <option value="gpt-4o">🤖 ChatGPT (GPT-4o)</option>
+                            <option value="gpt-4o-mini">⚡ ChatGPT (GPT-4o Mini)</option>
+                            <option value="claude-3-7-sonnet-20250219">🧠 Claude AI (3.7 Sonnet)</option>
+                            <option value="claude-3-5-haiku-20241022">💨 Claude AI (3.5 Haiku)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Collapsible API Key Config Box (Essential for Vercel/Netlify hosting & PDF AI Vision) -->
-                <div id="apiKeyPanel" class="hidden mb-3 p-2.5 rounded-xl bg-white border border-indigo-200 space-y-1.5">
-                    <div class="flex items-center justify-between">
-                        <label class="text-[11px] font-bold text-indigo-950">Google Gemini API Key (សម្រាប់ Gemini 4 Hydrogen & Argon • វិភាគ PDF & រូបភាព)</label>
-                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 underline hover:text-indigo-800">យក Key</a>
+                <!-- Collapsible Multi-Provider API Key Config Box -->
+                <div id="apiKeyPanel" class="hidden mb-3 p-3 rounded-xl bg-white border border-indigo-200 space-y-2.5 shadow-sm">
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[11px] font-bold text-indigo-950">Google Gemini API Key</label>
+                            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-[10px] text-indigo-600 underline hover:text-indigo-800">យក Key</a>
+                        </div>
+                        <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                     </div>
-                    <div class="flex gap-1.5">
-                        <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <button type="button" onclick="saveGeminiApiKey()" class="px-3 py-1.5 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold cursor-pointer">រក្សាទុក</button>
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[11px] font-bold text-emerald-900">ChatGPT (OpenAI) API Key</label>
+                            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="text-[10px] text-emerald-600 underline hover:text-emerald-800">យក Key</a>
+                        </div>
+                        <input type="password" id="openaiApiKeyInput" placeholder="sk-proj-..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[11px] font-bold text-amber-900">Claude AI (Anthropic) API Key</label>
+                            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener" class="text-[10px] text-amber-700 underline hover:text-amber-900">យក Key</a>
+                        </div>
+                        <input type="password" id="claudeApiKeyInput" placeholder="sk-ant-..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-1">
+                        <button type="button" onclick="toggleApiKeyPanel()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">បិទ</button>
+                        <button type="button" onclick="saveAllApiKeys()" class="px-3.5 py-1.5 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold cursor-pointer">រក្សាទុក API Keys</button>
                     </div>
                 </div>
 
@@ -419,23 +813,35 @@
                         </label>
 
                         <select id="teachingMethod" onchange="onMethodChange()" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-indigo-200 bg-indigo-50/40 text-indigo-950 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <optgroup label="វិធីសាស្ត្រ និងលំនាំបង្រៀនគោល (MoEYS & ICT Methods)">
+                            <optgroup label="១. វិធីសាស្ត្របង្រៀនគោល (NIE & MoEYS Methods)">
                                 <option value="demo" selected>បែបបង្ហាញ និងអនុវត្តផ្ទាល់ (Demonstration & Hands-on Practice)</option>
-                                <option value="active">បែបសិស្សមជ្ឈមណ្ឌល / ពិភាក្សាសកម្ម (Active Learning)</option>
-                                <option value="jigsaw">បែបសហការ (Cooperative Learning - Jigsaw)</option>
-                                <option value="polya">បែបដោះស្រាយបញ្ហា (Problem Solving - Polya)</option>
-                                <option value="ibl">បែបរិះរក (Inquiry-Based Learning - IBL)</option>
-                                <option value="5es">លំនាំបង្រៀន 5Es (Engage, Explore, Explain, Elaborate, Evaluate)</option>
-                                <option value="pbl">បែបគម្រោង (Project-Based Learning - PBL)</option>
+                                <option value="flipped">វិធីសាស្ត្របង្រៀនបែបថ្នាក់រៀនត្រឡប់ (Flipped Classroom)</option>
+                                <option value="collaborative">វិធីបង្រៀនបែបសហការ (Collaborative Learning - ៦ តួនាទី)</option>
+                                <option value="ibl">ការសិក្សាបែបរិះរក (Inquiry-Based Learning - IBL)</option>
+                                <option value="pbl">ការសិក្សាបែបគម្រោង (Project-based Learning - PBL)</option>
+                                <option value="polya">ការបង្រៀនបែបដោះស្រាយបញ្ហា (Problem Solving - George Polya)</option>
+                                <option value="scientific">ការសិក្សាបែបវិធីវិទ្យាសាស្ត្រ (Scientific Method - ៥ ជំហាន)</option>
+                                <option value="5es">ការបង្រៀនតាមលំនាំគម្រូ (5Es: Engage, Explore, Explain, Elaborate, Evaluate)</option>
+                                <option value="active">គោលវិធីសិស្សមជ្ឈមណ្ឌល / ស្ថាបនានិយម (Active & Constructivist)</option>
                                 <option value="inductive">បែបឧបមាន-អនុមាន និងសំណួរ-ចម្លើយ (Inductive-Deductive)</option>
                             </optgroup>
-                            <optgroup label="យុទ្ធវិធី និងបច្ចេកទេសបង្រៀន (Teaching Strategies & Techniques)">
-                                <option value="tps">យុទ្ធវិធី គិត-ពិភាក្សាជាដៃគូ-ចែករំលែក (Think-Pair-Share)</option>
+                            <optgroup label="២. យុទ្ធវិធីបង្រៀនថ្មី (NIE Teaching Techniques)">
+                                <option value="picture_prompt">យុទ្ធវិធី Picture Prompt (បង្ហាញរូបភាពបំផុសគំនិត)</option>
+                                <option value="conceptmap">យុទ្ធវិធី ផែនទីគំនិត (Mind Map)</option>
+                                <option value="pass_problem">យុទ្ធវិធី សំបុត្រនាំសារ (Pass the Problem)</option>
+                                <option value="carousel">យុទ្ធវិធី សេះហោះ (Carousel Brainstorm)</option>
+                                <option value="world_cafe">យុទ្ធវិធី World Café (ពិភាក្សាប្ដូរក្រុម)</option>
+                                <option value="round_table">យុទ្ធវិធី តុមូល (Round Table)</option>
+                                <option value="gallerywalk">យុទ្ធវិធី ដំណើរវិចិត្រសាល (Gallery Walk)</option>
+                                <option value="jigsaw">យុទ្ធវិធី Jigsaw 1 & Jigsaw 2</option>
+                                <option value="tps">យុទ្ធវិធី គិត-ដៃគូ-ចែករំលែក (Think-Pair-Share)</option>
+                                <option value="kwl">យុទ្ធវិធី K-W-L (What I Know - Want - Learned)</option>
+                                <option value="three_two_one">យុទ្ធវិធី 3-2-1 (ចំណុចសំខាន់ ៣ - សំណួរ ២ - ចំណាប់អារម្មណ៍ ១)</option>
+                                <option value="give_get">យុទ្ធវិធី Give one, Get one (ផ្ដល់មួយ ទទួលមួយ)</option>
+                                <option value="three_step_interview">យុទ្ធវិធី Three-step Interview (សម្ភាស ៣ ជំហាន)</option>
+                                <option value="four_corners">យុទ្ធវិធី ជ្រុងទាំង៤ (Four Corners)</option>
+                                <option value="commit_toss">យុទ្ធវិធី Commit and Toss (មតិត្រឡប់អនាមិក)</option>
                                 <option value="gradual">លំនាំផ្ទេរការទទួលខុសត្រូវ (I Do - We Do - You Do)</option>
-                                <option value="flipped">ថ្នាក់រៀនត្រឡប់ (Flipped Classroom)</option>
-                                <option value="kwl">យុទ្ធវិធី K-W-L (ដឹងស្រាប់ - ចង់ដឹង - បានរៀន)</option>
-                                <option value="conceptmap">យុទ្ធវិធីផែនទីគំនិត (Concept Mapping & Graphic Organizers)</option>
-                                <option value="gallerywalk">យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)</option>
                             </optgroup>
                         </select>
 
@@ -458,6 +864,18 @@
                                     <span id="aiPacingTitle">ការវិភាគទំហំមេរៀនតាមរយៈពេលសិក្សា៖</span>
                                 </div>
                                 <p id="aiPacingReason" class="text-[11px] leading-relaxed text-slate-800"></p>
+                            </div>
+
+                            <!-- 9-Point Pre-Lesson Analysis Panel (ការវិភាគមុននឹងសរសេរកិច្ចតែងការបង្រៀន) -->
+                            <div id="preLessonAnalysisBox" class="pt-2 border-t border-emerald-200/80 space-y-1.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-indigo-950 flex items-center gap-1">
+                                        <span>📋</span>
+                                        <span>ការវិភាគទាំង ៩ ចំណុចមុនសរសេរកិច្ចតែងការ (ស្តង់ដារ NIE)</span>
+                                    </span>
+                                    <button type="button" onclick="toggleNinePointGrid()" class="text-[10px] font-bold text-indigo-700 hover:underline cursor-pointer">បង្ហាញ/លាក់</button>
+                                </div>
+                                <div id="ninePointAnalysisGrid" class="grid grid-cols-1 gap-1.5 text-[11px] text-slate-800 pt-1"></div>
                             </div>
                         </div>
 
@@ -509,8 +927,8 @@
                 </div>
             </div>
 
-            <!-- Scrollable Form Sections -->
-            <div class="p-4 sm:p-5 space-y-5 overflow-y-auto max-h-[calc(100vh-220px)]">
+            <!-- TAB 2: Administrative, Objectives & Materials -->
+            <div id="edSectionMeta" class="hidden p-4 sm:p-5 space-y-5">
                 
                 <!-- 1. Administrative Info & Khmer Lunar Date -->
                 <div class="space-y-3">
@@ -599,8 +1017,10 @@
                     </div>
                 </div>
 
-                <hr class="border-slate-200">
+            </div>
 
+            <!-- TAB 3: 5-Step Pedagogical Process -->
+            <div id="edSectionSteps" class="hidden p-4 sm:p-5 space-y-4">
                 <!-- 5. 5-Step Pedagogical Process -->
                 <div class="space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-2">
@@ -609,10 +1029,6 @@
                             III. ដំណើរការបង្រៀន (៥ ជំហាន)
                         </h3>
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <select id="tableLayoutMode" onchange="onTableLayoutChange()" title="ប្ដូរទម្រង់តារាង ៣ ជួរ ឬ ៤ ជួរ" class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-900 font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                                <option value="3col">📋 ៣ ជួរ (ក្រសួង)</option>
-                                <option value="4col" selected>📊 ៤ ជួរ (មានជួរដំណាក់កាល)</option>
-                            </select>
                             <span id="timeBalanceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">⏱️ សរុប៖ ៥០/៥០ នាទី ✓</span>
                         </div>
                     </div>
@@ -690,18 +1106,45 @@
 
                 </div>
             </div>
+            </div>
         </section>
 
         <!-- RIGHT PANEL: Live A4 MoEYS Document Preview -->
-        <section id="previewPanel" class="print-only-container lg:col-span-7 flex flex-col items-center">
+        <section id="previewPanel" class="print-only-container preview-desk lg:col-span-7 xl:col-span-8 flex flex-col items-center rounded-2xl p-2 sm:p-4 border border-slate-200/80">
             
             <!-- Preview Toolbar -->
-            <div id="previewToolbar" class="no-print w-full max-w-[297mm] mb-3 flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
+            <div id="previewToolbar" class="no-print w-full max-w-[210mm] mb-3 flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-2 text-xs text-slate-600">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                    <span>ទម្រង់បង្ហាញផ្ទាល់ (<span id="previewOrientationLabel">A4 ផ្ដេក</span>) • ពុម្ពអក្សរ៖ <strong>Khmer OS Moul Light</strong> & <strong>Siemreap</strong></span>
+                    <span>ទម្រង់ A4 បញ្ឈរ • <strong>Khmer OS Moul Light</strong> & <strong>Siemreap</strong></span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="outputStyleSelect" onchange="applyOutputStyle(this.value)" title="ជ្រើសរើសរចនាប័ទ្មក្រដាស A4" class="px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="modern">✨ ទំនើប (Modern)</option>
+                        <option value="banner">🏛️ ក្បាលពណ៌ពេញ (Banner)</option>
+                        <option value="framed">🖼️ ស៊ុមប្រណីត (Framed)</option>
+                        <option value="academic">📘 បែបសៀវភៅ (Academic)</option>
+                        <option value="minimal">🌿 សាមញ្ញស្អាត (Minimal)</option>
+                        <option value="classic">📄 ផ្លូវការដើម (Classic)</option>
+                    </select>
+                    <div class="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-1.5 py-0.5">
+                        <select id="outputColorSelect" onchange="applyOutputColor(this.value)" title="ជ្រើសរើសពណ៌លទ្ធផល A4" class="bg-transparent text-slate-700 text-xs font-semibold focus:outline-none cursor-pointer py-0.5">
+                            <option value="auto">🎨 ពណ៌តាម Theme</option>
+                            <option value="navy">🔵 ខៀវចាស់ MoEYS</option>
+                            <option value="emerald">🟢 បៃតងត្បូង</option>
+                            <option value="burgundy">🔴 ក្រហមមាស</option>
+                            <option value="purple">🟣 ស្វាយរាជ</option>
+                            <option value="teal">🩵 ខៀវបៃតង</option>
+                            <option value="slate">⚫ ប្រផេះផ្លូវការ</option>
+                            <option value="custom">🖌️ ពណ៌ផ្ទាល់ខ្លួន</option>
+                        </select>
+                        <input type="color" id="outputCustomColorPicker" value="#1e3a8a" oninput="applyCustomOutputColor(this.value)" title="រើសពណ៌ផ្ទាល់ខ្លួនសម្រាប់ក្រដាស A4" class="w-5 h-5 rounded border-0 bg-transparent p-0 cursor-pointer">
+                    </div>
+                    <select id="outputFontSizeSelect" onchange="applyOutputFontSize(this.value)" title="ទំហំអក្សរលើក្រដាស A4" class="px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="12px">អក្សរ 12px</option>
+                        <option value="13px" selected>អក្សរ 13px</option>
+                        <option value="14px">អក្សរ 14px</option>
+                    </select>
                     <button onclick="exportToWord()" class="text-xs font-semibold text-sky-700 hover:text-sky-900 px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 transition cursor-pointer">
                         ទាញយក Word
                     </button>
@@ -712,27 +1155,29 @@
             </div>
 
             <!-- Official A4 Sheet -->
-            <div id="a4Document" class="a4-paper font-siemreap text-slate-900">
-                
+            <div id="a4Document" data-output-style="modern" class="a4-paper font-siemreap text-slate-900">
+                <div class="out-accent-bar"></div>
+
                 <!-- Kingdom Header -->
                 <div class="text-center mb-1">
                     <div class="font-moul text-[14px] leading-relaxed">ព្រះរាជាណាចក្រកម្ពុជា</div>
                     <div class="font-moul text-[13px] leading-relaxed">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
-                    <div class="text-[12px] tracking-[0.2em] text-slate-700 mt-0.5">❖❖❖</div>
+                    <div class="out-divider">❖❖❖</div>
                 </div>
 
                 <!-- High School Name (Left) -->
-                <div class="text-left text-[12.5px] mb-2">
+                <div class="text-left text-[12.5px] mb-1.5">
                     <div class="font-moul text-[12.5px]" id="prevSchool">វិទ្យាល័យ ស្រីសន្ធរ</div>
                 </div>
 
                 <!-- Document Title -->
-                <div class="text-center my-2">
-                    <h2 class="font-moul text-[15px] underline underline-offset-4 decoration-1">កិច្ចតែងការបង្រៀន</h2>
+                <div class="out-title-wrap text-center my-2.5">
+                    <h2 class="out-title-text font-moul text-[15.5px] underline underline-offset-4 decoration-1">កិច្ចតែងការបង្រៀន</h2>
                 </div>
 
                 <!-- Structured Metadata Lines matching user template -->
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px; line-height: 1.75;">
+                <div class="out-meta-card">
+                <table class="out-meta-table" style="width: 100%; border-collapse: collapse; line-height: 1.75;">
                     <tr>
                         <td style="width: 155px; font-weight: bold; vertical-align: top; padding: 1px 0;">កាលបរិច្ឆេទ</td>
                         <td style="width: 15px; font-weight: bold; vertical-align: top; padding: 1px 0;">៖</td>
@@ -783,40 +1228,38 @@
                         <td style="vertical-align: top; padding: 1px 0;" id="prevDuration">៥០ នាទី (១ ម៉ោងសិក្សា)</td>
                     </tr>
                 </table>
+                </div>
 
                 <!-- Section I: Objectives -->
-                <div class="mb-3 text-[13px] leading-[1.7]">
-                    <div class="font-bold">I. វត្ថុបំណង</div>
-                    <ul class="list-none pl-4 space-y-1 mt-1">
-                        <li><span class="font-bold">- វិជ្ជាសម្បទា៖</span> <span id="prevObjKnowledge"></span></li>
-                        <li><span class="font-bold">- បំណិនសម្បទា៖</span> <span id="prevObjSkill"></span></li>
-                        <li><span class="font-bold">- ចរិយាសម្បទា៖</span> <span id="prevObjAttitude"></span></li>
+                <div class="mb-3.5 out-section-body leading-[1.75]">
+                    <div class="out-section-title">I. វត្ថុបំណង</div>
+                    <ul class="list-none pl-3 space-y-1.5 mt-1.5">
+                        <li class="out-obj-item"><span class="out-obj-label">- វិជ្ជាសម្បទា៖</span> <span id="prevObjKnowledge"></span></li>
+                        <li class="out-obj-item"><span class="out-obj-label">- បំណិនសម្បទា៖</span> <span id="prevObjSkill"></span></li>
+                        <li class="out-obj-item"><span class="out-obj-label">- ចរិយាសម្បទា៖</span> <span id="prevObjAttitude"></span></li>
                     </ul>
                 </div>
 
                 <!-- Section II: Materials -->
-                <div class="mb-3 text-[13px] leading-[1.7]">
-                    <div class="font-bold">II. សម្ភារឧបទេស</div>
-                    <div id="prevMaterials" class="pl-4 whitespace-pre-line mt-0.5"></div>
+                <div class="mb-3.5 out-section-body leading-[1.75]">
+                    <div class="out-section-title">II. សម្ភារឧបទេស</div>
+                    <div id="prevMaterials" class="pl-3 whitespace-pre-line mt-1"></div>
                 </div>
 
                 <!-- Section III: 5-Step Table (3 Columns: សកម្មភាពគ្រូ | ខ្លឹមសារមេរៀន | សកម្មភាពសិស្ស) -->
-                <div class="mb-4 text-[13px]">
-                    <div class="font-bold mb-1.5">III. ដំណើរការបង្រៀន</div>
+                <div class="mb-4 out-section-body">
+                    <div class="out-section-title mb-2">III. ដំណើរការបង្រៀន</div>
                     <table class="moeys-table">
                         <thead>
                             <tr>
-                                <th id="prevThStep" class="hidden" style="width: 11%;">ដំណាក់កាល</th>
-                                <th id="prevThTeacher" style="width: 34%;">សកម្មភាពគ្រូ</th>
-                                <th id="prevThContent" style="width: 32%;">ខ្លឹមសារមេរៀន</th>
-                                <th id="prevThStudent" style="width: 34%;">សកម្មភាពសិស្ស</th>
+                                <th style="width: 34%;">សកម្មភាពគ្រូ</th>
+                                <th style="width: 32%;">ខ្លឹមសារមេរៀន</th>
+                                <th style="width: 34%;">សកម្មភាពសិស្ស</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Step 1 (Engage Part 1) -->
-                            <tr class="step-header-row" id="prevStepRow1">
-                                <td id="prevS1StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="4" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Engage
-(៨នាទី)</td>
+                            <!-- Step 1 -->
+                            <tr class="step-header-row">
                                 <td colspan="3" style="text-align: center;">ជំហានទី១៖ លំនឹងថ្នាក់ (<span id="prevS1HeaderTime">៣ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -825,8 +1268,8 @@
                                 <td class="whitespace-pre-line" id="prevS1Student"></td>
                             </tr>
 
-                            <!-- Step 2 (Engage Part 2) -->
-                            <tr class="step-header-row" id="prevStepRow2">
+                            <!-- Step 2 -->
+                            <tr class="step-header-row">
                                 <td colspan="3" style="text-align: center;">ជំហានទី២៖ រំឭកមេរៀន (<span id="prevS2HeaderTime">៥ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -835,10 +1278,8 @@
                                 <td class="whitespace-pre-line" id="prevS2Student"></td>
                             </tr>
 
-                            <!-- Step 3 (Explore, Explain, Elaborate) -->
-                            <tr class="step-header-row" id="prevStepRow3">
-                                <td id="prevS2StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="2" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Explore
-(១០នាទី)</td>
+                            <!-- Step 3 -->
+                            <tr class="step-header-row">
                                 <td colspan="3" style="text-align: center;">ជំហានទី៣៖ ខ្លឹមសារមេរៀនថ្មី (<span id="prevS3HeaderTime">៣០ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -846,25 +1287,9 @@
                                 <td class="whitespace-pre-line" id="prevS3Content"></td>
                                 <td class="whitespace-pre-line" id="prevS3Student"></td>
                             </tr>
-                            <tr id="prevStep3ExplainRow" class="hidden">
-                                <td id="prevS3StepCell" class="step-col-cell font-bold text-center whitespace-pre-line" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Explain
-(១០នាទី)</td>
-                                <td class="whitespace-pre-line" id="prevS3ExplainTeacher"></td>
-                                <td class="whitespace-pre-line" id="prevS3ExplainContent"></td>
-                                <td class="whitespace-pre-line" id="prevS3ExplainStudent"></td>
-                            </tr>
-                            <tr id="prevStep3ElaborateRow" class="hidden">
-                                <td id="prevS4StepCell" class="step-col-cell font-bold text-center whitespace-pre-line" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Elaborate
-(១០នាទី)</td>
-                                <td class="whitespace-pre-line" id="prevS3ElaborateTeacher"></td>
-                                <td class="whitespace-pre-line" id="prevS3ElaborateContent"></td>
-                                <td class="whitespace-pre-line" id="prevS3ElaborateStudent"></td>
-                            </tr>
 
-                            <!-- Step 4 (Evaluate) -->
-                            <tr class="step-header-row" id="prevStepRow4">
-                                <td id="prevS5StepCell" class="step-col-cell hidden font-bold text-center whitespace-pre-line" rowspan="2" style="background-color: #ffffff; color: #0f172a; vertical-align: middle;">Evaluate
-(៨នាទី)</td>
+                            <!-- Step 4 -->
+                            <tr class="step-header-row">
                                 <td colspan="3" style="text-align: center;">ជំហានទី៤៖ ពង្រឹងពុទ្ធិ (<span id="prevS4HeaderTime">៨ នាទី</span>)</td>
                             </tr>
                             <tr>
@@ -873,13 +1298,11 @@
                                 <td class="whitespace-pre-line" id="prevS4Student"></td>
                             </tr>
 
-                            <!-- Step 5 (Homework / Closing) -->
-                            <tr class="step-header-row" id="prevStepRow5">
-                                <td id="prevStageStep5HeaderCell" class="step-col-cell hidden" style="background-color: #ffffff;"></td>
+                            <!-- Step 5 -->
+                            <tr class="step-header-row">
                                 <td colspan="3" style="text-align: center;">ជំហានទី៥៖ បណ្ដាំផ្ញើ (<span id="prevS5HeaderTime">៤ នាទី</span>)</td>
                             </tr>
                             <tr>
-                                <td id="prevStageStep5ContentCell" class="step-col-cell hidden" style="background-color: #ffffff;"></td>
                                 <td class="whitespace-pre-line" id="prevS5Teacher"></td>
                                 <td class="whitespace-pre-line" id="prevS5Content"></td>
                                 <td class="whitespace-pre-line" id="prevS5Student"></td>
@@ -889,7 +1312,7 @@
                 </div>
 
                 <!-- Signature Block -->
-                <div class="grid grid-cols-2 gap-6 mt-5 text-[12.5px] leading-relaxed">
+                <div class="out-sig-box grid grid-cols-2 gap-6 mt-5 text-[12.5px] leading-relaxed" style="page-break-inside: avoid;">
                     <div class="text-center pt-5">
                         <div class="font-bold">បានឃើញ និងឯកភាព</div>
                         <div class="font-moul text-[12px] mt-1" id="prevPrincipal">នាយកសាលា</div>
@@ -1445,12 +1868,120 @@
                 }
             },
             gallerywalk: {
-                label: 'យុទ្ធវិធីដើរពិនិត្យស្នាដៃក្រុម (Gallery Walk)',
-                description: 'ក្រុមនីមួយៗបិទស្នាដៃលើជញ្ជាំង ➔ ដើរពិនិត្យ និងផ្ដល់មតិកែលម្អឆ្លងក្រុម ➔ បូកសរុបខ្លឹមសាររួម។',
+                label: 'យុទ្ធវិធី ដំណើរវិចិត្រសាល (Gallery Walk)',
+                description: 'ចែកក្រុម ៥-៦ ក្រុម ➔ បិទក្រដាសចម្លើយតាមជញ្ជាំង ➔ ចាត់តំណាងបកស្រាយ និងសមាជិកដទៃដើរសួរតាមទិសដៅ។',
                 step3Template: {
                     content: 'ប្រធានបទពិភាក្សាតាមស្ថានីយក្រុម និងខ្លឹមសារសំយោគនៃមេរៀន។',
-                    teacher: '១. បែងចែកក្រុម និងប្រធានបទរង ឱ្យសិស្សសរសេរលទ្ធផលលើផ្ទាំងក្រដាសធំ (Poster)។\n២. រៀបចំ Gallery Walk៖ ឱ្យក្រុមនីមួយៗដើរពិនិត្យស្នាដៃក្រុមផ្សេង និងបិទក្រដាសមតិយោបល់។\n៣. ឱ្យក្រុមដើមឆ្លើយតបមតិយោបល់ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀនផ្លូវការ។',
-                    student: '១. ពិភាក្សា និងរៀបចំផ្ទាំងបង្ហាញលទ្ធផលរបស់ក្រុម។\n២. ដើរពិនិត្យស្នាដៃក្រុមផ្សេងៗតាមស្ថានីយ កត់ត្រា និងផ្ដល់មតិកែលម្អ។\n៣. បកស្រាយបំភ្លឺសំណួររបស់មិត្តរួមថ្នាក់ និងកត់ត្រាមេរៀន។'
+                    teacher: '១. ចែកសិស្សជា ៥ ឬ ៦ ក្រុម ដោយមានតួនាទីរៀងៗខ្លួន និងផ្ដល់សំណួរ/ប្រធានបទខុសៗគ្នា។\n២. ឱ្យក្រុមយកក្រដាសចម្លើយបិទតាមជញ្ជាំង និងចាត់តំណាងក្រុមចាំបកស្រាយ។\n៣. ឱ្យសមាជិកដទៃដើរតាមក្រុមតាមទិសដៅសួរ-ឆ្លើយ រួចគ្រូបូកសរុបខ្លឹមសារមេរៀន។',
+                    student: '១. សហការក្នុងក្រុមឆ្លើយសំណួរ និងសរសេរចម្លើយបិទតាមជញ្ជាំង។\n២. តំណាងក្រុមបកស្រាយ និងសមាជិកដទៃដើរពិនិត្យ សួរសំណួរតាមស្ថានីយ។\n៣. កត់ត្រាខ្លឹមសារសំខាន់ៗនៃមេរៀនចូលសៀវភៅ។'
+                }
+            },
+            collaborative: {
+                label: 'វិធីបង្រៀនបែបសហការ (Collaborative Learning)',
+                description: 'រៀបចំការសិក្សាជាក្រុមតូចមានតួនាទី ៦៖ អ្នកសម្របសម្រួល អ្នកកត់ត្រា អ្នកផ្ទៀងផ្ទាត់ពេល អ្នករាយការណ៍ អ្នកបកស្រាយ អ្នកនាំសារ។',
+                step3Template: {
+                    content: 'ខ្លឹមសារមេរៀនសម្រាប់ការពិភាក្សាសហការក្រុម។',
+                    teacher: '១. ចែកសិស្សជាក្រុមតូច ដោយកំណត់តួនាទី ៦ ក្នុងក្រុម (អ្នកសម្របសម្រួល អ្នកសរសេរ អ្នករក្សាពេល អ្នករាយការណ៍ អ្នកបកស្រាយ អ្នកនាំសារ)។\n២. ផ្ដល់សន្លឹកកិច្ចការ និងសម្របសម្រួលការពិភាក្សា។\n៣. ឱ្យអ្នករាយការណ៍ និងអ្នកបកស្រាយឡើងបង្ហាញ រួចគ្រូសង្ខេប។',
+                    student: '១. ទទួលតួនាទីរៀងៗខ្លួន និងពឹងពាក់អាស្រ័យគ្នាដោយវិជ្ជមាន។\n២. អនុវត្តកិច្ចការក្រុមដោយទំនួលខុសត្រូវបុគ្គល និងសហការ។\n៣. រាយការណ៍លទ្ធផល និងកត់ត្រាមេរៀន។'
+                }
+            },
+            scientific: {
+                label: 'ការសិក្សាបែបវិធីវិទ្យាសាស្ត្រ (Scientific Method)',
+                description: '៥ ជំហានវិទ្យាសាស្ត្រ៖ កំណត់បញ្ហា ➔ បង្កើតសម្មតិកម្ម ➔ តេស្ត/ពិសោធន៍ ➔ វាស់វែង និងវិភាគ ➔ ទាញសេចក្ដីសន្និដ្ឋាន។',
+                step3Template: {
+                    content: 'បញ្ហាវិទ្យាសាស្ត្រ សម្មតិកម្ម លទ្ធផលពិសោធន៍ និងសេចក្ដីសន្និដ្ឋាន។',
+                    teacher: '១. កំណត់បញ្ហា និងជំរុញសិស្សបង្កើតសម្មតិកម្ម។\n២. ណែនាំសិស្សធ្វើពិសោធន៍ ឬតេស្តសម្មតិកម្ម វាស់វែង និងវិភាគលទ្ធផល។\n៣. សម្របសម្រួលសិស្សទាញសេចក្ដីសន្និដ្ឋានផ្លូវការ។',
+                    student: '១. កំណត់បញ្ហា និងសរសេរសម្មតិកម្មបឋម។\n២. អនុវត្តការពិសោធន៍ កត់ត្រាទិន្នន័យ វាស់វែង និងវិភាគ។\n៣. ទាញសេចក្ដីសន្និដ្ឋានផ្ទៀងផ្ទាត់នឹងសម្មតិកម្ម។'
+                }
+            },
+            picture_prompt: {
+                label: 'យុទ្ធវិធី Picture Prompt',
+                description: 'បង្ហាញរូបភាពស៊ីនឹងមេរៀនដោយមិនពន្យល់មុន ➔ ឱ្យសិស្សគិត/ពិភាក្សាកំណត់អត្តសញ្ញាណ និងផ្ដល់ហេតុផល។',
+                step3Template: {
+                    content: 'រូបភាពបំផុសគំនិត និងខ្លឹមសារគោលដែលទាញចេញពីរូបភាព។',
+                    teacher: '១. បង្ហាញរូបភាពសមស្របនឹងមេរៀនជូនសិស្សដោយពុំចាំបាច់ពន្យល់មុន។\n២. ឱ្យសិស្សគិត ឬពិភាក្សា ហើយឆ្លើយតបអំពីអ្វីដែលឃើញ និងហេតុផល។\n៣. ទាញចូលខ្លឹមសារមេរៀន និងបូកសរុប។',
+                    student: '១. សង្កេតរូបភាពដោយយកចិត្តទុកដាក់។\n២. គិតវិភាគ ពិភាក្សា និងពន្យល់អត្ថន័យរូបភាពព្រមទាំងហេតុផល។\n៣. កត់ត្រាខ្លឹមសារមេរៀន។'
+                }
+            },
+            pass_problem: {
+                label: 'យុទ្ធវិធី សំបុត្រនាំសារ (Pass the Problem)',
+                description: 'ចែក ៤-៦ នាក់/ក្រុម មានអ្នកបញ្ជូនសំបុត្រ ➔ បញ្ជូនស្រោមសំបុត្របន្តឆ្លងក្រុមដើម្បីបន្ថែមគំនិតរហូតដល់ក្រុមដើមវិញ។',
+                step3Template: {
+                    content: 'ប្រធានបទតាមស្រោមសំបុត្រ និងចម្លើយសំយោគពីគ្រប់ក្រុម។',
+                    teacher: '១. ចែកសិស្សជាក្រុម ៤-៦ នាក់ ដោយមានអ្នកបញ្ជូនសំបុត្រ ១ នាក់ និងដាក់ប្រធានបទខុសៗគ្នាក្នុងស្រោមសំបុត្រ។\n២. ឱ្យអ្នកបញ្ជូនសំបុត្រយកសំបុត្របន្តទៅក្រុមផ្សេងធ្វើព្យុះគំនិតបន្ថែមចម្លើយរហូតដល់ក្រុមដើមវិញ។\n៣. សម្របសម្រួលខ្លឹមសាររួម។',
+                    student: '១. ពិភាក្សាស្វែងរកចម្លើយដំបូងដាក់ក្នុងស្រោមសំបុត្រ។\n២. បញ្ជូន និងពិនិត្យបំពេញបន្ថែមលើចម្លើយរបស់ក្រុមដទៃ។\n៣. ត្រួតពិនិត្យចម្លើយចុងក្រោយ និងបង្ហាញជូនថ្នាក់។'
+                }
+            },
+            carousel: {
+                label: 'យុទ្ធវិធី សេះហោះ (Carousel Brainstorm)',
+                description: 'ក្រុម ៤-៦ នាក់ មានប៊ិចពណ៌/Stick note ➔ សិស្សចល័តវិលជុំធ្វើព្យុះគំនិតបន្ថែមលើចម្លើយក្រុមដទៃ។',
+                step3Template: {
+                    content: 'ប្រធានបទតាមក្រុម និងចម្លើយបំផុសគំនិតវិលជុំ។',
+                    teacher: '១. ចែកក្រុម ៤-៦ នាក់ និងផ្ដល់ប៊ិចពណ៌ ឬ Sticky note ជាមួយប្រធានបទខុសៗគ្នា។\n២. ឱ្យសិស្សចល័តវិលជុំធ្វើព្យុះគំនិតបន្ថែមលើចម្លើយដែលមានស្រាប់។\n៣. សម្របសម្រួល និងបូកសរុបខ្លឹមសារ។',
+                    student: '១. បំពេញចម្លើយដំបូងលើប្រធានបទក្រុមខ្លួន។\n២. ដើរវិលជុំពិនិត្យ និងសរសេរបន្ថែមគំនិតថ្មីៗលើក្រដាសក្រុមដទៃ។\n៣. សង្ខេប និងកត់ត្រាមេរៀន។'
+                }
+            },
+            world_cafe: {
+                label: 'យុទ្ធវិធី World Café',
+                description: 'ចែក ៥-៦ ក្រុមមានប្រធានក្រុម ➔ សមាជិកប្ដូរក្រុមដោយទុកប្រធានក្រុមចាំបកស្រាយ/សង្ខេប ➔ វិលចូលក្រុមដើមវិញ។',
+                step3Template: {
+                    content: 'ប្រធានបទពិភាក្សាជុំវិញតុ World Café និងលទ្ធផលសំយោគ។',
+                    teacher: '១. ចែកសិស្សជា ៥ ឬ ៦ ក្រុម (៥-៦ នាក់) ដោយជ្រើសប្រធានក្រុម។\n២. ឱ្យសមាជិកប្ដូរក្រុមតាមជុំ ដោយទុកប្រធានក្រុមនៅចាំសង្ខេបប្រធានបទចាស់ និងទទួលប្រធានបទថ្មី។\n៣. ឱ្យសិស្សវិលចូលក្រុមដើមវិញ រួចតំណាងក្រុមឡើងបកស្រាយ។',
+                    student: '១. ពិភាក្សាសំណួរទី១ តាមពេលកំណត់។\n២. ផ្លាស់ប្ដូរក្រុមពិភាក្សាទស្សនៈចម្រុះ រួចត្រឡប់មកក្រុមដើមចែករំលែក។\n៣. តំណាងក្រុមបកស្រាយ និងសួរ-ឆ្លើយ។'
+                }
+            },
+            round_table: {
+                label: 'យុទ្ធវិធី តុមូល (Round Table)',
+                description: 'សមាជិក ១ នាក់ទទួលសំណួរ ១ ក្នុងក្រុមតែមួយ ➔ បង្វិលសន្លឹកកិច្ចការបន្ថែមគំនិតគ្នារហូតដល់ម្ចាស់ដើមវិញ។',
+                step3Template: {
+                    content: 'កម្រងសំណួរតាមសមាជិកក្រុម និងចម្លើយបន្ថែមជុំវិញតុមូល។',
+                    teacher: '១. ចែកក្រុម និងដាក់ប្រធានបទ/សំណួរខុសៗគ្នាតាមចំនួនសមាជិក។\n២. ឱ្យបង្វិលសំណួរ និងចម្លើយបញ្ជូនបន្តក្នុងក្រុមដើម្បីបន្ថែមគំនិតរហូតដល់អ្នកទទួលបន្ទុកដើមវិញ។\n៣. សម្របសម្រួលខ្លឹមសារមេរៀន។',
+                    student: '១. ទទួលសំណួរ ១ រៀងៗខ្លួន និងសរសេរចម្លើយបឋម។\n២. បង្វិលសន្លឹកកិច្ចការបន្ថែមគំនិតឱ្យគ្នាទៅវិញទៅមកក្នុងក្រុម។\n៣. ចែករំលែកលទ្ធផលក្នុងក្រុម និងកត់ត្រាមេរៀន។'
+                }
+            },
+            three_two_one: {
+                label: 'យុទ្ធវិធី 3-2-1',
+                description: 'សិស្សអានអត្ថបទ ឬមើលវីដេអូ រួចបំពេញតារាង ៣-២-១៖ ចំណុចសំខាន់ ៣ សំណួរ ២ និងចំណាប់អារម្មណ៍ ១។',
+                step3Template: {
+                    content: 'តារាង ៣-២-១ (ចំណុចសំខាន់ ៣ • សំណួរ ២ • ចំណាប់អារម្មណ៍ ១)។',
+                    teacher: '១. ចែកតារាង ៣-២-១ ឱ្យសិស្សម្នាក់មួយសន្លឹក។\n២. ឱ្យសិស្សអានអត្ថបទ/មើលវីដេអូ រួចបំពេញចំណុចសំខាន់ ៣ សំណួរ ២ និងចំណាប់អារម្មណ៍ ១។\n៣. សម្របសម្រួលការចែករំលែកក្នុងថ្នាក់ទាំងមូល។',
+                    student: '១. អានអត្ថបទ ឬទស្សនាវីដេអូមេរៀន។\n២. សរសេរចំណុចសំខាន់ ៣ សំណួរឆ្ងល់ ២ និងចំណាប់អារម្មណ៍ ១ ចូលតារាង។\n៣. ចែករំលែកលទ្ធផលជាមួយថ្នាក់។'
+                }
+            },
+            give_get: {
+                label: 'យុទ្ធវិធី Give one, Get one',
+                description: 'សិស្សសរសេរគំនិតផ្ទាល់ខ្លួន ➔ ដើរផ្លាស់ប្ដូរគំនិតជាមួយមិត្តភក្តិតាមពេលកំណត់ ➔ ចែករំលែកក្នុងថ្នាក់។',
+                step3Template: {
+                    content: 'តារាង Give one, Get one (គំនិតផ្ទាល់ខ្លួន និងគំនិតមិត្តភក្តិ)។',
+                    teacher: '១. ចែកក្រដាស Give one, Get one ឱ្យសិស្សម្នាក់មួយ។\n២. ឱ្យសិស្សសរសេរចម្លើយផ្ទាល់ខ្លួន រួចដើរផ្លាស់ប្ដូរយកគំនិតមិត្តភក្តិតាមពេលកំណត់។\n៣. សម្របសម្រួលការចែករំលែក និងបូកសរុបមេរៀន។',
+                    student: '១. សរសេរគំនិតផ្ទាល់ខ្លួនចូលក្នុងប្រអប់ទី១។\n២. ផ្លាស់ប្ដូរគំនិតជាមួយមិត្តភក្តិដើម្បីបំពេញប្រអប់បន្ទាប់។\n៣. ចែករំលែកគំនិតល្អៗជូនថ្នាក់ទាំងមូល។'
+                }
+            },
+            three_step_interview: {
+                label: 'យុទ្ធវិធី Three-step Interview',
+                description: 'ក្រុមមាន ៣ តួនាទី (Interviewer, Interviewee, Reporter) ➔ សម្ភាសផ្លាស់ប្ដូរតួនាទីវិលជុំ ➔ Reporter បង្ហាញលទ្ធផល។',
+                step3Template: {
+                    content: 'ប្រធានបទសម្ភាស និងសំណួរសំខាន់ៗនៃមេរៀន។',
+                    teacher: '១. ផ្ដល់ប្រធានបទ និងឱ្យសិស្សបង្កើតក្រុមមាន ៣ តួនាទី (Interviewer, Interviewee, Reporter)។\n២. ឱ្យសិស្សសម្ភាស និងផ្លាស់ប្ដូរតួនាទីវិលជុំគ្រប់គ្នា។\n៣. ឱ្យតំណាងក្រុមឡើងបង្ហាញលទ្ធផល រួចគ្រូសម្របសម្រួលចម្លើយ។',
+                    student: '១. បង្កើតក្រុម និងចែកតួនាទីសម្ភាស ៣ ជំហាន។\n២. សួរ ស្តាប់សកម្ម កត់ចំណាំ និងប្ដូរតួនាទីវិលជុំ។\n៣. ឡើងរាយការណ៍លទ្ធផលរបស់ក្រុម។'
+                }
+            },
+            four_corners: {
+                label: 'យុទ្ធវិធី ជ្រុងទាំង៤ (Four Corners)',
+                description: 'កំណត់ជ្រុងទាំង ៤ (យល់ស្របខ្លាំង យល់ស្រប មិនយល់ស្រប មិនយល់ស្របខ្លាំង) ➔ សិស្សចល័តទៅជ្រុងតាមមតិ និងបកស្រាយហេតុផល។',
+                step3Template: {
+                    content: 'មតិយោបល់ ឬបញ្ហាជជែកវែកញែកតាមជ្រុងទាំង ៤។',
+                    teacher: '១. កំណត់ទីតាំងជ្រុងទាំង ៤ និងដាក់មតិយោបល់ ឬសំណួរ។\n២. ណែនាំសិស្សផ្លាស់ទីទៅជ្រុងដែលខ្លួនយល់ស្រប និងពិភាក្សាហេតុផលក្នុងជ្រុងដូចគ្នា។\n៣. ឱ្យតំណាងជ្រុងទាំង ៤ ឡើងពន្យល់សង្ខេប រួចគ្រូបូកសរុប។',
+                    student: '១. គិតសម្រេចចិត្ត និងដើរទៅជ្រុងចម្លើយដែលខ្លួនជ្រើសរើស។\n២. ចែករំលែកហេតុផលជាមួយមិត្តក្នុងជ្រុងដូចគ្នា។\n៣. តំណាងជ្រុងឡើងបកស្រាយជូនថ្នាក់ទាំងមូល។'
+                }
+            },
+            commit_toss: {
+                label: 'យុទ្ធវិធី Commit and Toss',
+                description: 'សិស្សអង្គុយជារង្វង់ ➔ សរសេរចម្លើយមូលជារាងបាល់គប់ចូលប្រអប់ (អនាមិក) ➔ ចាប់អានឮៗ និងពិភាក្សាក្រុម។',
+                step3Template: {
+                    content: 'សំណួរស្ទង់មតិ ឬសំណួរមេរៀនសម្រាប់ឆ្លើយបែបអនាមិក។',
+                    teacher: '១. ឱ្យសិស្សអង្គុយជារង្វង់មូល និងដាក់សំណួរជូនសិស្សឆ្លើយលើក្រដាស។\n២. ឱ្យសិស្សមូរក្រដាសជារាងបាល់គប់ចូលប្រអប់ រួចចាប់ក្រដាសក្នុងប្រអប់អានឮៗ។\n៣. សម្របសម្រួលការពិភាក្សាចែករំលែកគ្នាក្នុងក្រុម។',
+                    student: '១. សរសេរចម្លើយ ឬមតិយោបល់ដោយអនាមិកលើក្រដាស។\n២. មូរក្រដាសគប់ចូលប្រអប់ រួចចាប់យកក្រដាសមួយមកអានឮៗ។\n៣. ពិភាក្សាវិភាគចម្លើយជាមួយមិត្តរួមថ្នាក់។'
                 }
             }
         };
@@ -1460,29 +1991,57 @@
         // =========================================================================
         const STORAGE_KEY = 'khmer_highschool_lesson_plans_v3';
         const API_KEY_STORAGE = 'khmer_lp_gemini_api_key';
+        const OPENAI_KEY_STORAGE = 'khmer_lp_openai_api_key';
+        const CLAUDE_KEY_STORAGE = 'khmer_lp_claude_api_key';
         const MODEL_STORAGE = 'khmer_lp_gemini_model';
+        const THEME_STORAGE = 'khmer_lp_theme';
         let currentLessonId = null;
         let uploadedLessonFiles = [];
         let aiChatHistory = [];
 
+        const AI_MODEL_CATALOG = {
+            'gemini-4-hydrogen': { provider: 'gemini', label: 'Gemini 4 Hydrogen' },
+            'gemini-4-argon': { provider: 'gemini', label: 'Gemini 4 Argon' },
+            'gpt-4o': { provider: 'openai', label: 'ChatGPT (GPT-4o)' },
+            'gpt-4o-mini': { provider: 'openai', label: 'ChatGPT (GPT-4o Mini)' },
+            'claude-3-7-sonnet-20250219': { provider: 'claude', label: 'Claude 3.7 Sonnet' },
+            'claude-3-5-haiku-20241022': { provider: 'claude', label: 'Claude 3.5 Haiku' }
+        };
+
         function getActiveModelId() {
             const sel = document.getElementById('aiModelSelect')?.value;
-            return sel === 'gemini-4-argon' ? 'gemini-4-argon' : 'gemini-4-hydrogen';
+            return AI_MODEL_CATALOG[sel] ? sel : 'gemini-4-hydrogen';
+        }
+
+        function getActiveProvider() {
+            return AI_MODEL_CATALOG[getActiveModelId()]?.provider || 'gemini';
         }
 
         function getActiveModelLabel() {
-            return getActiveModelId() === 'gemini-4-argon' ? 'Gemini 4 Argon' : 'Gemini 4 Hydrogen';
+            return AI_MODEL_CATALOG[getActiveModelId()]?.label || 'Gemini 4 Hydrogen';
         }
 
         function getGeminiEndpoint(apiKey) {
             return `https://generativelanguage.googleapis.com/v1beta/models/${getActiveModelId()}:generateContent?key=${apiKey}`;
         }
 
+        function updateApiKeyStatusDot() {
+            const dot = document.getElementById('apiKeyStatusDot');
+            if (!dot) return;
+            const hasKey = Boolean(getActiveApiKey());
+            dot.classList.toggle('bg-emerald-500', hasKey);
+            dot.classList.toggle('bg-slate-300', !hasKey);
+        }
+
         function onAiModelChange() {
             const modelId = getActiveModelId();
+            const provider = getActiveProvider();
             safeStorageSet(MODEL_STORAGE, modelId);
             const xhighOpt = document.getElementById('xhighOption');
             const thinkingSel = document.getElementById('argonThinkingLevel');
+            if (thinkingSel) {
+                thinkingSel.classList.toggle('hidden', provider !== 'gemini');
+            }
             if (xhighOpt && thinkingSel) {
                 if (modelId === 'gemini-4-argon') {
                     xhighOpt.disabled = true;
@@ -1497,6 +2056,7 @@
             if (btnLabel) {
                 btnLabel.textContent = `វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ ${getActiveModelLabel()}`;
             }
+            updateApiKeyStatusDot();
         }
 
         function getSelectedThinkingLevel() {
@@ -1534,27 +2094,139 @@
             const panel = document.getElementById('apiKeyPanel');
             if (!panel) return;
             panel.classList.toggle('hidden');
-            const input = document.getElementById('geminiApiKeyInput');
-            if (input && !panel.classList.contains('hidden')) {
-                input.value = safeStorageGet(API_KEY_STORAGE, '');
+            if (!panel.classList.contains('hidden')) {
+                const gemEl = document.getElementById('geminiApiKeyInput');
+                const oaiEl = document.getElementById('openaiApiKeyInput');
+                const cldEl = document.getElementById('claudeApiKeyInput');
+                if (gemEl) gemEl.value = safeStorageGet(API_KEY_STORAGE, '');
+                if (oaiEl) oaiEl.value = safeStorageGet(OPENAI_KEY_STORAGE, '');
+                if (cldEl) cldEl.value = safeStorageGet(CLAUDE_KEY_STORAGE, '');
+            }
+        }
+
+        function saveAllApiKeys() {
+            const pairs = [
+                ['geminiApiKeyInput', API_KEY_STORAGE],
+                ['openaiApiKeyInput', OPENAI_KEY_STORAGE],
+                ['claudeApiKeyInput', CLAUDE_KEY_STORAGE]
+            ];
+            let savedCount = 0;
+            for (const [elId, storeKey] of pairs) {
+                const val = (document.getElementById(elId)?.value || '').trim();
+                if (val) {
+                    safeStorageSet(storeKey, val);
+                    savedCount++;
+                } else {
+                    safeStorageRemove(storeKey);
+                }
+            }
+            updateApiKeyStatusDot();
+            document.getElementById('apiKeyPanel')?.classList.add('hidden');
+            if (savedCount > 0) {
+                showToast(`បានរក្សាទុក API Key ចំនួន ${savedCount} រួចរាល់!`, 'success');
+            } else {
+                showToast('បានលុប API Keys ចេញពី Browser!', 'info');
             }
         }
 
         function saveGeminiApiKey() {
-            const input = document.getElementById('geminiApiKeyInput');
-            const val = (input?.value || '').trim();
-            if (val) {
-                safeStorageSet(API_KEY_STORAGE, val);
-                showToast(`បានរក្សាទុក Gemini API Key សម្រាប់ ${getActiveModelLabel()} រួចរាល់!`, 'success');
-            } else {
-                safeStorageRemove(API_KEY_STORAGE);
-                showToast('បានលុប API Key ចេញពី Browser!', 'info');
-            }
-            document.getElementById('apiKeyPanel')?.classList.add('hidden');
+            saveAllApiKeys();
         }
 
         function getActiveApiKey() {
+            const provider = getActiveProvider();
+            if (provider === 'openai') return safeStorageGet(OPENAI_KEY_STORAGE, '').trim();
+            if (provider === 'claude') return safeStorageGet(CLAUDE_KEY_STORAGE, '').trim();
             return safeStorageGet(API_KEY_STORAGE, '').trim();
+        }
+
+        function extractCleanJsonText(raw) {
+            const trimmed = String(raw || '').trim();
+            const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+            return fenced ? fenced[1].trim() : trimmed;
+        }
+
+        async function callActiveAi(geminiPayload) {
+            const apiKey = getActiveApiKey();
+            const provider = getActiveProvider();
+            const modelId = getActiveModelId();
+            const sysText = geminiPayload?.systemInstruction?.parts?.map(p => p.text || '').join('\n') || '';
+            const parts = geminiPayload?.contents?.[0]?.parts || [];
+            const wantsJson = geminiPayload?.generationConfig?.responseMimeType === 'application/json';
+
+            if (provider === 'gemini') {
+                const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), geminiPayload, 1);
+                return res?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            }
+
+            if (provider === 'openai') {
+                const userContent = parts.map(p => {
+                    if (p.inlineData) {
+                        return {
+                            type: 'image_url',
+                            image_url: { url: `data:${p.inlineData.mimeType || 'image/jpeg'};base64,${p.inlineData.data}` }
+                        };
+                    }
+                    return { type: 'text', text: p.text || '' };
+                });
+                const body = {
+                    model: modelId,
+                    messages: [
+                        ...(sysText ? [{ role: 'system', content: wantsJson ? `${sysText}\nReturn valid JSON only.` : sysText }] : []),
+                        { role: 'user', content: userContent }
+                    ],
+                    temperature: 0.4
+                };
+                if (wantsJson) body.response_format = { type: 'json_object' };
+                const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+                return data?.choices?.[0]?.message?.content || '';
+            }
+
+            if (provider === 'claude') {
+                const claudeContent = parts.map(p => {
+                    if (p.inlineData) {
+                        return {
+                            type: 'image',
+                            source: {
+                                type: 'base64',
+                                media_type: p.inlineData.mimeType || 'image/jpeg',
+                                data: p.inlineData.data
+                            }
+                        };
+                    }
+                    return { type: 'text', text: p.text || '' };
+                });
+                const body = {
+                    model: modelId,
+                    max_tokens: 4096,
+                    system: wantsJson ? `${sysText}\nReturn strictly valid JSON only without markdown fences.` : sysText,
+                    messages: [{ role: 'user', content: claudeContent }]
+                };
+                const resp = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+                const txt = data?.content?.[0]?.text || '';
+                return wantsJson ? extractCleanJsonText(txt) : txt;
+            }
+            return '';
         }
 
         // =========================================================================
@@ -1803,8 +2475,7 @@
                     }
                 };
 
-                const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
-                const corrected = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                const corrected = await callActiveAi(payload);
                 if (corrected && corrected.trim()) {
                     pdfBox.value = corrected.trim();
                     uploadedLessonFiles.forEach(f => {
@@ -2005,8 +2676,7 @@
                 };
 
                 try {
-                    const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
-                    const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    const raw = await callActiveAi(payload);
                     if (raw) {
                         detected = JSON.parse(raw);
                         if (detected.cleanKhmerText && pdfBox) {
@@ -2139,179 +2809,15 @@
             setTxt('prevMaterials', getVal('materialsInput'));
 
             for (let i = 1; i <= 5; i++) {
-                const t = getVal(`s${i}Time`);
-                setTxt(`prevS${i}HeaderTime`, t);
-                if (i !== 3) {
-                    setTxt(`prevS${i}Teacher`, getVal(`s${i}Teacher`));
-                    setTxt(`prevS${i}Content`, getVal(`s${i}Content`));
-                    setTxt(`prevS${i}Student`, getVal(`s${i}Student`));
-                }
+                setTxt(`prevS${i}HeaderTime`, getVal(`s${i}Time`));
+                setTxt(`prevS${i}Teacher`, getVal(`s${i}Teacher`));
+                setTxt(`prevS${i}Content`, getVal(`s${i}Content`));
+                setTxt(`prevS${i}Student`, getVal(`s${i}Student`));
             }
-
-            // Compute 5Es stage times from Step 1..4 times
-            const s1Min = parseKhmerOrArabicMinutes(getVal('s1Time')) || 3;
-            const s2Min = parseKhmerOrArabicMinutes(getVal('s2Time')) || 5;
-            const s3Min = parseKhmerOrArabicMinutes(getVal('s3Time')) || 30;
-            const s4Min = parseKhmerOrArabicMinutes(getVal('s4Time')) || 8;
-
-            const engageMin = s1Min + s2Min;
-            const exploreMin = Math.floor(s3Min / 3);
-            const explainMin = Math.round(s3Min / 3);
-            const elaborateMin = Math.max(1, s3Min - exploreMin - explainMin);
-
-            setTxt('prevS1StepCell', `Engage\n(${toKhmerNumerals(engageMin)}នាទី)`);
-            setTxt('prevS2StepCell', `Explore\n(${toKhmerNumerals(exploreMin)}នាទី)`);
-            setTxt('prevS3StepCell', `Explain\n(${toKhmerNumerals(explainMin)}នាទី)`);
-            setTxt('prevS4StepCell', `Elaborate\n(${toKhmerNumerals(elaborateMin)}នាទី)`);
-            setTxt('prevS5StepCell', `Evaluate\n(${toKhmerNumerals(s4Min)}នាទី)`);
-
-            onTableLayoutChange();
             updateTimeBalanceBadge();
 
             setTxt('prevLunarDate', getVal('lunarDateInput'));
             setTxt('prevSolarDateText', getVal('solarDateTextInput'));
-        }
-
-        function splitStep3IntoThreeStages(rawText) {
-            const text = String(rawText || '').trim();
-            if (!text) return ['', '', ''];
-
-            // Check if text explicitly mentions Explore / Explain / Elaborate
-            const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-            const exploreLines = [];
-            const explainLines = [];
-            const elaborateLines = [];
-            let has5EsKeywords = false;
-            let currentBucket = null;
-
-            for (const line of lines) {
-                if (/explore|រុករក/i.test(line)) {
-                    has5EsKeywords = true;
-                    currentBucket = exploreLines;
-                } else if (/explain|ពន្យល់/i.test(line) && has5EsKeywords) {
-                    currentBucket = explainLines;
-                } else if (/elaborate|ពង្រីក/i.test(line) && has5EsKeywords) {
-                    currentBucket = elaborateLines;
-                } else if (/engage|evaluate/i.test(line) && has5EsKeywords) {
-                    currentBucket = null;
-                    continue;
-                }
-                if (currentBucket) currentBucket.push(line);
-            }
-
-            if (has5EsKeywords && (exploreLines.length || explainLines.length || elaborateLines.length)) {
-                return [
-                    exploreLines.join('\n') || lines[0] || '',
-                    explainLines.join('\n') || lines[1] || '',
-                    elaborateLines.join('\n') || lines.slice(2).join('\n') || ''
-                ];
-            }
-
-            // Otherwise split by numbered items (១., ២., ៣., ...) or paragraphs
-            const numberedBlocks = text
-                .split(/\n(?=[១-៩1-9]+\.)/)
-                .map(b => b.trim())
-                .filter(Boolean);
-
-            if (numberedBlocks.length >= 3) {
-                return [
-                    numberedBlocks[0],
-                    numberedBlocks[1],
-                    numberedBlocks.slice(2).join('\n')
-                ];
-            }
-
-            if (lines.length >= 3) {
-                const third = Math.ceil(lines.length / 3);
-                return [
-                    lines.slice(0, third).join('\n'),
-                    lines.slice(third, third * 2).join('\n'),
-                    lines.slice(third * 2).join('\n')
-                ];
-            }
-
-            if (lines.length === 2) {
-                return [lines[0], lines[1], ''];
-            }
-
-            return [text, '', ''];
-        }
-
-        function onTableLayoutChange() {
-            const mode = document.getElementById('tableLayoutMode')?.value || '3col';
-            const is4 = mode === '4col';
-            const a4El = document.getElementById('a4Document');
-            const toolbarEl = document.getElementById('previewToolbar');
-            const orientLabelEl = document.getElementById('previewOrientationLabel');
-            const printPageStyleEl = document.getElementById('dynamicPrintPageStyle');
-            if (a4El) a4El.classList.toggle('landscape', is4);
-            if (toolbarEl) {
-                toolbarEl.classList.toggle('max-w-[297mm]', is4);
-                toolbarEl.classList.toggle('max-w-[210mm]', !is4);
-            }
-            if (orientLabelEl) {
-                orientLabelEl.textContent = is4 ? 'A4 ផ្ដេក' : 'A4 បញ្ឈរ';
-            }
-            if (printPageStyleEl) {
-                printPageStyleEl.textContent = is4
-                    ? '@media print { @page { size: A4 landscape; margin: 10mm 12mm; } }'
-                    : '@media print { @page { size: A4 portrait; margin: 12mm 14mm; } }';
-            }
-            const thStep = document.getElementById('prevThStep');
-            const thTeacher = document.getElementById('prevThTeacher');
-            const thContent = document.getElementById('prevThContent');
-            const thStudent = document.getElementById('prevThStudent');
-            if (thStep) thStep.classList.toggle('hidden', !is4);
-            if (thTeacher) thTeacher.style.width = is4 ? '32%' : '34%';
-            if (thContent) thContent.style.width = is4 ? '28%' : '32%';
-            if (thStudent) thStudent.style.width = is4 ? '29%' : '34%';
-
-            const stageCells = [
-                'prevS1StepCell',
-                'prevS2StepCell',
-                'prevS5StepCell',
-                'prevStageStep5HeaderCell',
-                'prevStageStep5ContentCell'
-            ];
-            for (const id of stageCells) {
-                document.getElementById(id)?.classList.toggle('hidden', !is4);
-            }
-
-            const explainRow = document.getElementById('prevStep3ExplainRow');
-            const elaborateRow = document.getElementById('prevStep3ElaborateRow');
-            if (explainRow) explainRow.classList.toggle('hidden', !is4);
-            if (elaborateRow) elaborateRow.classList.toggle('hidden', !is4);
-
-            const s3T = document.getElementById('s3Teacher')?.value || '';
-            const s3C = document.getElementById('s3Content')?.value || '';
-            const s3S = document.getElementById('s3Student')?.value || '';
-
-            const setTxt = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = val;
-            };
-
-            if (is4) {
-                const [tExplore, tExplain, tElaborate] = splitStep3IntoThreeStages(s3T);
-                const [cExplore, cExplain, cElaborate] = splitStep3IntoThreeStages(s3C);
-                const [sExplore, sExplain, sElaborate] = splitStep3IntoThreeStages(s3S);
-
-                setTxt('prevS3Teacher', tExplore);
-                setTxt('prevS3Content', cExplore);
-                setTxt('prevS3Student', sExplore);
-
-                setTxt('prevS3ExplainTeacher', tExplain);
-                setTxt('prevS3ExplainContent', cExplain);
-                setTxt('prevS3ExplainStudent', sExplain);
-
-                setTxt('prevS3ElaborateTeacher', tElaborate);
-                setTxt('prevS3ElaborateContent', cElaborate);
-                setTxt('prevS3ElaborateStudent', sElaborate);
-            } else {
-                setTxt('prevS3Teacher', s3T);
-                setTxt('prevS3Content', s3C);
-                setTxt('prevS3Student', s3S);
-            }
         }
 
         function parseKhmerOrArabicMinutes(str) {
@@ -2335,6 +2841,45 @@
             } else {
                 badge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold';
                 badge.textContent = `⚠️ សរុប៖ ${toKhmerNumerals(total)}/${toKhmerNumerals(target)} នាទី`;
+            }
+        }
+
+        function applyTheme(themeName, silent = false) {
+            const validThemes = ['indigo', 'emerald', 'royal', 'sky', 'dark'];
+            const chosen = validThemes.includes(themeName) ? themeName : 'indigo';
+            document.documentElement.setAttribute('data-theme', chosen);
+            const sel = document.getElementById('themeSelect');
+            if (sel && sel.value !== chosen) sel.value = chosen;
+            safeStorageSet(THEME_STORAGE, chosen);
+            if (!silent) {
+                const names = {
+                    indigo: 'ខៀវអប់រំ',
+                    emerald: 'បៃតងត្បូង',
+                    royal: 'ក្រហមមាស',
+                    sky: 'ផ្ទៃមេឃ',
+                    dark: 'ងងឹត (Dark)'
+                };
+                showToast(`បានប្ដូរ Theme ទៅ "${names[chosen]}"!`, 'info');
+            }
+        }
+
+        function switchEditorSectionTab(tab) {
+            const sections = {
+                ai: document.getElementById('edSectionAi'),
+                meta: document.getElementById('edSectionMeta'),
+                steps: document.getElementById('edSectionSteps')
+            };
+            const btns = {
+                ai: document.getElementById('edTabAiBtn'),
+                meta: document.getElementById('edTabMetaBtn'),
+                steps: document.getElementById('edTabStepsBtn')
+            };
+            const activeCls = 'py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1';
+            const inactiveCls = 'py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1';
+
+            for (const key of ['ai', 'meta', 'steps']) {
+                if (sections[key]) sections[key].classList.toggle('hidden', key !== tab);
+                if (btns[key]) btns[key].className = key === tab ? activeCls : inactiveCls;
             }
         }
 
@@ -2384,11 +2929,12 @@
                 clone.querySelectorAll('.hidden').forEach(el => el.remove());
                 docContent = clone.innerHTML;
             }
-            const is4 = (document.getElementById('tableLayoutMode')?.value || '3col') === '4col';
-            const wordPageCss = is4
-                ? `@page Section1 { size: 29.7cm 21.0cm; mso-page-orientation: landscape; margin: 1.2cm 1.4cm; } div.Section1 { page: Section1; } @page { size: A4 landscape; margin: 1.2cm 1.4cm; }`
-                : `@page Section1 { size: 21.0cm 29.7cm; mso-page-orientation: portrait; margin: 1.5cm; } div.Section1 { page: Section1; } @page { size: A4 portrait; margin: 1.5cm; }`;
+            const wordPageCss = `@page Section1 { size: 21.0cm 29.7cm; mso-page-orientation: portrait; margin: 1.5cm; } div.Section1 { page: Section1; } @page { size: A4 portrait; margin: 1.5cm; }`;
             const lessonTitle = document.getElementById('lessonTitleInput')?.value || 'កិច្ចតែងការបង្រៀន';
+            const a4Comp = a4El ? getComputedStyle(a4El) : null;
+            const wordAccent = (a4Comp?.getPropertyValue('--out-accent') || '').trim() || '#1d4ed8';
+            const wordTint = (a4Comp?.getPropertyValue('--out-tint') || '').trim() || '#eef2ff';
+            const wordText = (a4Comp?.getPropertyValue('--out-text') || '').trim() || '#1e1b4b';
             const htmlWord = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
                 <head>
@@ -2400,8 +2946,10 @@
                         .font-moul { font-family: 'Khmer OS Moul Light', 'Moul', serif; font-weight: normal; }
                         table.moeys-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
                         table.moeys-table th, table.moeys-table td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
-                        table.moeys-table th { background-color: #f1f5f9; font-weight: bold; text-align: center; }
-                        .step-header-row td { background-color: #eef2ff; font-weight: bold; text-align: center; }
+                        table.moeys-table th { background-color: ${wordTint}; font-weight: bold; text-align: center; color: ${wordText}; }
+                        .step-header-row td { background-color: ${wordTint}; font-weight: bold; text-align: center; color: ${wordText}; }
+                        .out-meta-card { background-color: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid ${wordAccent}; padding: 8px 10px; margin-bottom: 10px; }
+                        .out-section-title { font-weight: bold; border-bottom: 1.5px solid ${wordAccent}; padding-bottom: 2px; margin-bottom: 4px; color: ${wordText}; }
                     </style>
                 </head>
                 <body><div class="Section1">${docContent}</div></body>
@@ -2423,7 +2971,7 @@
         // 6. LOCAL STORAGE & SAVED LESSONS MANAGEMENT
         // =========================================================================
         const FORM_FIELD_IDS = [
-            'schoolInput', 'headerDateInput', 'tableLayoutMode', 'durationInput', 'gregorianDatePicker',
+            'schoolInput', 'headerDateInput', 'durationInput', 'gregorianDatePicker',
             'deptInput', 'lunarDateInput', 'solarDateTextInput', 'teacherInput', 'principalInput',
             'gradeInput', 'subjectInput', 'chapterNumInput', 'chapterInput', 'lessonNumInput',
             'lessonTitleInput', 'subLessonsInput', 'teachingMethod',
@@ -2661,8 +3209,47 @@
             return `• សម្រាប់គ្រូ៖\n${baseBook}\n${teacherTools} (រៀបចំតាមលំនាំ ${methodLabel})\n• សម្រាប់សិស្ស៖\n- សៀវភៅពុម្ព${subject} សៀវភៅសរសេរ ប៊ិច ខ្មៅដៃ និងសម្ភារសិក្សាផ្ទាល់ខ្លួន។`;
         }
 
-        function analyzeMethodOnly() {
+        function toggleNinePointGrid() {
+            const g = document.getElementById('ninePointAnalysisGrid');
+            if (g) g.classList.toggle('hidden');
+        }
+
+        function buildNinePointAnalysis(subject, grade, title, activeSubs, methodKey, duration) {
+            const subList = (activeSubs || title).split('\n').map(s => s.trim()).filter(Boolean);
+            const firstConcept = (subList[0] || title).replace(/^[០-៩0-9]+\.\s*/, '');
+            const methodLabel = PEDAGOGICAL_METHODS[methodKey]?.label || 'បែបសិស្សមជ្ឈមណ្ឌល';
+            let envText = 'ក្នុងថ្នាក់រៀន ឬបន្ទប់ពិសោធន៍/បន្ទប់កុំព្យូទ័រ';
+            if (subject === 'ព័ត៌មានវិទ្យា (ICT)') envText = 'បន្ទប់កុំព្យូទ័រ (ក្រៅថ្នាក់រៀន) និងក្នុងថ្នាក់រៀន';
+            else if (['រូបវិទ្យា', 'គីមីវិទ្យា', 'ជីវវិទ្យា'].includes(subject)) envText = 'មន្ទីរពិសោធន៍វិទ្យាសាស្ត្រ និងក្នុងថ្នាក់រៀន';
+
+            return [
+                { code: 'ក', title: 'ពិនិត្យកម្មវិធីសិក្សា កាលវិភាគ និងរយៈពេល', detail: `មុខវិជ្ជា ${subject} ថ្នាក់${grade} • រយៈពេល ${duration} • បង្រៀន ${toKhmerNumerals(subList.length || 1)} ចំណុចរង (${subList.join(' / ')})។` },
+                { code: 'ខ', title: 'វត្ថុបំណង / លទ្ធផលរំពឹងទុក (៣ ចំណុច)', detail: `វិជ្ជាសម្បទា (សកម្មភាព+លក្ខខណ្ឌ+ស្ដង់ដារ) • បំណិនសម្បទា (ផ្សារភ្ជាប់ទ្រឹស្ដីនឹងការអនុវត្ត) • ចរិយាសម្បទា (សីលធម៌ វិន័យ សហការ)។` },
+                { code: 'គ', title: 'ខ្លឹមសារមេរៀន', detail: `ផ្ដោតលើខ្លឹមសារសំខាន់នៃ "${firstConcept}" និងឧទាហរណ៍ជាក់ស្ដែងក្នុងជីវភាពរស់នៅ។` },
+                { code: 'ឃ', title: 'សមត្ថភាពមានស្រាប់ និងសមត្ថភាពចាំបាច់', detail: `រំឭកចំណេះដឹងចាស់ជាឈ្នាន់ និងបង្កើតសំណួរ/ឃ្លាទាក់ទងដើម្បីភ្ជាប់ទៅខ្លឹមសារថ្មី "${title}"។` },
+                { code: 'ង', title: 'សម្ភារឧបទេស', detail: `ឯកសារសៀវភៅសិក្សាគោល សន្លឹកកិច្ចការ និងឧបករណ៍ជាក់ស្ដែងដើម្បីផ្សារភ្ជាប់ទ្រឹស្ដីទៅនឹងការអនុវត្ត និងចំណេញពេលវេលា។` },
+                { code: 'ច', title: 'បរិស្ថានសិក្សា', detail: `ទីកន្លែងរៀន៖ ${envText} សមស្របតាមលំនាំ ${methodLabel}។` },
+                { code: 'ឆ', title: 'សកម្មភាពសិក្សា (គ្រូ និងសិស្ស)', detail: `អនុវត្តតាម ${methodLabel} ក្នុងលំនាំ ៥ ជំហាន (រដ្ឋបាលថ្នាក់ ➔ រំឭកមេរៀនចាស់ ➔ មេរៀនថ្មី ➔ ពង្រឹងពុទ្ធិ ➔ កិច្ចការផ្ទះ)។` },
+                { code: 'ជ', title: 'រង្វាយតម្លៃ', detail: `វាស់ស្ទង់តាមសំណួរផ្ទាល់មាត់ សំណួរសរសេរ ប័ណ្ណសំណួរ និងការអនុវត្តផ្ទាល់ ឆ្លុះបញ្ចាំងវត្ថុបំណងទាំង ៣។` },
+                { code: 'ឈ', title: 'បណ្ដាំផ្ញើ / កិច្ចការផ្ទះ', detail: `ផ្ដល់លំហាត់ពង្រីកចំណេះដឹងបន្ថែម បំពេញកង្វះខាតក្នុងថ្នាក់ និងស្រាវជ្រាវបម្រើឱ្យមេរៀនក្រោយ។` }
+            ];
+        }
+
+        function renderNinePointAnalysis(subject, grade, title, activeSubs, methodKey, duration) {
+            const grid = document.getElementById('ninePointAnalysisGrid');
+            if (!grid) return;
+            const items = buildNinePointAnalysis(subject, grade, title, activeSubs, methodKey, duration);
+            grid.innerHTML = items.map(item => `
+                <div class="p-2 rounded-lg bg-white/90 border border-emerald-200/80">
+                    <span class="font-bold text-indigo-950">${item.code}) ${escapeHtml(item.title)}៖</span>
+                    <span class="text-slate-700"> ${escapeHtml(item.detail)}</span>
+                </div>
+            `).join('');
+        }
+
+        async function analyzeMethodOnly() {
             const subject = document.getElementById('subjectInput')?.value || '';
+            const grade = document.getElementById('gradeInput')?.value || 'ទី១១';
             const title = document.getElementById('lessonTitleInput')?.value || '';
             const subLessons = document.getElementById('subLessonsInput')?.value || '';
             const duration = document.getElementById('durationInput')?.value || '៥០ នាទី (១ ម៉ោងសិក្សា)';
@@ -2671,15 +3258,66 @@
             const rec = recommendMethodLocally(subject, title, subLessons, pdfText);
             const pacing = inferLessonPacingLocally(duration, subLessons, title, pdfText);
 
-            document.getElementById('teachingMethod').value = rec.methodKey;
+            let chosenKey = rec.methodKey;
+            let chosenReason = rec.reason;
+            let chosenPacingTitle = pacing.pacingTitle;
+            let chosenPacingReason = pacing.pacingReason;
+
+            const apiKey = getActiveApiKey();
+            if (apiKey) {
+                try {
+                    const methodKeys = Object.keys(PEDAGOGICAL_METHODS).join(', ');
+                    const payload = {
+                        systemInstruction: {
+                            parts: [{
+                                text: `អ្នកគឺជាអ្នកជំនាញគរុកោសល្យ NIE និង MoEYS។ ចូរវិភាគមេរៀន និងត្រឡប់មកវិញជា JSON ដែលមាន៖ recommendedMethodKey (ជ្រើសពី៖ ${methodKeys}), methodReason (មូលហេតុជាភាសាខ្មែរ), pacingTitle និង pacingReason។`
+                            }]
+                        },
+                        contents: [{
+                            role: 'user',
+                            parts: [{
+                                text: `ថ្នាក់៖ ${grade} | មុខវិជ្ជា៖ ${subject} | មេរៀន៖ ${title} | រយៈពេល៖ ${duration}\nចំណងជើងរង៖ ${subLessons}`
+                            }]
+                        }],
+                        generationConfig: {
+                            thinkingConfig: { thinkingLevel: 'LOW' },
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    recommendedMethodKey: { type: "STRING" },
+                                    methodReason: { type: "STRING" },
+                                    pacingTitle: { type: "STRING" },
+                                    pacingReason: { type: "STRING" }
+                                },
+                                required: ['recommendedMethodKey', 'methodReason', 'pacingTitle', 'pacingReason']
+                            }
+                        }
+                    };
+                    const raw = await callActiveAi(payload);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed.recommendedMethodKey && PEDAGOGICAL_METHODS[parsed.recommendedMethodKey]) {
+                            chosenKey = parsed.recommendedMethodKey;
+                        }
+                        if (parsed.methodReason) chosenReason = parsed.methodReason;
+                        if (parsed.pacingTitle) chosenPacingTitle = parsed.pacingTitle;
+                        if (parsed.pacingReason) chosenPacingReason = parsed.pacingReason;
+                    }
+                } catch (_) {}
+            }
+
+            document.getElementById('teachingMethod').value = chosenKey;
             onMethodChange();
             if (Array.isArray(pacing.selectedIndices) && pacing.selectedIndices.length > 0) {
                 renderSubTopicCheckboxes(pacing.selectedIndices);
             }
-            showAiRecommendation(PEDAGOGICAL_METHODS[rec.methodKey]?.label || '', rec.reason);
-            showPacingCard(pacing.pacingTitle, pacing.pacingReason);
+            const activeSubs = getActiveSelectedSubLessonsText();
+            showAiRecommendation(PEDAGOGICAL_METHODS[chosenKey]?.label || '', chosenReason);
+            showPacingCard(chosenPacingTitle, chosenPacingReason);
+            renderNinePointAnalysis(subject, grade, title, activeSubs, chosenKey, duration);
             syncPreview();
-            showToast('AI បានវិភាគ និងជ្រើសរើសវិធីសាស្ត្រសមស្របរួចរាល់!', 'success');
+            showToast(`${getActiveModelLabel()} បានវិភាគមេរៀនទាំង ៩ ចំណុច និងជ្រើសរើសវិធីសាស្ត្ររួចរាល់!`, 'success');
         }
 
         function buildCuratedFallbackPlan(subject, grade, title, activeSubs, methodKey, duration) {
@@ -2717,21 +3355,21 @@
                 objSkill: `${skillVerb} "${primaryConcept}${secondaryConcept}" ${skillCriteria}ក្នុងរយៈពេល ${duration}។`,
                 objAttitude: `បង្ហាញស្មារតីទទួលខុសត្រូវ ការសហការយ៉ាងសកម្មក្នុងក្រុម ហ៊ានបញ្ចេញមតិ និងចេះផ្សារភ្ជាប់ចំណេះដឹងអំពី "${primaryConcept}" ទៅអនុវត្តប្រកបដោយប្រសិទ្ធភាពក្នុងជីវភាពរស់នៅប្រចាំថ្ងៃ។`,
                 materialsInput: inferSubjectMaterialsLocally(subject, title, activeSubs, methodKey),
-                s1Content: '- ពិនិត្យវត្តមាន អនាម័យ និងសណ្ដាប់ធ្នាប់ក្នុងថ្នាក់',
-                s1Teacher: '- ពិនិត្យវត្តមានសិស្ស ឯកសណ្ឋាន និងណែនាំឱ្យរក្សាភាពស្ងៀមស្ងាត់។',
-                s1Student: '- ប្រធានថ្នាក់រាយការណ៍អវត្តមាន និងរៀបចំខ្លួនចូលរៀន។',
-                s2Content: `- រំឭកចំណេះដឹងមូលដ្ឋានពាក់ព័ន្ធនឹងមេរៀន "${title}"។`,
-                s2Teacher: '- សួរសំណួររំឭកមេរៀនចាស់ និងភ្ជាប់ទំនាក់ទំនងទៅមេរៀនថ្មី។',
-                s2Student: '- ស្ដាប់ ពិចារណា និងឆ្លើយសំណួររំឭករបស់គ្រូ។',
-                s3Content: `ខ្លឹមសារគោលសម្រាប់ម៉ោងសិក្សានេះ (${duration})៖\n${focusTopic}\n\n${mTemplate.content}`,
+                s1Content: '- ប្រមូលអារម្មណ៍សិស្សមុនផ្ដើមមេរៀន\n- រៀបចំសណ្ដាប់ធ្នាប់ក្នុងថ្នាក់ និងបណ្ដុះមនសិការ',
+                s1Teacher: '- ពិនិត្យអវត្តមាន និងអនាម័យ\n- ពង្រឹងវិន័យ និងសណ្ដាប់ធ្នាប់ក្នុងថ្នាក់',
+                s1Student: '- ក្រោកឈរដោយស្ងៀមស្ងាត់ រួចអង្គុយចុះដោយមានសណ្ដាប់ធ្នាប់តាមការណែនាំរបស់គ្រូ\n- ប្រធានថ្នាក់រាយការណ៍វត្តមាន',
+                s2Content: `- រំឭកចំណេះដឹងដែលមានពីមុនដើម្បីផ្សារភ្ជាប់នឹងខ្លឹមសារថ្មី "${primaryConcept}"។`,
+                s2Teacher: `- រំឭកមេរៀនចាស់ ឬកែកិច្ចការចាស់\n- បំផុសសមត្ថភាពមានស្រាប់ និងសួរសំណួរទាក់ទង (ឃ្លាទាក់ទង) ភ្ជាប់ទៅមេរៀនថ្មី "${title}"។`,
+                s2Student: '- ត្រៀមខ្លួន ស្ដាប់គ្រូ និងឆ្លើយសំណួររំឭកមេរៀនចាស់\n- សង្កេត និងឆ្លើយសំណួរភ្ជាប់ទៅមេរៀនថ្មី។',
+                s3Content: `ខ្លឹមសារមេរៀនថ្មី (${duration})៖\n${focusTopic}\n\n${mTemplate.content}`,
                 s3Teacher: mTemplate.teacher,
                 s3Student: mTemplate.student,
-                s4Content: `- សំណួរពង្រឹង៖ ចូរសង្ខេបចំណុចសំខាន់ៗនៃ "${focusTopic}" ដែលបានរៀនក្នុងម៉ោងនេះ។`,
-                s4Teacher: '- ចោទសំណួរវាយតម្លៃ និងដាក់លំហាត់ខ្លីៗដើម្បីផ្ទៀងផ្ទាត់ការយល់ដឹងរបស់សិស្ស។',
-                s4Student: '- គិត ឆ្លើយសំណួរ និងអនុវត្តដោះស្រាយលំហាត់លើក្ដារខៀន។',
-                s5Content: `- ធ្វើលំហាត់អនុវត្តក្នុងសៀវភៅពុម្ពមុខវិជ្ជា ${subject} និងអានចំណុចបន្ទាប់នៃមេរៀន "${title}"។`,
-                s5Teacher: '- ដាក់កិច្ចការផ្ទះ និងណែនាំឱ្យសិស្សរំឭកមេរៀនឡើងវិញនៅផ្ទះ។',
-                s5Student: '- កត់ត្រាកិច្ចការផ្ទះ និងស្ដាប់ការណែនាំរបស់គ្រូ។'
+                s4Content: `- ពិនិត្យឡើងវិញថាសិស្សទទួលបានចំណេះដឹងសមស្របតាមវត្ថុបំណង៖\n  ចម្លើយរំពឹងទុក៖ សិស្សពន្យល់ និងអនុវត្តចំណុច "${primaryConcept}${secondaryConcept}" បានត្រឹមត្រូវ។`,
+                s4Teacher: `- ប្រើសំណួរផ្ទាល់មាត់ សំណួរសរសេរខ្លីៗ ឬប័ណ្ណសំណួរឆ្លុះបញ្ចាំងនូវវិជ្ជាសម្បទា បំណិនសម្បទា និងចរិយាសម្បទា អំពី "${primaryConcept}"។`,
+                s4Student: `- សិស្សឆ្លើយផ្ទាល់មាត់ ឬសរសេរចម្លើយត្រឹមត្រូវនៃសំណួរ និងលំហាត់ពង្រឹងពុទ្ធិ។`,
+                s5Content: `- កិច្ចការផ្ទះ៖ លំហាត់ពង្រឹងចំណេះដឹងអំពី "${primaryConcept}" និងស្រាវជ្រាវចំណុចបន្ទាប់នៃមេរៀន "${title}"។`,
+                s5Teacher: '- សរសេរលំហាត់សម្រាប់ធ្វើនៅផ្ទះ (ដើម្បីពង្រីកចំណេះដឹងបន្ថែម និងត្រៀមសម្រាប់មេរៀនក្រោយ)។',
+                s5Student: '- ចម្លងខ្លឹមសារសង្ខេប និងលំហាត់ដាក់សៀវភៅ ដើម្បីអនុវត្តនៅផ្ទះតាមបណ្ដាំផ្ញើរបស់គ្រូ។'
             };
         }
 
@@ -2778,7 +3416,12 @@
    - objSkill (បំណិនសម្បទា)៖ បញ្ជាក់ជំនាញអនុវត្តជាក់លាក់ (សរសេរកូដ, គូសដ្យាក្រាម, គណនា, បង្កើត...) ហើយត្រូវមានសកម្មភាពអនុវត្តផ្ទាល់នោះនៅក្នុងជំហានទី៣ (s3Teacher/s3Student)។
    - objAttitude (ចរិយាសម្បទា)៖ ផ្ដោតលើឥរិយាបថ ការសហការក្រុម ក្រមសីលធម៌ឌីជីថល និងការអនុវត្តក្នុងជីវភាព (ហាមសរសេរដូចជំនាញបច្ចេកទេស)។
 3. II. សម្ភារឧបទេស (materialsInput)៖ បែងចែក «សម្រាប់គ្រូ» និង «សម្រាប់សិស្ស» ដោយប្រើសៀវភៅសិក្សាគោល និងឧបករណ៍ពិត (ហាមដាក់ «កិច្ចតែងការបង្រៀន» ជាសម្ភារឧបទេស)។
-4. ជំហានទី៤ (s4Content, s4Student)៖ ហាម Copy-Paste និយមន័យវែងៗពីជំហានទី៣ មកដាក់ដដែលៗ។ ត្រូវដាក់តែសំណួរ/លំហាត់វាយតម្លៃខ្លីៗ និងចម្លើយសង្ខេបរបស់សិស្ស។
+4. ការវិភាគតាមស្តង់ដារកិច្ចតែងការ (ប៉ែន សំភា / NIE)៖
+   - ជំហានទី១ (រដ្ឋបាលថ្នាក់)៖ សកម្មភាពគ្រូ (ពិនិត្យអវត្តមាន អនាម័យ សណ្ដាប់ធ្នាប់) | ខ្លឹមសារ (ប្រមូលអារម្មណ៍សិស្សមុនផ្ដើមមេរៀន បណ្ដុះមនសិការ) | សកម្មភាពសិស្ស (ក្រោកឈរស្ងៀមស្ងាត់ រាយការណ៍វត្តមាន)។
+   - ជំហានទី២ (រំឭកមេរៀនចាស់)៖ គ្រូត្រូវរំឭកចំណេះដឹងមានស្រាប់ និងដាក់ «សំណួរទាក់ទង ឬឃ្លាទាក់ទង» ជាឈ្នាន់ភ្ជាប់ទៅមេរៀនថ្មី។
+   - ជំហានទី៣ (ខ្លឹមសារមេរៀនថ្មី)៖ គ្រូកំណត់សកម្មភាព និងសំណួរ/លំហាត់ក្នុងជួរគ្រូ រីឯជួរខ្លឹមសារសរសេរចំណងជើង ចំណងជើងរង ចំណុចសំខាន់ និងមេរៀនសង្ខេប។
+   - ជំហានទី៤ (ពង្រឹងពុទ្ធិ)៖ សំណួរវាយតម្លៃក្នុងជួរគ្រូត្រូវឆ្លុះបញ្ចាំងវត្ថុបំណងទាំង ៣ (វិជ្ជាសម្បទា បំណិន ចរិយា) រីឯជួរខ្លឹមសារ និងសិស្សដាក់ចម្លើយត្រឹមត្រូវដែលរំពឹងទុក។
+   - ជំហានទី៥ (កិច្ចការផ្ទះ/បណ្ដាំផ្ញើ)៖ ដាក់លំហាត់ហ្វឹកហាត់បំពេញកង្វះខាត ពង្រីកចំណេះដឹង និងស្រាវជ្រាវសម្រាប់មេរៀនក្រោយ។
 5. អក្ខរាវិរុទ្ធខ្មែរ៖ សរសេរឱ្យត្រូវតាមវចនានុក្រមខ្មែរ ១០០% (ឧ. ឥទ្ធិពល, សេវាកម្ម, បច្ចេកវិទ្យា) ដោយគ្មានដកឃ្លាខុស។
 
 ត្រូវត្រឡប់មកវិញជា JSON ដែលមាន field ទាំងអស់ដូចខាងក្រោម៖
@@ -2826,8 +3469,7 @@
                 };
 
                 try {
-                    const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
-                    const rawText = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    const rawText = await callActiveAi(payload);
                     if (rawText) {
                         generated = JSON.parse(rawText);
                     }
@@ -2861,6 +3503,7 @@
                 generated.pacingTitle || localPacing.pacingTitle,
                 generated.pacingReason || localPacing.pacingReason
             );
+            renderNinePointAnalysis(subject, grade, title, activeSubs, selectedMethodKey, duration);
 
             const contentFields = [
                 'objKnowledge', 'objSkill', 'objAttitude', 'materialsInput',
@@ -2936,7 +3579,7 @@
             const currentState = collectFormState();
 
             if (!apiKey) {
-                const reply = `សូមបញ្ចូល Gemini API Key ជាមុនសិន ដើម្បីឱ្យ ${getActiveModelLabel()} កែលម្អកិច្ចតែងការតាមសំណើរបស់អ្នក!`;
+                const reply = `សូមបញ្ចូល API Key ជាមុនសិន ដើម្បីឱ្យ ${getActiveModelLabel()} កែលម្អកិច្ចតែងការតាមសំណើរបស់អ្នក!`;
                 appendAiChatBubble('ai', reply);
                 aiChatHistory.push({ role: 'ai', text: reply });
                 sendBtn.disabled = false;
@@ -2983,8 +3626,7 @@
                     }
                 };
 
-                const res = await fetchWithBackoff(getGeminiEndpoint(apiKey), payload, 1);
-                const raw = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+                const raw = await callActiveAi(payload);
                 if (raw) {
                     const updated = JSON.parse(raw);
                     for (const f of editableFields) {
@@ -3011,10 +3653,106 @@
         // =========================================================================
         // 8. INITIALIZATION ON PAGE LOAD
         // =========================================================================
+        const OUTPUT_STYLE_STORAGE = 'khmer_lp_output_style';
+        const OUTPUT_FONT_STORAGE = 'khmer_lp_output_font';
+        const OUTPUT_COLOR_STORAGE = 'khmer_lp_output_color';
+        const OUTPUT_CUSTOM_HEX_STORAGE = 'khmer_lp_output_custom_hex';
+
+        const OUTPUT_COLOR_PALETTES = {
+            navy: { accent: '#1d4ed8', tint: '#eff6ff', text: '#1e3a8a', label: 'ខៀវចាស់ MoEYS' },
+            emerald: { accent: '#047857', tint: '#ecfdf5', text: '#064e3b', label: 'បៃតងត្បូង' },
+            burgundy: { accent: '#991b1b', tint: '#fef2f2', text: '#7f1d1d', label: 'ក្រហមមាស' },
+            purple: { accent: '#6d28d9', tint: '#f5f3ff', text: '#4c1d95', label: 'ស្វាយរាជ' },
+            teal: { accent: '#0f766e', tint: '#f0fdfa', text: '#115e59', label: 'ខៀវបៃតង' },
+            slate: { accent: '#334155', tint: '#f1f5f9', text: '#0f172a', label: 'ប្រផេះផ្លូវការ' }
+        };
+
+        function hexToSoftTint(hex) {
+            const clean = String(hex || '#1d4ed8').replace('#', '');
+            if (clean.length !== 6) return '#eef2ff';
+            const r = parseInt(clean.slice(0, 2), 16);
+            const g = parseInt(clean.slice(2, 4), 16);
+            const b = parseInt(clean.slice(4, 6), 16);
+            const mix = (c) => Math.round(c + (255 - c) * 0.88);
+            return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+        }
+
+        function applyOutputColor(colorKey, silent = false) {
+            const a4 = document.getElementById('a4Document');
+            const sel = document.getElementById('outputColorSelect');
+            const picker = document.getElementById('outputCustomColorPicker');
+            if (!a4) return;
+            const valid = ['auto', 'navy', 'emerald', 'burgundy', 'purple', 'teal', 'slate', 'custom'];
+            const chosen = valid.includes(colorKey) ? colorKey : 'auto';
+            if (sel) sel.value = chosen;
+            safeStorageSet(OUTPUT_COLOR_STORAGE, chosen);
+
+            if (chosen === 'auto') {
+                a4.style.removeProperty('--out-accent');
+                a4.style.removeProperty('--out-tint');
+                a4.style.removeProperty('--out-text');
+            } else if (chosen === 'custom') {
+                const hex = picker?.value || safeStorageGet(OUTPUT_CUSTOM_HEX_STORAGE, '#1d4ed8');
+                if (picker) picker.value = hex;
+                a4.style.setProperty('--out-accent', hex);
+                a4.style.setProperty('--out-tint', hexToSoftTint(hex));
+                a4.style.setProperty('--out-text', hex);
+            } else {
+                const pal = OUTPUT_COLOR_PALETTES[chosen];
+                a4.style.setProperty('--out-accent', pal.accent);
+                a4.style.setProperty('--out-tint', pal.tint);
+                a4.style.setProperty('--out-text', pal.text);
+                if (picker) picker.value = pal.accent;
+            }
+            if (!silent) {
+                const msg = chosen === 'auto' ? 'តាម Theme កម្មវិធី' : (chosen === 'custom' ? 'ពណ៌ផ្ទាល់ខ្លួន' : OUTPUT_COLOR_PALETTES[chosen].label);
+                showToast(`បានប្ដូរពណ៌លទ្ធផល៖ ${msg}`, 'info');
+            }
+        }
+
+        function applyCustomOutputColor(hex) {
+            safeStorageSet(OUTPUT_CUSTOM_HEX_STORAGE, hex);
+            applyOutputColor('custom', true);
+        }
+
+        function applyOutputStyle(styleName, silent = false) {
+            const valid = ['modern', 'banner', 'framed', 'academic', 'minimal', 'classic'];
+            const chosen = valid.includes(styleName) ? styleName : 'modern';
+            const a4 = document.getElementById('a4Document');
+            if (a4) a4.setAttribute('data-output-style', chosen);
+            const sel = document.getElementById('outputStyleSelect');
+            if (sel) sel.value = chosen;
+            safeStorageSet(OUTPUT_STYLE_STORAGE, chosen);
+            if (!silent) {
+                const labels = { modern: 'ទំនើប', banner: 'ក្បាលពណ៌ពេញ', framed: 'ស៊ុមប្រណីត', academic: 'បែបសៀវភៅ', minimal: 'សាមញ្ញស្អាត', classic: 'ផ្លូវការដើម' };
+                showToast(`បានប្ដូររចនាប័ទ្មលទ្ធផល៖ ${labels[chosen]}`, 'info');
+            }
+        }
+
+        function applyOutputFontSize(sizeVal, silent = false) {
+            const valid = ['12px', '13px', '14px'];
+            const chosen = valid.includes(sizeVal) ? sizeVal : '13px';
+            const a4 = document.getElementById('a4Document');
+            if (a4) a4.style.setProperty('--out-font-size', chosen);
+            const sel = document.getElementById('outputFontSizeSelect');
+            if (sel) sel.value = chosen;
+            safeStorageSet(OUTPUT_FONT_STORAGE, chosen);
+            if (!silent) {
+                showToast(`បានប្ដូរទំហំអក្សរ៖ ${chosen}`, 'info');
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            applyTheme(safeStorageGet(THEME_STORAGE, 'indigo'), true);
+            applyOutputStyle(safeStorageGet(OUTPUT_STYLE_STORAGE, 'modern'), true);
+            const savedHex = safeStorageGet(OUTPUT_CUSTOM_HEX_STORAGE, '#1d4ed8');
+            const customPicker = document.getElementById('outputCustomColorPicker');
+            if (customPicker) customPicker.value = savedHex;
+            applyOutputColor(safeStorageGet(OUTPUT_COLOR_STORAGE, 'auto'), true);
+            applyOutputFontSize(safeStorageGet(OUTPUT_FONT_STORAGE, '13px'), true);
             const savedModel = safeStorageGet(MODEL_STORAGE, 'gemini-4-hydrogen');
             const modelSel = document.getElementById('aiModelSelect');
-            if (modelSel && (savedModel === 'gemini-4-argon' || savedModel === 'gemini-4-hydrogen')) {
+            if (modelSel && AI_MODEL_CATALOG[savedModel]) {
                 modelSel.value = savedModel;
             }
             onAiModelChange();
