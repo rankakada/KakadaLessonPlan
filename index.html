@@ -16,7 +16,7 @@
     <!-- Google Fonts: Khmer OS Moul Light & Khmer OS Siemreap fallbacks (Moul, Siemreap, Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Moul&family=Siemreap&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Moul&family=Siemreap&display=swap" rel="stylesheet">
     
     <style>
         /* Official Khmer Font Definitions prioritizing locally installed Khmer OS fonts */
@@ -201,16 +201,16 @@
         }
 
         /* Output Design Styles, Color Variables & Typography */
-        #a4Document {
+        .a4-paper {
             --out-font-size: 13px;
             --out-accent: var(--accent-bg, #4338ca);
             --out-tint: var(--step-row-bg, #eef2ff);
             --out-text: var(--step-row-text, #1e1b4b);
             --out-card-bg: #f8fafc;
         }
-        #a4Document .out-meta-table,
-        #a4Document .out-section-body,
-        #a4Document .moeys-table {
+        .a4-paper .out-meta-table,
+        .a4-paper .out-section-body,
+        .a4-paper .moeys-table {
             font-size: var(--out-font-size);
         }
         .out-accent-bar {
@@ -252,20 +252,20 @@
         }
 
         /* Global Output Color Application on Table Step Rows */
-        #a4Document .step-header-row td {
+        .a4-paper .step-header-row td {
             background-color: var(--out-tint);
             color: var(--out-text);
         }
 
         /* Style 1: Modern Accented */
-        #a4Document[data-output-style="modern"] .out-accent-bar {
+        .a4-paper[data-output-style="modern"] .out-accent-bar {
             display: block;
         }
-        #a4Document[data-output-style="modern"] .out-title-text,
-        #a4Document[data-output-style="modern"] .out-divider {
+        .a4-paper[data-output-style="modern"] .out-title-text,
+        .a4-paper[data-output-style="modern"] .out-divider {
             color: var(--out-text);
         }
-        #a4Document[data-output-style="modern"] .out-meta-card {
+        .a4-paper[data-output-style="modern"] .out-meta-card {
             background-color: var(--out-card-bg);
             border: 1px solid #e2e8f0;
             border-left: 4px solid var(--out-accent);
@@ -273,46 +273,46 @@
             padding: 9px 12px;
             margin-bottom: 12px;
         }
-        #a4Document[data-output-style="modern"] .out-section-title {
+        .a4-paper[data-output-style="modern"] .out-section-title {
             border-left: 4px solid var(--out-accent);
             border-bottom: 1px solid #e2e8f0;
             padding: 2px 0 3px 8px;
             color: var(--out-text);
             background: linear-gradient(to right, var(--out-tint), transparent);
         }
-        #a4Document[data-output-style="modern"] .moeys-table th {
+        .a4-paper[data-output-style="modern"] .moeys-table th {
             background-color: var(--out-tint);
             color: var(--out-text);
             border-color: #475569;
         }
-        #a4Document[data-output-style="modern"] .moeys-table td {
+        .a4-paper[data-output-style="modern"] .moeys-table td {
             border-color: #64748b;
         }
-        #a4Document[data-output-style="modern"] .out-sig-box {
+        .a4-paper[data-output-style="modern"] .out-sig-box {
             border-top: 1px dashed #cbd5e1;
             padding-top: 14px;
         }
 
         /* Style 2: Banner Header */
-        #a4Document[data-output-style="banner"] .out-title-wrap {
+        .a4-paper[data-output-style="banner"] .out-title-wrap {
             background: var(--out-accent);
             color: #ffffff;
             padding: 7px 14px;
             border-radius: 6px;
             margin: 10px 0 12px;
         }
-        #a4Document[data-output-style="banner"] .out-title-text {
+        .a4-paper[data-output-style="banner"] .out-title-text {
             color: #ffffff !important;
             text-decoration: none !important;
         }
-        #a4Document[data-output-style="banner"] .out-meta-card {
+        .a4-paper[data-output-style="banner"] .out-meta-card {
             background-color: var(--out-tint);
             border: 1px solid var(--out-accent);
             border-radius: 6px;
             padding: 9px 12px;
             margin-bottom: 12px;
         }
-        #a4Document[data-output-style="banner"] .out-section-title {
+        .a4-paper[data-output-style="banner"] .out-section-title {
             background-color: var(--out-accent);
             color: #ffffff;
             padding: 3px 10px;
@@ -320,97 +320,97 @@
             display: inline-block;
             margin-bottom: 6px;
         }
-        #a4Document[data-output-style="banner"] .moeys-table th {
+        .a4-paper[data-output-style="banner"] .moeys-table th {
             background-color: var(--out-accent);
             color: #ffffff;
             border-color: var(--out-accent);
         }
-        #a4Document[data-output-style="banner"] .moeys-table td {
+        .a4-paper[data-output-style="banner"] .moeys-table td {
             border-color: #475569;
         }
 
         /* Style 3: Formal Framed */
-        #a4Document[data-output-style="framed"] {
+        .a4-paper[data-output-style="framed"] {
             border: 1px solid #cbd5e1;
             box-shadow: inset 0 0 0 8mm #ffffff, inset 0 0 0 8.7mm var(--out-accent), inset 0 0 0 9.6mm #ffffff, inset 0 0 0 10mm var(--out-text), 0 10px 30px -5px rgba(15, 23, 42, 0.12);
         }
-        #a4Document[data-output-style="framed"] .out-title-text {
+        .a4-paper[data-output-style="framed"] .out-title-text {
             color: var(--out-text);
         }
-        #a4Document[data-output-style="framed"] .out-meta-card {
+        .a4-paper[data-output-style="framed"] .out-meta-card {
             border-top: 1.5px solid var(--out-accent);
             border-bottom: 1.5px solid var(--out-accent);
             padding: 8px 4px;
             margin-bottom: 12px;
         }
-        #a4Document[data-output-style="framed"] .out-section-title {
+        .a4-paper[data-output-style="framed"] .out-section-title {
             border-bottom: 1.5px solid var(--out-accent);
             color: var(--out-text);
             padding-bottom: 2px;
             display: inline-block;
             min-width: 180px;
         }
-        #a4Document[data-output-style="framed"] .moeys-table th {
+        .a4-paper[data-output-style="framed"] .moeys-table th {
             background-color: var(--out-tint);
             color: var(--out-text);
         }
 
         /* Style 4: Academic Book */
-        #a4Document[data-output-style="academic"] .out-accent-bar {
+        .a4-paper[data-output-style="academic"] .out-accent-bar {
             display: block;
             height: 3px;
         }
-        #a4Document[data-output-style="academic"] .out-title-text {
+        .a4-paper[data-output-style="academic"] .out-title-text {
             color: var(--out-text);
             letter-spacing: 0 !important;
         }
-        #a4Document[data-output-style="academic"] .out-meta-card {
+        .a4-paper[data-output-style="academic"] .out-meta-card {
             border: 1.5px solid #cbd5e1;
             border-top: 3px solid var(--out-accent);
             padding: 9px 12px;
             margin-bottom: 12px;
             background: #ffffff;
         }
-        #a4Document[data-output-style="academic"] .out-section-title {
+        .a4-paper[data-output-style="academic"] .out-section-title {
             color: var(--out-text);
             border-bottom: 2px solid var(--out-accent);
             padding-bottom: 2px;
             margin-bottom: 6px;
         }
-        #a4Document[data-output-style="academic"] .out-obj-item {
+        .a4-paper[data-output-style="academic"] .out-obj-item {
             border-left: 2px solid var(--out-tint);
             padding-left: 8px;
         }
-        #a4Document[data-output-style="academic"] .moeys-table th {
+        .a4-paper[data-output-style="academic"] .moeys-table th {
             background-color: var(--out-tint);
             color: var(--out-text);
             border-bottom: 2px solid var(--out-accent);
         }
 
         /* Style 5: Minimal Clean */
-        #a4Document[data-output-style="minimal"] .out-title-text {
+        .a4-paper[data-output-style="minimal"] .out-title-text {
             color: var(--out-text);
             text-decoration: none !important;
             border-bottom: 2px solid var(--out-accent);
             padding-bottom: 4px;
             display: inline-block;
         }
-        #a4Document[data-output-style="minimal"] .out-meta-card {
+        .a4-paper[data-output-style="minimal"] .out-meta-card {
             border-bottom: 1px dashed #cbd5e1;
             padding-bottom: 8px;
             margin-bottom: 12px;
         }
-        #a4Document[data-output-style="minimal"] .out-section-title {
+        .a4-paper[data-output-style="minimal"] .out-section-title {
             color: var(--out-accent);
             margin-bottom: 4px;
         }
-        #a4Document[data-output-style="minimal"] .moeys-table th {
+        .a4-paper[data-output-style="minimal"] .moeys-table th {
             background-color: #f8fafc;
             color: var(--out-text);
         }
 
         /* Style 6: Classic MoEYS (neutral) */
-        #a4Document[data-output-style="classic"] .step-header-row td {
+        .a4-paper[data-output-style="classic"] .step-header-row td {
             background-color: #f1f5f9;
             color: #0f172a;
         }
@@ -459,7 +459,7 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            #a4Document[data-output-style="framed"] {
+            .a4-paper[data-output-style="framed"] {
                 box-shadow: none !important;
                 border: 3px double #1e293b !important;
                 padding: 8mm 10mm !important;
@@ -467,6 +467,43 @@
             tr {
                 page-break-inside: avoid;
             }
+        }
+
+        /* Modern Studio UI/UX Enhancements */
+        .preview-desk {
+            background-color: var(--desk-bg, #f1f5f9);
+            background-image:
+                radial-gradient(circle at 20% 10%, rgba(99, 102, 241, 0.06), transparent 45%),
+                radial-gradient(var(--desk-dot, #cbd5e1) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px;
+        }
+        #editorPanel input:not([type="checkbox"]):not([type="color"]),
+        #editorPanel select,
+        #editorPanel textarea {
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+        }
+        #editorPanel input:not([type="checkbox"]):not([type="color"]):focus,
+        #editorPanel select:focus,
+        #editorPanel textarea:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+        }
+        .a4-paper {
+            border-radius: 6px;
+            transition: transform 0.2s ease, max-width 0.2s ease;
+            transform-origin: top center;
+        }
+        [data-theme="dark"] #edSectionTasks,
+        [data-theme="dark"] #edSectionSlides,
+        [data-theme="dark"] #edSectionNotebook {
+            background: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        [data-theme="dark"] #edSectionTasks .bg-gradient-to-r,
+        [data-theme="dark"] #edSectionSlides .bg-gradient-to-br,
+        [data-theme="dark"] #edSectionNotebook .bg-gradient-to-br {
+            background: #0f172a !important;
+            border-color: #334155 !important;
         }
 
         /* Spinner animation */
@@ -479,6 +516,81 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
+
+    <!-- Login & User Registration Gate Overlay -->
+    <div id="loginOverlay" class="no-print fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-amber-300/40 overflow-hidden">
+            <!-- Brand Banner -->
+            <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 text-white p-5 text-center border-b border-amber-400/30">
+                <div class="w-14 h-14 mx-auto mb-2.5 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 p-[1.5px] shadow-lg">
+                    <div class="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center font-black text-xl text-amber-300" style="font-family:'Inter',sans-serif;">CG</div>
+                </div>
+                <h2 class="text-xl font-black tracking-wide bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent" style="font-family:'Inter',sans-serif;">CG SYSTEM</h2>
+                <p class="text-xs text-amber-100/90 mt-0.5">ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន • Team CG</p>
+            </div>
+
+            <!-- Login / Register Tab Switcher -->
+            <div class="p-5 space-y-4">
+                <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl">
+                    <button type="button" id="authTabLoginBtn" onclick="switchAuthTab('login')" class="py-2 rounded-lg text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer">🔑 ចូលប្រើប្រាស់</button>
+                    <button type="button" id="authTabRegisterBtn" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer">➕ បង្កើត User ថ្មី</button>
+                </div>
+
+                <!-- Error / Info Banner -->
+                <div id="authErrorBox" class="hidden p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 font-semibold"></div>
+
+                <!-- Form 1: Login -->
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះអ្នកប្រើប្រាស់ (Username)</label>
+                        <input type="text" id="loginUsernameInput" required placeholder="ឧ. kakada" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់ (Password)</label>
+                        <input type="password" id="loginPasswordInput" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-600 hover:to-blue-600 text-white text-sm font-bold shadow-md transition cursor-pointer">
+                        ចូលប្រើប្រាស់ប្រព័ន្ធ
+                    </button>
+
+                    <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-between gap-2 text-[11px] text-amber-950">
+                        <div>
+                            <div class="font-bold">គណនីគំរូ (Default User)៖</div>
+                            <div>User: <code class="font-bold">kakada</code> • Pass: <code class="font-bold">cg2026</code></div>
+                        </div>
+                        <button type="button" onclick="quickDemoLogin()" class="px-2.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-[11px] cursor-pointer shrink-0">
+                            ⚡ ចូលរហ័ស
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Form 2: Register New User -->
+                <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-2.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគ្រូបង្រៀន (Display Name)</label>
+                        <input type="text" id="regFullNameInput" required placeholder="ឧ. លោកគ្រូ សុខ ដារ៉ា" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសាលា / វិទ្យាល័យ</label>
+                        <input type="text" id="regSchoolInput" value="វិទ្យាល័យ ស្រីសន្ធរ" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+                            <input type="text" id="regUsernameInput" required placeholder="dara" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់</label>
+                            <input type="password" id="regPasswordInput" required placeholder="••••••" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-md transition cursor-pointer">
+                        បង្កើតគណនី & ចូលប្រើ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Navigation Bar (Premium Brand Header) -->
     <header id="appHeader" class="no-print text-white shadow-xl sticky top-0 z-30 border-b border-amber-300/25 relative overflow-hidden">
@@ -513,7 +625,7 @@
                 <!-- Brand Text Block -->
                 <div class="flex flex-col">
                     <div class="flex flex-wrap items-center gap-2">
-                        <h1 class="font-extrabold text-base sm:text-lg md:text-xl tracking-tight bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent drop-shadow-sm">
+                        <h1 style="font-family: 'Inter', sans-serif; font-weight: 900;" class="font-black text-lg sm:text-xl md:text-2xl tracking-wide bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent drop-shadow-sm">
                             CG SYSTEM
                         </h1>
                         <span class="px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-300/35 text-amber-200 font-moul text-[10px] sm:text-[11px] leading-relaxed">
@@ -531,6 +643,12 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <!-- Active User Pill & Logout -->
+                <div id="activeUserBadge" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/15 border border-amber-300/35 text-xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                    <span id="activeUserNameLabel" class="font-bold text-amber-200 max-w-[140px] truncate">លោកគ្រូ រ៉ាន កក្កដា</span>
+                    <button type="button" onclick="logoutUser()" class="ml-1 px-1.5 py-0.5 rounded-lg bg-rose-500/80 hover:bg-rose-500 text-white text-[10px] font-bold cursor-pointer transition" title="ចាកចេញពីគណនី">ចាកចេញ</button>
+                </div>
                 <select id="themeSelect" onchange="applyTheme(this.value)" title="ប្ដូរពណ៌ផ្ទៃកម្មវិធី (Theme)" class="px-2.5 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-[13px] font-medium border border-white/15 focus:outline-none cursor-pointer transition">
                     <option value="indigo" class="text-slate-900">🎨 ខៀវអប់រំ</option>
                     <option value="emerald" class="text-slate-900">🌿 បៃតងត្បូង</option>
@@ -595,16 +713,39 @@
         <!-- LEFT PANEL: Editor & Gemini 4 Argon Generator -->
         <section id="editorPanel" class="no-print lg:col-span-5 xl:col-span-4 bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden flex flex-col lg:sticky lg:top-[76px] lg:max-h-[calc(100vh-94px)]">
             
-            <!-- Editor Section Switcher Tabs -->
-            <div class="bg-slate-50 border-b border-slate-200 p-2 grid grid-cols-3 gap-1.5 shrink-0">
-                <button type="button" id="edTabAiBtn" onclick="switchEditorSectionTab('ai')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1">
+            <!-- System Quick Status Strip -->
+            <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white px-3.5 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] shrink-0 border-b border-white/10">
+                <span class="font-semibold text-amber-300 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
+                    <span>CG System Studio</span>
+                    <span id="studioModelBadge" class="px-1.5 py-0.5 rounded bg-white/10 text-indigo-200 text-[10px] font-medium">Gemini 4 Hydrogen</span>
+                </span>
+                <div class="flex items-center gap-2 text-[10px] text-slate-300">
+                    <button type="button" onclick="printBothDocuments()" class="px-2 py-0.5 rounded bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-300/30 font-semibold transition cursor-pointer" title="បោះពុម្ពទាំងកិច្ចតែងការ និងសន្លឹកកិច្ចការ">
+                        🖨️ បោះពុម្ពទាំង ២
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editor Section Switcher Tabs (Clean 3x2 Studio Navigation Grid) -->
+            <div class="bg-slate-100/80 border-b border-slate-200 p-2 grid grid-cols-3 gap-1.5 shrink-0">
+                <button type="button" id="edTabAiBtn" onclick="switchEditorSectionTab('ai')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1.5">
                     <span>✨</span><span>មេរៀន & AI</span>
                 </button>
-                <button type="button" id="edTabMetaBtn" onclick="switchEditorSectionTab('meta')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1">
-                    <span>🏫</span><span>រដ្ឋបាល & វត្ថុបំណង</span>
+                <button type="button" id="edTabMetaBtn" onclick="switchEditorSectionTab('meta')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🏫</span><span>រដ្ឋបាល</span>
                 </button>
-                <button type="button" id="edTabStepsBtn" onclick="switchEditorSectionTab('steps')" class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1">
-                    <span>📝</span><span>៥ ជំហាន</span>
+                <button type="button" id="edTabStepsBtn" onclick="switchEditorSectionTab('steps')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>📊</span><span>៥ ជំហាន</span>
+                </button>
+                <button type="button" id="edTabTasksBtn" onclick="switchEditorSectionTab('tasks')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>📝</span><span>កិច្ចការ</span>
+                </button>
+                <button type="button" id="edTabSlidesBtn" onclick="switchEditorSectionTab('slides')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>📽️</span><span>Slide បង្រៀន</span>
+                </button>
+                <button type="button" id="edTabNotebookBtn" onclick="switchEditorSectionTab('notebook')" class="py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>📓</span><span>NotebookLM</span>
                 </button>
             </div>
 
@@ -630,11 +771,16 @@
                         </select>
                         <select id="aiModelSelect" onchange="onAiModelChange()" title="ជ្រើសរើសម៉ូដែល AI" class="px-2.5 py-0.5 rounded-full bg-indigo-100 hover:bg-indigo-200 border border-indigo-200 text-indigo-900 text-[11px] font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer transition">
                             <option value="gemini-4-hydrogen" selected>⚡ Gemini 4 Hydrogen</option>
+                            <option value="gemini-4-carbon">💎 Gemini 4 Carbon</option>
+                            <option value="gemini-4-neon">✨ Gemini 4 Neon</option>
                             <option value="gemini-4-argon">🎯 Gemini 4 Argon</option>
-                            <option value="gpt-4o">🤖 ChatGPT (GPT-4o)</option>
-                            <option value="gpt-4o-mini">⚡ ChatGPT (GPT-4o Mini)</option>
-                            <option value="claude-3-7-sonnet-20250219">🧠 Claude AI (3.7 Sonnet)</option>
-                            <option value="claude-3-5-haiku-20241022">💨 Claude AI (3.5 Haiku)</option>
+                            <option value="gemini-3.5-flash-lite">💨 Gemini 3.5 Flash-Lite</option>
+                            <option value="gpt-6.2-astra">🤖 ChatGPT (GPT-6.2 Astra)</option>
+                            <option value="gpt-6.2-sol">⚡ ChatGPT (GPT-6.2 Sol)</option>
+                            <option value="gpt-5.4-mini">💨 ChatGPT (GPT-5.4 Mini)</option>
+                            <option value="claude-opus-5-5">👑 Claude AI (Opus 5.5)</option>
+                            <option value="claude-sonnet-5-5">🧠 Claude AI (Sonnet 5.5)</option>
+                            <option value="claude-haiku-5-5">💨 Claude AI (Haiku 5.5)</option>
                         </select>
                     </div>
                 </div>
@@ -1106,17 +1252,244 @@
 
                 </div>
             </div>
+
+            <!-- TAB 4: Student Worksheet & Task Generator (កិច្ចការសិស្ស) -->
+            <div id="edSectionTasks" class="hidden p-4 sm:p-5 space-y-3.5">
+                <div class="p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-sky-50 border border-indigo-200/80 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                            <span>📝</span>
+                            <span>រៀបចំសន្លឹកកិច្ចការ និងកិច្ចការផ្ទះ</span>
+                        </span>
+                        <button type="button" onclick="switchPreviewMode('worksheet')" class="text-[10px] font-bold text-indigo-700 hover:underline cursor-pointer">មើលសន្លឹកកិច្ចការ A4 ➔</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">ប្រភេទកិច្ចការ</label>
+                            <select id="taskTypeSelect" onchange="onTaskTypeChange()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <option value="worksheet">សន្លឹកកិច្ចការក្រុម (Group Worksheet)</option>
+                                <option value="homework">កិច្ចការផ្ទះ (Homework)</option>
+                                <option value="kwl">តារាង K-W-L (NIE)</option>
+                                <option value="321">តារាង 3-2-1 (NIE)</option>
+                                <option value="give_get">តារាង Give one, Get one (NIE)</option>
+                                <option value="mindmap">ក្រដាសផែនទីគំនិត (Mind Map)</option>
+                                <option value="quiz">លំហាត់វាយតម្លៃ (Quiz / MCQ)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">រយៈពេល / កាលបរិច្ឆេទ</label>
+                            <input type="text" id="taskDurationInput" value="រយៈពេល ១៥ នាទី" oninput="syncWorksheetPreview()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <button type="button" id="aiGenerateTaskBtn" onclick="generateWorksheetWithAI()" class="w-full py-2 px-3 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-bold shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>✨</span>
+                        <span>បង្កើតសន្លឹកកិច្ចការតាមមេរៀនដោយ AI</span>
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">ចំណងជើងសន្លឹកកិច្ចការ</label>
+                    <input type="text" id="taskTitleInput" value="សន្លឹកកិច្ចការសិស្ស៖ ការណែនាំអំពីបទបង្ហាញ" oninput="syncWorksheetPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">សេចក្ដីណែនាំសម្រាប់សិស្ស</label>
+                    <textarea id="taskInstructionsInput" rows="2" oninput="syncWorksheetPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">ចូរសហការគ្នាជាក្រុម អានខ្លឹមសារមេរៀន រួចពិភាក្សាឆ្លើយសំណួរខាងក្រោមឱ្យបានត្រឹមត្រូវ។</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">សំណួរ និងលំហាត់ (១ បន្ទាត់ ១ សំណួរ)</label>
+                    <textarea id="taskQuestionsInput" rows="6" oninput="syncWorksheetPreview()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm leading-relaxed focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. តើបទបង្ហាញ (Presentation) គឺជាអ្វី? មានសារៈសំខាន់អ្វីខ្លះក្នុងការសិក្សា និងការងារ?
+២. ចូររៀបរាប់ពីធាតុសំខាន់ៗនៃបទបង្ហាញប្រកបដោយប្រសិទ្ធភាព។
+៣. តើកម្មវិធីធ្វើបទបង្ហាញមានអ្វីខ្លះ? ចូរប្រៀបធៀបប្លង់ស្លាយ (Slide Layout) ចំនួន ២ ប្រភេទ។</textarea>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="wsShowRubricCheckbox" checked onchange="syncWorksheetPreview()" class="w-4 h-4 accent-indigo-600 rounded">
+                            <span>បង្ហាញតារាងពិន្ទុ (Rubric)</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="wsShowAnswerKeyCheckbox" onchange="syncWorksheetPreview()" class="w-4 h-4 accent-indigo-600 rounded">
+                            <span>ភ្ជាប់អត្រាកំណែ (Answer Key)</span>
+                        </label>
+                    </div>
+                    <textarea id="taskAnswerKeyInput" rows="3" oninput="syncWorksheetPreview()" placeholder="សរសេរចម្លើយគំរូ / អត្រាកំណែសម្រាប់គ្រូ..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">១. បទបង្ហាញគឺជាការផ្ដល់ព័ត៌មាន និងគំនិតទៅកាន់ទស្សនិកជនឱ្យមានភាពច្បាស់លាស់។
+២. ធាតុសំខាន់ៗមាន៖ ខ្លឹមសារល្អ ស្លាយស្អាត និងជំនាញអ្នកធ្វើបទបង្ហាញ។
+៣. កម្មវិធីធ្វើបទបង្ហាញ៖ PowerPoint, Google Slides, Keynote, Canva។</textarea>
+                </div>
+            </div>
+            <!-- TAB 5: Teaching Slides Generator (បង្កើត Slide បង្រៀនពីសៀវភៅគោល និងរុករកពីក្រៅ) -->
+            <div id="edSectionSlides" class="hidden p-4 sm:p-5 space-y-3.5">
+                <div class="p-3 rounded-xl bg-gradient-to-br from-amber-50 via-white to-indigo-50 border border-indigo-200/80 space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                            <span>📽️</span>
+                            <span>បង្កើត Slide បង្រៀន (16:9)</span>
+                        </span>
+                        <button type="button" onclick="switchPreviewMode('slides')" class="text-[10px] font-bold text-indigo-700 hover:underline cursor-pointer">មើល Slide ➔</button>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="slideUseTextbookCheckbox" checked class="w-4 h-4 accent-indigo-600 rounded">
+                            <span>📘 ផ្អែកលើសៀវភៅគោល និងឯកសារ PDF ដែលបានបញ្ចូល</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="slideExternalResearchCheckbox" checked class="w-4 h-4 accent-emerald-600 rounded">
+                            <span>🌐 រុករកព័ត៌មាន និងឧទាហរណ៍ជាក់ស្ដែងពីក្រៅបន្ថែម (Web Research)</span>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">ចំនួនស្លាយ</label>
+                            <select id="slideCountSelect" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <option value="6">៦ ស្លាយ (សង្ខេប)</option>
+                                <option value="8" selected>៨ ស្លាយ (ស្តង់ដារ ១ម៉ោង)</option>
+                                <option value="10">១០ ស្លាយ (លម្អិត)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">ស្ទាយ៍ស្លាយ</label>
+                            <select id="slideThemeSelect" onchange="renderSlidesDeck()" class="w-full px-2.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <option value="modern">✨ ទំនើប (MoEYS Blue)</option>
+                                <option value="emerald">🌿 បៃតងវិទ្យាសាស្ត្រ</option>
+                                <option value="royal">👑 ក្រហមមាស</option>
+                                <option value="dark">🌙 ងងឹត (Tech Dark)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" id="aiGenerateSlidesBtn" onclick="generateSlidesWithAI()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-indigo-700 to-blue-700 hover:from-indigo-600 hover:to-blue-600 text-white text-xs font-bold shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>✨</span>
+                        <span>បង្កើត Slide ពីសៀវភៅគោល + រុករកពីក្រៅ</span>
+                    </button>
+                </div>
+
+                <!-- 1-Click Pull from Lesson & Fetch from Internet -->
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                        <span>📡</span>
+                        <span>ទាញទិន្នន័យចេញពីមេរៀន និងអ៊ីនធឺណេតសម្រាប់ធ្វើ Slide៖</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        <button type="button" onclick="pullContentFromLessonToSlide()" class="py-1.5 px-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-[11px] font-bold text-indigo-900 cursor-pointer transition flex items-center justify-center gap-1">
+                            <span>📘</span><span>ទាញពីមេរៀន & PDF</span>
+                        </button>
+                        <button type="button" id="fetchInternetSlideBtn" onclick="fetchExternalInternetForSlide()" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[11px] font-bold text-emerald-900 cursor-pointer transition flex items-center justify-center gap-1">
+                            <span>🌐</span><span>ទាញពីអ៊ីនធឺណេត (Live)</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 pt-0.5">
+                        <button type="button" onclick="openExternalSearch('google')" class="px-2 py-1 rounded-lg bg-white hover:bg-indigo-50 border border-slate-300 text-[10.5px] font-semibold text-indigo-800 cursor-pointer transition">🌐 Google</button>
+                        <button type="button" onclick="openExternalSearch('youtube')" class="px-2 py-1 rounded-lg bg-white hover:bg-rose-50 border border-slate-300 text-[10.5px] font-semibold text-rose-700 cursor-pointer transition">▶️ YouTube</button>
+                        <button type="button" onclick="openExternalSearch('scholar')" class="px-2 py-1 rounded-lg bg-white hover:bg-emerald-50 border border-slate-300 text-[10.5px] font-semibold text-emerald-800 cursor-pointer transition">📚 Wikipedia</button>
+                    </div>
+                    <textarea id="slideExternalNotesInput" rows="4" placeholder="ខ្លឹមសារដែលទាញបានពីមេរៀន និងអ៊ីនធឺណេតនឹងបង្ហាញនៅទីនេះ (ឬបិទភ្ជាប់បន្ថែម)..." class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs leading-relaxed focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-3 gap-1.5">
+                    <button type="button" onclick="exportSlidesHtml()" class="py-2 px-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        📥 Slide (.html)
+                    </button>
+                    <button type="button" onclick="printSlidesPdf()" class="py-2 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        🖨️ PDF / Print
+                    </button>
+                    <button type="button" onclick="presentSlidesFullscreen()" class="py-2 px-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        ▶ Fullscreen
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 6: NotebookLM Reference Studio (វិភាគមេរៀន បង្កើត Slide & សំណួរតាមឯកសារយោង) -->
+            <div id="edSectionNotebook" class="hidden p-4 sm:p-5 space-y-3.5">
+                <div class="p-3 rounded-xl bg-gradient-to-br from-emerald-50 via-white to-indigo-50 border border-emerald-200/80 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                            <span>📓</span>
+                            <span>NotebookLM Studio (វិភាគតាមឯកសារយោង)</span>
+                        </span>
+                        <a href="https://notebooklm.google.com/" target="_blank" rel="noopener" class="text-[10px] font-bold text-indigo-700 underline hover:text-indigo-900">បើក Google NotebookLM ↗</a>
+                    </div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">
+                        ប្រមូលឯកសារយោង (PDF សៀវភៅគោល កិច្ចតែងការ និងអត្ថបទពីអ៊ីនធឺណេត) ដើម្បីវិភាគ សង្ខេប បង្កើត Slide និងបង្កើតសំណួរត្រឹមត្រូវតាមប្រភព។
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="syncNotebookSources(true)" class="px-2.5 py-1 rounded-lg bg-white hover:bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-900 cursor-pointer transition">
+                            🔄 ទាញប្រភពពីប្រព័ន្ធ
+                        </button>
+                        <button type="button" onclick="copyNotebookSources()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-indigo-50 border border-indigo-200 text-[11px] font-bold text-indigo-900 cursor-pointer transition">
+                            📋 ចម្លងប្រភពទាំងអស់
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reference Sources List -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-700">📚 ប្រភពឯកសារយោង (<span id="nbSourceCount">0</span>)</label>
+                    </div>
+                    <div id="nbSourcesList" class="space-y-1.5 max-h-36 overflow-y-auto pr-1"></div>
+                    <div class="flex gap-1.5 pt-1">
+                        <input type="text" id="nbCustomSourceTitle" placeholder="ឈ្មោះឯកសារយោងថ្មី..." class="w-1/3 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <input type="text" id="nbCustomSourceText" placeholder="បិទភ្ជាប់ខ្លឹមសារឯកសារយោងបន្ថែម..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <button type="button" onclick="addCustomNotebookSource()" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">+ បន្ថែម</button>
+                    </div>
+                </div>
+
+                <!-- 1-Click NotebookLM Studio Generators -->
+                <div class="grid grid-cols-2 gap-1.5">
+                    <button type="button" onclick="runNotebookAction('summary')" class="py-2 px-2.5 rounded-xl bg-indigo-700 hover:bg-indigo-600 text-white text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        🔍 វិភាគ & សង្ខេបមេរៀន
+                    </button>
+                    <button type="button" onclick="runNotebookAction('slides')" class="py-2 px-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        📽️ បង្កើត Slide ពីឯកសារ
+                    </button>
+                    <button type="button" onclick="runNotebookAction('questions')" class="py-2 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        ❓ បង្កើតសំណួរ & Quiz
+                    </button>
+                    <button type="button" onclick="runNotebookAction('audio')" class="py-2 px-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-sm transition cursor-pointer">
+                        🎧 ស្គ្រីបពន្យល់ (Audio)
+                    </button>
+                </div>
+
+                <!-- NotebookLM Q&A Ask Box -->
+                <div class="flex gap-1.5">
+                    <input type="text" id="nbQuestionInput" onkeydown="if(event.key==='Enter'){event.preventDefault();runNotebookAction('qa');}" placeholder="សួរសំណួរអំពីឯកសារយោងក្នុង Notebook..." class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <button type="button" id="nbAskBtn" onclick="runNotebookAction('qa')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold cursor-pointer">សួរ</button>
+                </div>
+
+                <!-- NotebookLM Output Result Box -->
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-indigo-950">📄 លទ្ធផលវិភាគ NotebookLM</span>
+                        <button type="button" id="nbSendToWorksheetBtn" onclick="sendNotebookQuestionsToWorksheet()" class="hidden text-[10.5px] font-bold text-emerald-700 hover:underline cursor-pointer">📝 បញ្ជូនសំណួរទៅកិច្ចការ A4 ➔</button>
+                    </div>
+                    <div id="nbOutputBox" class="text-xs text-slate-700 leading-relaxed whitespace-pre-line max-h-56 overflow-y-auto">
+                        ចុចប៊ូតុងវិភាគខាងលើ ដើម្បីឱ្យ NotebookLM វិភាគឯកសារយោង បង្កើត Slide ឬបង្កើតសំណួរចេញពីមេរៀន។
+                    </div>
+                </div>
+            </div>
             </div>
         </section>
 
         <!-- RIGHT PANEL: Live A4 MoEYS Document Preview -->
         <section id="previewPanel" class="print-only-container preview-desk lg:col-span-7 xl:col-span-8 flex flex-col items-center rounded-2xl p-2 sm:p-4 border border-slate-200/80">
             
-            <!-- Preview Toolbar -->
-            <div id="previewToolbar" class="no-print w-full max-w-[210mm] mb-3 flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center gap-2 text-xs text-slate-600">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                    <span>ទម្រង់ A4 បញ្ឈរ • <strong>Khmer OS Moul Light</strong> & <strong>Siemreap</strong></span>
+            <!-- Floating Studio Preview Toolbar -->
+            <div id="previewToolbar" class="no-print w-full max-w-[210mm] mb-3.5 flex flex-wrap items-center justify-between gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-200/90 shadow-md sticky top-[76px] z-20">
+                <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                    <button type="button" id="prevModeLessonBtn" onclick="switchPreviewMode('lesson')" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer">
+                        📄 កិច្ចតែងការ A4
+                    </button>
+                    <button type="button" id="prevModeWorksheetBtn" onclick="switchPreviewMode('worksheet')" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer">
+                        📝 សន្លឹកកិច្ចការ A4
+                    </button>
+                    <button type="button" id="prevModeSlidesBtn" onclick="switchPreviewMode('slides')" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer">
+                        📽️ Slide បង្រៀន
+                    </button>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <select id="outputStyleSelect" onchange="applyOutputStyle(this.value)" title="ជ្រើសរើសរចនាប័ទ្មក្រដាស A4" class="px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
@@ -1145,6 +1518,11 @@
                         <option value="13px" selected>អក្សរ 13px</option>
                         <option value="14px">អក្សរ 14px</option>
                     </select>
+                    <select id="previewZoomSelect" onchange="applyPreviewZoom(this.value)" title="ពង្រីក/បង្រួមផ្ទាំងមើល" class="hidden sm:inline-block px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="0.85">85%</option>
+                        <option value="1" selected>100%</option>
+                        <option value="1.08">108%</option>
+                    </select>
                     <button onclick="exportToWord()" class="text-xs font-semibold text-sky-700 hover:text-sky-900 px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 transition cursor-pointer">
                         ទាញយក Word
                     </button>
@@ -1165,9 +1543,10 @@
                     <div class="out-divider">❖❖❖</div>
                 </div>
 
-                <!-- High School Name (Left) -->
+                <!-- High School & Department Name (Left) -->
                 <div class="text-left text-[12.5px] mb-1.5">
                     <div class="font-moul text-[12.5px]" id="prevSchool">វិទ្យាល័យ ស្រីសន្ធរ</div>
+                    <div class="text-[11.5px] font-semibold text-slate-700" id="prevDept">ក្រុមបច្ចេកទេសព័ត៌មានវិទ្យា</div>
                 </div>
 
                 <!-- Document Title -->
@@ -1326,8 +1705,93 @@
                 </div>
 
             </div>
+
+            <!-- Official A4 Student Worksheet Sheet (សន្លឹកកិច្ចការសិស្ស) -->
+            <div id="worksheetDocument" data-output-style="modern" class="hidden a4-paper font-siemreap text-slate-900">
+                <div class="out-accent-bar"></div>
+                <div class="text-center mb-1">
+                    <div class="font-moul text-[14px] leading-relaxed">ព្រះរាជាណាចក្រកម្ពុជា</div>
+                    <div class="font-moul text-[13px] leading-relaxed">ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+                    <div class="out-divider">❖❖❖</div>
+                </div>
+                <div class="flex items-center justify-between text-[12.5px] mb-2">
+                    <div class="font-moul" id="wsSchool">វិទ្យាល័យ ស្រីសន្ធរ</div>
+                    <div class="text-xs font-bold text-slate-600" id="wsTypeBadge">សន្លឹកកិច្ចការសិស្ស</div>
+                </div>
+                <div class="out-title-wrap text-center my-2.5">
+                    <h2 id="wsTitle" class="out-title-text font-moul text-[15px] underline underline-offset-4 decoration-1">សន្លឹកកិច្ចការសិស្ស៖ ការណែនាំអំពីបទបង្ហាញ</h2>
+                </div>
+                <div class="out-meta-card text-[13px] leading-relaxed">
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                        <div><strong>មុខវិជ្ជា៖</strong> <span id="wsSubject">ព័ត៌មានវិទ្យា (ICT)</span></div>
+                        <div><strong>ថ្នាក់ទី៖</strong> <span id="wsGrade">ទី១១</span></div>
+                        <div><strong>ឈ្មោះសិស្ស / ក្រុម៖</strong> ...........................................</div>
+                        <div><strong>រយៈពេល៖</strong> <span id="wsDuration">រយៈពេល ១៥ នាទី</span></div>
+                    </div>
+                </div>
+                <div class="mb-3.5 out-section-body leading-[1.7]">
+                    <div class="out-section-title">I. សេចក្ដីណែនាំ</div>
+                    <div id="wsInstructions" class="pl-3 mt-1 text-[13px] whitespace-pre-line"></div>
+                </div>
+                <div class="mb-4 out-section-body leading-[1.8]">
+                    <div class="out-section-title mb-2">II. សំណួរ និងកិច្ចការអនុវត្ត</div>
+                    <div id="wsQuestionsContainer" class="space-y-3 text-[13px]"></div>
+                </div>
+                <div id="wsRubricBox" class="mb-4" style="page-break-inside: avoid;">
+                    <table class="moeys-table text-xs">
+                        <thead>
+                            <tr>
+                                <th>លក្ខណៈវិនិច្ឆ័យវាយតម្លៃ</th>
+                                <th style="width:22%">ខ្លឹមសារត្រឹមត្រូវ (៥ពិន្ទុ)</th>
+                                <th style="width:22%">ការសហការក្រុម (៣ពិន្ទុ)</th>
+                                <th style="width:22%">បទបង្ហាញ/សណ្ដាប់ធ្នាប់ (២ពិន្ទុ)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="height:28px"><td class="font-semibold text-center">ពិន្ទុសរុប (១០ ពិន្ទុ)</td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="wsAnswerKeyBox" class="hidden mb-4 p-3 rounded-lg border border-slate-400 bg-slate-50 text-[12.5px]" style="page-break-inside: avoid;">
+                    <div class="font-bold text-indigo-950 mb-1">អត្រាកំណែគំរូ (សម្រាប់គ្រូ)៖</div>
+                    <div id="wsAnswerKeyText" class="whitespace-pre-line leading-relaxed"></div>
+                </div>
+                <div class="out-sig-box grid grid-cols-2 gap-6 mt-6 text-[12.5px]" style="page-break-inside: avoid;">
+                    <div class="text-center">
+                        <div class="font-bold">ពិនិត្យដោយគ្រូបង្រៀន</div>
+                        <div class="mt-10 font-bold" id="wsTeacher">លោកគ្រូ រ៉ាន កក្កដា</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-bold">ពិន្ទុ និងមតិកែលម្អ</div>
+                        <div class="mt-2 border border-dashed border-slate-400 rounded-lg h-14 mx-6"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 16:9 Teaching Slides Deck Preview (បង្ហាញ Slide បង្រៀន) -->
+            <div id="slidesPreviewContainer" class="hidden w-full max-w-[920px] space-y-4">
+                <div class="no-print bg-white rounded-xl border border-slate-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+                    <div class="flex items-center gap-2 text-xs font-bold text-indigo-950">
+                        <span>📽️</span>
+                        <span id="slideDeckCounter">ស្លាយ ១ / ១</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="prevSlide()" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 cursor-pointer">◀ មុន</button>
+                        <button type="button" onclick="nextSlide()" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-800 cursor-pointer">បន្ទាប់ ▶</button>
+                        <button type="button" onclick="presentSlidesFullscreen()" class="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-xs font-bold text-slate-950 cursor-pointer">⛶ បង្ហាញពេញអេក្រង់</button>
+                        <button type="button" onclick="exportSlidesHtml()" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white cursor-pointer">📥 ទាញយក Slide</button>
+                    </div>
+                </div>
+                <div id="activeSlideStage" class="w-full aspect-video rounded-2xl shadow-xl overflow-hidden border border-slate-300 bg-white flex flex-col"></div>
+                <div id="slideThumbnailsStrip" class="no-print grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+            </div>
         </section>
     </main>
+
+    <!-- System Footer -->
+    <footer class="no-print bg-slate-900/95 text-slate-300 border-t border-slate-800 py-2.5 px-4 text-center text-[11px]">
+        <span class="text-amber-300 font-bold">CG SYSTEM</span> • ប្រព័ន្ធបង្កើតកិច្ចតែងការបង្រៀន និងសន្លឹកកិច្ចការសិស្ស (MoEYS & NIE) • ដោយលោកគ្រូ <strong class="text-white">រ៉ាន កក្កដា</strong> អគ្គនាយក Team CG
+    </footer>
 
     <!-- Saved Lesson Plans Modal Drawer -->
     <div id="savedDrawerModal" class="no-print fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -2001,11 +2465,22 @@
 
         const AI_MODEL_CATALOG = {
             'gemini-4-hydrogen': { provider: 'gemini', label: 'Gemini 4 Hydrogen' },
+            'gemini-4-carbon': { provider: 'gemini', label: 'Gemini 4 Carbon' },
+            'gemini-4-neon': { provider: 'gemini', label: 'Gemini 4 Neon' },
             'gemini-4-argon': { provider: 'gemini', label: 'Gemini 4 Argon' },
-            'gpt-4o': { provider: 'openai', label: 'ChatGPT (GPT-4o)' },
-            'gpt-4o-mini': { provider: 'openai', label: 'ChatGPT (GPT-4o Mini)' },
-            'claude-3-7-sonnet-20250219': { provider: 'claude', label: 'Claude 3.7 Sonnet' },
-            'claude-3-5-haiku-20241022': { provider: 'claude', label: 'Claude 3.5 Haiku' }
+            'gemini-3.5-flash-lite': { provider: 'gemini', label: 'Gemini 3.5 Flash-Lite' },
+            'gpt-6.2-astra': { provider: 'openai', label: 'ChatGPT (GPT-6.2 Astra)' },
+            'gpt-6.2-sol': { provider: 'openai', label: 'ChatGPT (GPT-6.2 Sol)' },
+            'gpt-5.4-mini': { provider: 'openai', label: 'ChatGPT (GPT-5.4 Mini)' },
+            'claude-opus-5-5': { provider: 'claude', label: 'Claude Opus 5.5' },
+            'claude-sonnet-5-5': { provider: 'claude', label: 'Claude Sonnet 5.5' },
+            'claude-haiku-5-5': { provider: 'claude', label: 'Claude Haiku 5.5' }
+        };
+        const LEGACY_MODEL_MIGRATION = {
+            'gpt-4o': 'gpt-6.2-sol',
+            'gpt-4o-mini': 'gpt-5.4-mini',
+            'claude-3-7-sonnet-20250219': 'claude-sonnet-5-5',
+            'claude-3-5-haiku-20241022': 'claude-haiku-5-5'
         };
 
         function getActiveModelId() {
@@ -2043,7 +2518,8 @@
                 thinkingSel.classList.toggle('hidden', provider !== 'gemini');
             }
             if (xhighOpt && thinkingSel) {
-                if (modelId === 'gemini-4-argon') {
+                const supportsXhigh = (modelId === 'gemini-4-hydrogen' || modelId === 'gemini-4-neon');
+                if (!supportsXhigh) {
                     xhighOpt.disabled = true;
                     xhighOpt.hidden = true;
                     if (thinkingSel.value === 'XHIGH') thinkingSel.value = 'HIGH';
@@ -2056,12 +2532,17 @@
             if (btnLabel) {
                 btnLabel.textContent = `វិភាគមេរៀន & បង្កើតកិច្ចតែងការដោយ ${getActiveModelLabel()}`;
             }
+            const studioBadge = document.getElementById('studioModelBadge');
+            if (studioBadge) {
+                studioBadge.textContent = getActiveModelLabel();
+            }
             updateApiKeyStatusDot();
         }
 
         function getSelectedThinkingLevel() {
             const val = document.getElementById('argonThinkingLevel')?.value || 'MEDIUM';
-            const allowed = getActiveModelId() === 'gemini-4-hydrogen'
+            const activeId = getActiveModelId();
+            const allowed = (activeId === 'gemini-4-hydrogen' || activeId === 'gemini-4-neon')
                 ? ['LOW', 'MEDIUM', 'HIGH', 'XHIGH']
                 : ['LOW', 'MEDIUM', 'HIGH'];
             return allowed.includes(val) ? val : 'MEDIUM';
@@ -2778,6 +3259,7 @@
             };
 
             setTxt('prevSchool', getVal('schoolInput') || 'វិទ្យាល័យ ........................');
+            setTxt('prevDept', getVal('deptInput'));
             setTxt('prevHeaderDate', getVal('headerDateInput'));
             setTxt('prevSubject', getVal('subjectInput'));
             setTxt('prevGrade', getVal('gradeInput'));
@@ -2818,6 +3300,7 @@
 
             setTxt('prevLunarDate', getVal('lunarDateInput'));
             setTxt('prevSolarDateText', getVal('solarDateTextInput'));
+            syncWorksheetPreview();
         }
 
         function parseKhmerOrArabicMinutes(str) {
@@ -2863,23 +3346,783 @@
             }
         }
 
+        let activePreviewMode = 'lesson';
+
+        function applyPreviewZoom(scaleVal) {
+            const z = parseFloat(scaleVal) || 1;
+            ['a4Document', 'worksheetDocument'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.transform = z === 1 ? '' : `scale(${z})`;
+            });
+        }
+
+        function switchPreviewMode(mode) {
+            activePreviewMode = ['worksheet', 'slides'].includes(mode) ? mode : 'lesson';
+            const a4 = document.getElementById('a4Document');
+            const ws = document.getElementById('worksheetDocument');
+            const sl = document.getElementById('slidesPreviewContainer');
+            const bLesson = document.getElementById('prevModeLessonBtn');
+            const bWs = document.getElementById('prevModeWorksheetBtn');
+            const bSl = document.getElementById('prevModeSlidesBtn');
+            if (a4) a4.classList.toggle('hidden', activePreviewMode !== 'lesson');
+            if (ws) ws.classList.toggle('hidden', activePreviewMode !== 'worksheet');
+            if (sl) sl.classList.toggle('hidden', activePreviewMode !== 'slides');
+            const act = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer';
+            const inact = 'px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer';
+            if (bLesson) bLesson.className = activePreviewMode === 'lesson' ? act : inact;
+            if (bWs) bWs.className = activePreviewMode === 'worksheet' ? act : inact;
+            if (bSl) bSl.className = activePreviewMode === 'slides' ? act : inact;
+            if (activePreviewMode === 'worksheet') syncWorksheetPreview();
+            if (activePreviewMode === 'slides') renderSlidesDeck();
+        }
+
+        function onTaskTypeChange() {
+            const type = document.getElementById('taskTypeSelect')?.value || 'worksheet';
+            const titleEl = document.getElementById('taskTitleInput');
+            const lessonTitle = document.getElementById('lessonTitleInput')?.value || 'មេរៀន';
+            const prefixes = {
+                worksheet: 'សន្លឹកកិច្ចការសិស្ស៖ ',
+                homework: 'កិច្ចការផ្ទះ៖ ',
+                kwl: 'តារាង K-W-L៖ ',
+                '321': 'តារាង 3-2-1៖ ',
+                quiz: 'លំហាត់វាយតម្លៃពុទ្ធិ៖ '
+            };
+            if (titleEl) titleEl.value = `${prefixes[type] || 'សន្លឹកកិច្ចការ៖ '}${lessonTitle}`;
+            syncWorksheetPreview();
+        }
+
+        function syncWorksheetPreview() {
+            const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+            const getVal = (id) => document.getElementById(id)?.value || '';
+            setTxt('wsSchool', getVal('schoolInput') || 'វិទ្យាល័យ ........................');
+            setTxt('wsSubject', getVal('subjectInput'));
+            setTxt('wsGrade', getVal('gradeInput'));
+            setTxt('wsTeacher', getVal('teacherInput'));
+            setTxt('wsTitle', getVal('taskTitleInput') || `សន្លឹកកិច្ចការសិស្ស៖ ${getVal('lessonTitleInput')}`);
+            setTxt('wsDuration', getVal('taskDurationInput') || 'រយៈពេល ១៥ នាទី');
+            setTxt('wsInstructions', getVal('taskInstructionsInput'));
+
+            const type = getVal('taskTypeSelect') || 'worksheet';
+            const typeLabels = {
+                worksheet: 'សន្លឹកកិច្ចការក្រុម',
+                homework: 'កិច្ចការផ្ទះ',
+                kwl: 'តារាង K-W-L',
+                '321': 'តារាង 3-2-1',
+                give_get: 'តារាង Give one, Get one',
+                mindmap: 'ផែនទីគំនិត (Mind Map)',
+                quiz: 'លំហាត់វាយតម្លៃ'
+            };
+            setTxt('wsTypeBadge', typeLabels[type] || 'សន្លឹកកិច្ចការ');
+
+            const qContainer = document.getElementById('wsQuestionsContainer');
+            if (!qContainer) return;
+            const rawQ = getVal('taskQuestionsInput').split('\n').map(s => s.trim()).filter(Boolean);
+            if (type === 'kwl') {
+                qContainer.innerHTML = `
+                    <table class="moeys-table">
+                        <thead><tr><th style="width:33%">K — អ្វីដែលដឹងស្រាប់</th><th style="width:34%">W — អ្វីដែលចង់ដឹង</th><th style="width:33%">L — អ្វីដែលបានរៀន</th></tr></thead>
+                        <tbody><tr style="height:190px"><td></td><td></td><td></td></tr></tbody>
+                    </table>
+                    ${rawQ.length ? `<div class="mt-3 space-y-1">${rawQ.map(q => `<div>${escapeHtml(q)}</div>`).join('')}</div>` : ''}
+                `;
+            } else if (type === '321') {
+                qContainer.innerHTML = `
+                    <table class="moeys-table">
+                        <tbody>
+                            <tr><td style="width:32%;font-weight:bold;">ចំណុចសំខាន់ ៣</td><td style="height:85px">១.<br>២.<br>៣.</td></tr>
+                            <tr><td style="font-weight:bold;">សំណួរឆ្ងល់ ២</td><td style="height:65px">១.<br>២.</td></tr>
+                            <tr><td style="font-weight:bold;">ចំណាប់អារម្មណ៍ ១</td><td style="height:50px">១.</td></tr>
+                        </tbody>
+                    </table>
+                `;
+            } else if (type === 'give_get') {
+                qContainer.innerHTML = `
+                    <table class="moeys-table">
+                        <thead><tr><th style="width:50%">គំនិតរបស់ខ្ញុំ (Give one)</th><th style="width:50%">គំនិតរបស់មិត្តភក្តិ (Get one)</th></tr></thead>
+                        <tbody>
+                            <tr style="height:60px"><td></td><td>គំនិតរបស់៖ ........................</td></tr>
+                            <tr style="height:60px"><td>គំនិតរបស់៖ ........................</td><td>គំនិតរបស់៖ ........................</td></tr>
+                            <tr style="height:60px"><td>គំនិតរបស់៖ ........................</td><td>គំនិតរបស់៖ ........................</td></tr>
+                        </tbody>
+                    </table>
+                `;
+            } else if (type === 'mindmap') {
+                qContainer.innerHTML = `
+                    <div class="border-2 border-dashed border-slate-400 rounded-xl h-[250px] flex flex-col items-center justify-center p-4 text-center">
+                        <div class="px-5 py-2.5 rounded-full border-2 border-slate-800 font-bold text-sm bg-slate-50">${escapeHtml(getVal('lessonTitleInput') || 'ប្រធានបទកណ្ដាល')}</div>
+                        <div class="text-xs text-slate-400 mt-3">(សូមគូរមែកធាងគំនិតសំខាន់ៗព័ទ្ធជុំវិញប្រធានបទកណ្ដាល)</div>
+                    </div>
+                `;
+            } else {
+                qContainer.innerHTML = rawQ.map(q => `
+                    <div class="space-y-1.5">
+                        <div class="font-semibold">${escapeHtml(q)}</div>
+                        <div class="border-b border-dotted border-slate-400 h-5"></div>
+                        <div class="border-b border-dotted border-slate-400 h-5"></div>
+                    </div>
+                `).join('');
+            }
+
+            const showRubric = document.getElementById('wsShowRubricCheckbox')?.checked;
+            const rubricBox = document.getElementById('wsRubricBox');
+            if (rubricBox) rubricBox.classList.toggle('hidden', !showRubric);
+
+            const showAns = document.getElementById('wsShowAnswerKeyCheckbox')?.checked;
+            const ansBox = document.getElementById('wsAnswerKeyBox');
+            if (ansBox) ansBox.classList.toggle('hidden', !showAns);
+            setTxt('wsAnswerKeyText', getVal('taskAnswerKeyInput'));
+        }
+
+        function printBothDocuments() {
+            const a4 = document.getElementById('a4Document');
+            const ws = document.getElementById('worksheetDocument');
+            const sl = document.getElementById('slidesPreviewContainer');
+            if (!a4 || !ws) return;
+            const prevMode = activePreviewMode;
+            syncPreview();
+            syncWorksheetPreview();
+            a4.classList.remove('hidden');
+            ws.classList.remove('hidden');
+            if (sl) sl.classList.add('hidden');
+            ws.style.pageBreakBefore = 'always';
+            window.print();
+            setTimeout(() => {
+                ws.style.pageBreakBefore = '';
+                switchPreviewMode(prevMode);
+            }, 300);
+        }
+
+        async function generateWorksheetWithAI() {
+            const btn = document.getElementById('aiGenerateTaskBtn');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span>⏳ កំពុងបង្កើតសន្លឹកកិច្ចការ...</span>`;
+            }
+            const subject = document.getElementById('subjectInput')?.value || '';
+            const grade = document.getElementById('gradeInput')?.value || '';
+            const title = document.getElementById('lessonTitleInput')?.value || '';
+            const subs = getActiveSelectedSubLessonsText();
+            const type = document.getElementById('taskTypeSelect')?.value || 'worksheet';
+            const apiKey = getActiveApiKey();
+
+            let result = null;
+            if (apiKey) {
+                try {
+                    const payload = {
+                        systemInstruction: {
+                            parts: [{
+                                text: `អ្នកគឺជាគ្រូបង្រៀនវិទ្យាល័យ។ ចូរបង្កើតសន្លឹកកិច្ចការសិស្សជាភាសាខ្មែរត្រឹមត្រូវ ឆ្លើយតបនឹងមេរៀន និងត្រឡប់ជា JSON ដែលមាន taskTitle, taskInstructions, taskQuestions (សំណួរ ៣ ទៅ ៥ ចំណុច ១ បន្ទាត់ ១ សំណួរ)។`
+                            }]
+                        },
+                        contents: [{
+                            role: 'user',
+                            parts: [{ text: `ប្រភេទ៖ ${type} | មុខវិជ្ជា៖ ${subject} | ថ្នាក់៖ ${grade} | មេរៀន៖ ${title}\nចំណុចរង៖ ${subs}` }]
+                        }],
+                        generationConfig: {
+                            thinkingConfig: { thinkingLevel: 'LOW' },
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    taskTitle: { type: "STRING" },
+                                    taskInstructions: { type: "STRING" },
+                                    taskQuestions: { type: "STRING" }
+                                },
+                                required: ['taskTitle', 'taskInstructions', 'taskQuestions']
+                            }
+                        }
+                    };
+                    const raw = await callActiveAi(payload);
+                    if (raw) result = JSON.parse(raw);
+                } catch (_) {}
+            }
+
+            if (!result) {
+                const subArr = subs.split('\n').map(s => s.replace(/^[០-៩0-9]+\.\s*/, '').trim()).filter(Boolean);
+                const p1 = subArr[0] || title;
+                const p2 = subArr[1] || title;
+                result = {
+                    taskTitle: `${type === 'homework' ? 'កិច្ចការផ្ទះ៖ ' : 'សន្លឹកកិច្ចការសិស្ស៖ '}${title}`,
+                    taskInstructions: `ចូរសិក្សាឯកសារមេរៀន "${title}" មុខវិជ្ជា ${subject} រួចឆ្លើយសំណួរ និងអនុវត្តកិច្ចការខាងក្រោមឱ្យបានត្រឹមត្រូវ។`,
+                    taskQuestions: `១. ចូរពន្យល់និយមន័យ និងគោលគំនិតសំខាន់នៃ "${p1}"។\n២. តើ "${p2}" មានលក្ខណៈ និងសារៈសំខាន់អ្វីខ្លះ? ចូរលើកឧទាហរណ៍ជាក់ស្ដែង។\n៣. ចូរសង្ខេបចំណុចគន្លឹះដែលអ្នកបានរៀនពីមេរៀន "${title}" ជាគំនិតខ្លីៗ។`
+                };
+            }
+
+            if (document.getElementById('taskTitleInput')) document.getElementById('taskTitleInput').value = result.taskTitle || '';
+            if (document.getElementById('taskInstructionsInput')) document.getElementById('taskInstructionsInput').value = result.taskInstructions || '';
+            if (document.getElementById('taskQuestionsInput')) document.getElementById('taskQuestionsInput').value = result.taskQuestions || '';
+            switchPreviewMode('worksheet');
+            showToast('បានបង្កើតសន្លឹកកិច្ចការសិស្សរួចរាល់!', 'success');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        }
+
+        let generatedSlides = [];
+        let activeSlideIndex = 0;
+
+        function pullContentFromLessonToSlide() {
+            const title = document.getElementById('lessonTitleInput')?.value || '';
+            const subs = getActiveSelectedSubLessonsText();
+            const objK = document.getElementById('objKnowledge')?.value || '';
+            const s3 = document.getElementById('s3Content')?.value || '';
+            const pdf = (document.getElementById('extractedPdfTextBox')?.value || '').trim().slice(0, 800);
+            const box = document.getElementById('slideExternalNotesInput');
+            if (!box) return;
+            const summary = [
+                `[ខ្លឹមសារមេរៀន] ${title}`,
+                subs ? `ចំណុចរង៖ ${subs.replace(/\n/g, ' | ')}` : '',
+                objK ? `វត្ថុបំណង៖ ${objK}` : '',
+                s3 ? `ខ្លឹមសារជំហានទី៣៖ ${s3.slice(0, 450)}` : '',
+                pdf ? `ឯកសារ PDF៖ ${pdf}` : ''
+            ].filter(Boolean).join('\n');
+            box.value = summary;
+            generatedSlides = buildDefaultSlidesFromLesson();
+            activeSlideIndex = 0;
+            switchPreviewMode('slides');
+            showToast('បានទាញខ្លឹមសារពីមេរៀន និង PDF មកបង្កើត Slide រួចរាល់!', 'success');
+        }
+
+        async function fetchExternalInternetForSlide() {
+            const btn = document.getElementById('fetchInternetSlideBtn');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>⏳ កំពុងទាញ...</span>';
+            }
+            const title = (document.getElementById('lessonTitleInput')?.value || '').trim();
+            const subject = (document.getElementById('subjectInput')?.value || '').trim();
+            const box = document.getElementById('slideExternalNotesInput');
+            const cleanQuery = title.replace(/ការណែនាំអំពី|មេរៀនទី[០-៩0-9]+[:៖]?/g, '').trim() || title || subject;
+            const collected = [];
+
+            async function searchWiki(lang, q) {
+                try {
+                    const url = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&utf8=&format=json&origin=*&srlimit=2`;
+                    const r = await fetch(url);
+                    if (!r.ok) return;
+                    const d = await r.json();
+                    const hits = d?.query?.search || [];
+                    for (const h of hits.slice(0, 2)) {
+                        const snippet = String(h.snippet || '').replace(/<[^>]+>/g, '').trim();
+                        if (snippet) {
+                            collected.push(`• [${lang.toUpperCase()} Wikipedia - ${h.title}]: ${snippet} (https://${lang}.wikipedia.org/wiki/${encodeURIComponent(h.title.replace(/\s+/g, '_'))})`);
+                        }
+                    }
+                } catch (_) {}
+            }
+
+            await Promise.all([
+                searchWiki('km', cleanQuery),
+                searchWiki('en', `${cleanQuery} ${subject.includes('ICT') ? 'computer' : ''}`.trim())
+            ]);
+
+            if (collected.length > 0 && box) {
+                const header = `[ព័ត៌មានទាញពីអ៊ីនធឺណេតសម្រាប់ "${cleanQuery}"]\n${collected.join('\n')}`;
+                box.value = box.value.trim() ? `${box.value.trim()}\n\n${header}` : header;
+                generatedSlides = buildDefaultSlidesFromLesson();
+                activeSlideIndex = 0;
+                switchPreviewMode('slides');
+                showToast(`បានទាញព័ត៌មានពីអ៊ីនធឺណេតចំនួន ${toKhmerNumerals(collected.length)} ប្រភពរួចរាល់!`, 'success');
+            } else {
+                showToast('មិនអាចទាញទិន្នន័យដោយផ្ទាល់បានទេ — សូមប្រើប៊ូតុង Google ឬ AI ដើម្បីរុករកបន្ថែម!', 'info');
+            }
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        }
+
+        function printSlidesPdf() {
+            if (!Array.isArray(generatedSlides) || generatedSlides.length === 0) {
+                generatedSlides = buildDefaultSlidesFromLesson();
+            }
+            const pal = getSlideThemeColors();
+            const title = document.getElementById('lessonTitleInput')?.value || 'Slide បង្រៀន';
+            const cards = generatedSlides.map((s, idx) => `
+                <section class="slide">
+                    <div class="s-head"><span>${escapeHtml(s.tag)}</span><span>Slide ${idx + 1} / ${generatedSlides.length}</span></div>
+                    <div class="s-body">
+                        <h2>${escapeHtml(s.title)}</h2>
+                        <ul>${(s.bullets || []).map(b => `<li>▸ ${escapeHtml(b)}</li>`).join('')}</ul>
+                    </div>
+                    <div class="s-foot">💡 ${escapeHtml(s.note || '')}</div>
+                </section>
+            `).join('');
+            const win = window.open('', '_blank');
+            if (!win) {
+                exportSlidesHtml();
+                return;
+            }
+            win.document.write(`<!DOCTYPE html><html lang="km"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Moul&family=Siemreap&display=swap" rel="stylesheet">
+                <style>
+                    @page{size:A4 landscape;margin:8mm;}
+                    body{margin:0;font-family:'Khmer OS Siemreap','Siemreap',sans-serif;background:#fff;}
+                    .slide{width:100%;height:185mm;background:${pal.bg};color:${pal.text};border:1px solid #cbd5e1;display:flex;flex-direction:column;page-break-after:always;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+                    .s-head{background:${pal.header};color:#fff;padding:12px 22px;display:flex;justify-content:space-between;font-size:13px;font-weight:bold;}
+                    .s-body{flex:1;padding:24px 32px;display:flex;flex-direction:column;justify-content:center;}
+                    h2{font-family:'Moul','Khmer OS Muol Light','Khmer OS Moul Light',serif;font-weight:400;letter-spacing:0 !important;font-feature-settings:'liga' 1,'clig' 1,'kern' 1;font-size:22px;border-bottom:2px solid ${pal.accent};padding-bottom:8px;margin:0 0 14px;color:${pal.text === '#f8fafc' ? '#fde68a' : pal.header};}
+                    ul{list-style:none;padding:0;margin:0;font-size:16px;line-height:1.8;} li{margin-bottom:8px;}
+                    .s-foot{background:${pal.tint};padding:10px 22px;font-size:12px;border-top:1px solid #cbd5e1;}
+                </style></head><body>${cards}<script>window.onload=function(){setTimeout(function(){window.print();},400);};<\/script></body></html>`);
+            win.document.close();
+        }
+
+        function openExternalSearch(source) {
+            const subject = document.getElementById('subjectInput')?.value || '';
+            const title = document.getElementById('lessonTitleInput')?.value || '';
+            const q = encodeURIComponent(`${title} ${subject}`.trim());
+            let url = `https://www.google.com/search?q=${q}`;
+            if (source === 'youtube') url = `https://www.youtube.com/results?search_query=${q}`;
+            if (source === 'scholar') url = `https://km.wikipedia.org/w/index.php?search=${encodeURIComponent(title)}`;
+            window.open(url, '_blank', 'noopener');
+        }
+
+        function buildDefaultSlidesFromLesson() {
+            const subject = document.getElementById('subjectInput')?.value || 'ព័ត៌មានវិទ្យា (ICT)';
+            const grade = document.getElementById('gradeInput')?.value || 'ទី១១';
+            const title = document.getElementById('lessonTitleInput')?.value || 'មេរៀន';
+            const teacher = document.getElementById('teacherInput')?.value || 'លោកគ្រូ រ៉ាន កក្កដា';
+            const subs = getActiveSelectedSubLessonsText().split('\n').map(s => s.trim()).filter(Boolean);
+            const extNotes = (document.getElementById('slideExternalNotesInput')?.value || '').trim();
+            const objK = document.getElementById('objKnowledge')?.value || '';
+            const objS = document.getElementById('objSkill')?.value || '';
+            const s4 = document.getElementById('s4Content')?.value || '';
+            const s5 = document.getElementById('s5Content')?.value || '';
+
+            const slides = [
+                {
+                    tag: 'សៀវភៅគោល MoEYS',
+                    title: title,
+                    bullets: [`មុខវិជ្ជា៖ ${subject} • កម្រិតថ្នាក់៖ ${grade}`, `បង្រៀនដោយ៖ ${teacher}`, `CG System • ទម្រង់បទបង្ហាញបង្រៀន`],
+                    note: 'ស្លាយបើកក្បាលមេរៀន និងស្វាគមន៍សិស្ស'
+                },
+                {
+                    tag: 'វត្ថុបំណងមេរៀន',
+                    title: 'I. វត្ថុបំណងនៃការសិក្សា',
+                    bullets: [objK || `យល់ដឹងពីគោលគំនិតសំខាន់ៗនៃ "${title}"`, objS || `អនុវត្តជំនាញពាក់ព័ន្ធនឹង "${title}" បានត្រឹមត្រូវ`, 'សហការក្រុម និងផ្សារភ្ជាប់នឹងជីវភាពរស់នៅ'],
+                    note: 'ពន្យល់សិស្សពីលទ្ធផលរំពឹងទុកក្រោយចប់មេរៀន'
+                }
+            ];
+
+            subs.slice(0, 4).forEach((sub, idx) => {
+                slides.push({
+                    tag: `ខ្លឹមសារសៀវភៅគោល • ផ្នែកទី ${toKhmerNumerals(idx + 1)}`,
+                    title: sub,
+                    bullets: [
+                        `និយមន័យ និងគោលការណ៍សំខាន់នៃ ${sub.replace(/^[០-៩0-9]+\.\s*/, '')}`,
+                        'ឧទាហរណ៍គំរូ និងការបង្ហាញជាក់ស្ដែងក្នុងថ្នាក់',
+                        'សំណួរពិភាក្សាក្រុម និងសកម្មភាពអនុវត្ត'
+                    ],
+                    note: `ពន្យល់ខ្លឹមសារ ${sub} ពីសៀវភៅពុម្ពគោល`
+                });
+            });
+
+            slides.push({
+                tag: '🌐 រុករកបន្ថែមពីក្រៅ (External Insight)',
+                title: 'ការអនុវត្តជាក់ស្ដែង និងបច្ចេកវិទ្យាបន្ថែម',
+                bullets: extNotes
+                    ? extNotes.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 4)
+                    : [
+                        `ការប្រើប្រាស់ចំណេះដឹង "${title}" ក្នុងបរិបទការងារ និងសង្គមឌីជីថលបច្ចុប្បន្ន`,
+                        'ករណីសិក្សាជាក់ស្ដែង និងធនធានសិក្សាបន្ថែមពីអ៊ីនធឺណិត',
+                        'គន្លឹះអនុវត្តល្អៗសម្រាប់សិស្សវិទ្យាល័យ'
+                    ],
+                note: 'បន្ថែមឧទាហរណ៍ជាក់ស្ដែងពីក្រៅសៀវភៅពុម្ពដើម្បីឱ្យសិស្សកាន់តែយល់ច្បាស់'
+            });
+
+            slides.push({
+                tag: 'វាយតម្លៃ & កិច្ចការផ្ទះ',
+                title: 'ពង្រឹងពុទ្ធិ និងបណ្ដាំផ្ញើ',
+                bullets: [
+                    s4.split('\n')[0] || `សង្ខេបចំណុចសំខាន់ៗនៃមេរៀន "${title}"`,
+                    s5.split('\n')[0] || 'កិច្ចការផ្ទះ៖ អនុវត្តលំហាត់ និងស្រាវជ្រាវមេរៀនបន្ទាប់'
+                ],
+                note: 'ពិនិត្យការយល់ដឹង និងដាក់កិច្ចការផ្ទះ'
+            });
+
+            return slides;
+        }
+
+        function getSlideThemeColors() {
+            const st = document.getElementById('slideThemeSelect')?.value || 'modern';
+            const map = {
+                modern: { bg: '#ffffff', header: '#1e3a8a', accent: '#1d4ed8', tint: '#eff6ff', text: '#0f172a', badge: '#dbeafe' },
+                emerald: { bg: '#ffffff', header: '#064e3b', accent: '#047857', tint: '#ecfdf5', text: '#0f172a', badge: '#d1fae5' },
+                royal: { bg: '#ffffff', header: '#7f1d1d', accent: '#b45309', tint: '#fef3c7', text: '#0f172a', badge: '#fde68a' },
+                dark: { bg: '#0f172a', header: '#1e1b4b', accent: '#6366f1', tint: '#1e293b', text: '#f8fafc', badge: '#312e81' }
+            };
+            return map[st] || map.modern;
+        }
+
+        function renderSlidesDeck() {
+            if (!Array.isArray(generatedSlides) || generatedSlides.length === 0) {
+                generatedSlides = buildDefaultSlidesFromLesson();
+            }
+            if (activeSlideIndex >= generatedSlides.length) activeSlideIndex = 0;
+            if (activeSlideIndex < 0) activeSlideIndex = 0;
+
+            const stage = document.getElementById('activeSlideStage');
+            const strip = document.getElementById('slideThumbnailsStrip');
+            const counter = document.getElementById('slideDeckCounter');
+            if (!stage) return;
+
+            const slide = generatedSlides[activeSlideIndex];
+            const pal = getSlideThemeColors();
+            if (counter) counter.textContent = `ស្លាយ ${toKhmerNumerals(activeSlideIndex + 1)} / ${toKhmerNumerals(generatedSlides.length)}`;
+
+            stage.style.backgroundColor = pal.bg;
+            stage.style.color = pal.text;
+            stage.innerHTML = `
+                <div style="background:${pal.header}; color:#fff; padding:16px 26px; display:flex; align-items:center; justify-content:space-between;">
+                    <span style="font-size:12px; font-weight:700; background:rgba(255,255,255,0.16); padding:3px 10px; border-radius:999px;">${escapeHtml(slide.tag || 'មេរៀន')}</span>
+                    <span style="font-size:12px; opacity:0.9;">CG System • Slide ${activeSlideIndex + 1}/${generatedSlides.length}</span>
+                </div>
+                <div style="flex:1; padding:26px 34px; display:flex; flex-direction:column; justify-content:center; gap:14px;">
+                    <h3 class="font-moul" style="font-size:20px; line-height:1.6; color:${pal.text === '#f8fafc' ? '#fde68a' : pal.header}; border-bottom:2px solid ${pal.accent}; padding-bottom:8px;">
+                        ${escapeHtml(slide.title || '')}
+                    </h3>
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; font-size:15px; line-height:1.75;">
+                        ${(slide.bullets || []).map(b => `<li style="display:flex; align-items:flex-start; gap:10px;"><span style="color:${pal.accent}; font-weight:bold;">▸</span><span>${escapeHtml(b)}</span></li>`).join('')}
+                    </ul>
+                </div>
+                <div style="background:${pal.tint}; padding:8px 26px; font-size:11px; opacity:0.85; border-top:1px solid rgba(148,163,184,0.25); display:flex; justify-content:space-between;">
+                    <span>💡 កំណត់ចំណាំគ្រូ៖ ${escapeHtml(slide.note || '')}</span>
+                    <span>${escapeHtml(document.getElementById('subjectInput')?.value || '')}</span>
+                </div>
+            `;
+
+            if (strip) {
+                strip.innerHTML = generatedSlides.map((s, idx) => `
+                    <button type="button" onclick="goToSlide(${idx})" class="p-2 rounded-xl border text-left transition cursor-pointer ${idx === activeSlideIndex ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-300' : 'border-slate-200 bg-white hover:bg-slate-50'}">
+                        <div class="text-[10px] font-bold text-indigo-700">ស្លាយទី ${toKhmerNumerals(idx + 1)}</div>
+                        <div class="text-[11px] font-semibold text-slate-800 truncate mt-0.5">${escapeHtml(s.title)}</div>
+                    </button>
+                `).join('');
+            }
+        }
+
+        function goToSlide(idx) { activeSlideIndex = idx; renderSlidesDeck(); }
+        function prevSlide() { if (activeSlideIndex > 0) { activeSlideIndex--; renderSlidesDeck(); } }
+        function nextSlide() { if (activeSlideIndex < generatedSlides.length - 1) { activeSlideIndex++; renderSlidesDeck(); } }
+
+        function presentSlidesFullscreen() {
+            switchPreviewMode('slides');
+            const stage = document.getElementById('activeSlideStage');
+            if (stage && stage.requestFullscreen) {
+                stage.requestFullscreen().catch(() => showToast('ចុច F11 ដើម្បីបង្ហាញពេញអេក្រង់!', 'info'));
+            }
+        }
+
+        function exportSlidesHtml() {
+            if (!Array.isArray(generatedSlides) || generatedSlides.length === 0) {
+                generatedSlides = buildDefaultSlidesFromLesson();
+            }
+            const pal = getSlideThemeColors();
+            const title = document.getElementById('lessonTitleInput')?.value || 'Slide បង្រៀន';
+            const cards = generatedSlides.map((s, idx) => `
+                <section class="slide">
+                    <div class="s-head"><span>${escapeHtml(s.tag)}</span><span>Slide ${idx + 1} / ${generatedSlides.length}</span></div>
+                    <div class="s-body">
+                        <h2>${escapeHtml(s.title)}</h2>
+                        <ul>${(s.bullets || []).map(b => `<li>▸ ${escapeHtml(b)}</li>`).join('')}</ul>
+                    </div>
+                    <div class="s-foot">💡 ${escapeHtml(s.note || '')}</div>
+                </section>
+            `).join('');
+            const doc = `<!DOCTYPE html><html lang="km"><head><meta charset="utf-8"><title>${escapeHtml(title)}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Moul&family=Siemreap&display=swap" rel="stylesheet">
+                <style>
+                    body{margin:0;background:#e2e8f0;font-family:'Khmer OS Siemreap','Siemreap',sans-serif;padding:24px;}
+                    .slide{max-width:960px;aspect-ratio:16/9;margin:0 auto 24px;background:${pal.bg};color:${pal.text};border-radius:14px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.12);display:flex;flex-direction:column;page-break-after:always;}
+                    .s-head{background:${pal.header};color:#fff;padding:14px 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:bold;}
+                    .s-body{flex:1;padding:28px 36px;display:flex;flex-direction:column;justify-content:center;}
+                    h2{font-family:'Moul','Khmer OS Muol Light','Khmer OS Moul Light',serif;font-weight:400;letter-spacing:0 !important;font-feature-settings:'liga' 1,'clig' 1,'kern' 1;font-size:22px;border-bottom:2px solid ${pal.accent};padding-bottom:8px;margin:0 0 16px;color:${pal.text === '#f8fafc' ? '#fde68a' : pal.header};}
+                    ul{list-style:none;padding:0;margin:0;font-size:17px;line-height:1.8;} li{margin-bottom:8px;}
+                    .s-foot{background:${pal.tint};padding:10px 24px;font-size:12px;border-top:1px solid #cbd5e1;}
+                    @media print{body{background:#fff;padding:0;} .slide{box-shadow:none;margin:0;border-radius:0;}}
+                </style></head><body>${cards}</body></html>`;
+            const blob = new Blob([doc], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Slide_${title.replace(/\s+/g, '_')}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('បានទាញយកឯកសារ Slide (.html) រួចរាល់!', 'success');
+        }
+
+        async function generateSlidesWithAI() {
+            const btn = document.getElementById('aiGenerateSlidesBtn');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span>⏳ កំពុងបង្កើត Slide ពីសៀវភៅគោល និងរុករកពីក្រៅ...</span>`;
+            }
+            const subject = document.getElementById('subjectInput')?.value || '';
+            const grade = document.getElementById('gradeInput')?.value || '';
+            const title = document.getElementById('lessonTitleInput')?.value || '';
+            const subs = getActiveSelectedSubLessonsText();
+            const count = document.getElementById('slideCountSelect')?.value || '8';
+            const useExternal = document.getElementById('slideExternalResearchCheckbox')?.checked;
+            const extNotes = document.getElementById('slideExternalNotesInput')?.value || '';
+            const apiKey = getActiveApiKey();
+
+            let parsedSlides = null;
+            if (apiKey) {
+                try {
+                    const payload = {
+                        systemInstruction: {
+                            parts: [{
+                                text: `អ្នកគឺជាអ្នករៀបចំ Slide បង្រៀនវិទ្យាល័យ។ ចូរបង្កើតស្លាយចំនួន ${count} ស្លាយជាភាសាខ្មែរផ្លូវការ ដោយផ្អែកលើខ្លឹមសារសៀវភៅគោល និង${useExternal ? 'រុករកឧទាហរណ៍ជាក់ស្ដែង/ព័ត៌មានថ្មីៗពីក្រៅបន្ថែម' : 'រក្សាខ្លឹមសារគោល'}។ ត្រឡប់ជា JSON: { "slides": [ { "tag": "...", "title": "...", "bullets": ["..."], "note": "..." } ] }`
+                            }]
+                        },
+                        contents: [{
+                            role: 'user',
+                            parts: [
+                                { text: `មុខវិជ្ជា៖ ${subject} | ថ្នាក់៖ ${grade} | មេរៀន៖ ${title}\nចំណុចរង៖ ${subs}\nព័ត៌មានបន្ថែមពីក្រៅ៖ ${extNotes}` },
+                                ...buildAttachedLessonParts()
+                            ]
+                        }],
+                        generationConfig: {
+                            thinkingConfig: { thinkingLevel: 'LOW' },
+                            responseMimeType: "application/json"
+                        }
+                    };
+                    if (useExternal && getActiveProvider() === 'gemini') {
+                        payload.tools = [{ googleSearch: {} }];
+                    }
+                    const raw = await callActiveAi(payload);
+                    if (raw) {
+                        const obj = JSON.parse(extractCleanJsonText(raw));
+                        if (Array.isArray(obj?.slides) && obj.slides.length > 0) {
+                            parsedSlides = obj.slides;
+                        }
+                    }
+                } catch (_) {}
+            }
+
+            generatedSlides = parsedSlides || buildDefaultSlidesFromLesson();
+            activeSlideIndex = 0;
+            switchPreviewMode('slides');
+            showToast(`បានបង្កើត Slide បង្រៀនចំនួន ${toKhmerNumerals(generatedSlides.length)} ស្លាយរួចរាល់!`, 'success');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
+        }
+
         function switchEditorSectionTab(tab) {
             const sections = {
                 ai: document.getElementById('edSectionAi'),
                 meta: document.getElementById('edSectionMeta'),
-                steps: document.getElementById('edSectionSteps')
+                steps: document.getElementById('edSectionSteps'),
+                tasks: document.getElementById('edSectionTasks'),
+                slides: document.getElementById('edSectionSlides'),
+                notebook: document.getElementById('edSectionNotebook')
             };
             const btns = {
                 ai: document.getElementById('edTabAiBtn'),
                 meta: document.getElementById('edTabMetaBtn'),
-                steps: document.getElementById('edTabStepsBtn')
+                steps: document.getElementById('edTabStepsBtn'),
+                tasks: document.getElementById('edTabTasksBtn'),
+                slides: document.getElementById('edTabSlidesBtn'),
+                notebook: document.getElementById('edTabNotebookBtn')
             };
-            const activeCls = 'py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1';
-            const inactiveCls = 'py-2 px-2 rounded-xl text-[11px] sm:text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer flex items-center justify-center gap-1';
+            const activeCls = 'py-2 px-2 rounded-xl text-[11px] font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer flex items-center justify-center gap-1.5';
+            const inactiveCls = 'py-2 px-2 rounded-xl text-[11px] font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/80 transition cursor-pointer flex items-center justify-center gap-1.5';
 
-            for (const key of ['ai', 'meta', 'steps']) {
+            for (const key of ['ai', 'meta', 'steps', 'tasks', 'slides', 'notebook']) {
                 if (sections[key]) sections[key].classList.toggle('hidden', key !== tab);
                 if (btns[key]) btns[key].className = key === tab ? activeCls : inactiveCls;
+            }
+            if (tab === 'notebook') syncNotebookSources(false);
+        }
+
+        // =========================================================================
+        // NOTEBOOKLM REFERENCE STUDIO ENGINE
+        // =========================================================================
+        let notebookCustomSources = [];
+        let lastNotebookGeneratedQuestions = '';
+        let lastNotebookGeneratedAnswers = '';
+
+        function collectAllNotebookSources() {
+            const list = [];
+            const title = document.getElementById('lessonTitleInput')?.value || 'មេរៀន';
+            const subs = getActiveSelectedSubLessonsText();
+            const s3 = document.getElementById('s3Content')?.value || '';
+            list.push({
+                id: 'src_lesson',
+                title: `កិច្ចតែងការ៖ ${title}`,
+                text: `ចំណងជើង៖ ${title}\nចំណុចរង៖ ${subs}\nខ្លឹមសារ៖ ${s3}`,
+                checked: true
+            });
+
+            const pdfText = (document.getElementById('extractedPdfTextBox')?.value || '').trim();
+            if (pdfText) {
+                list.push({
+                    id: 'src_pdf',
+                    title: 'សៀវភៅគោល / ឯកសារ PDF ដែលបានបញ្ចូល',
+                    text: pdfText.slice(0, 6000),
+                    checked: true
+                });
+            }
+
+            const extText = (document.getElementById('slideExternalNotesInput')?.value || '').trim();
+            if (extText) {
+                list.push({
+                    id: 'src_internet',
+                    title: 'ឯកសាររុករកពីអ៊ីនធឺណេត (Web Research)',
+                    text: extText.slice(0, 4000),
+                    checked: true
+                });
+            }
+
+            notebookCustomSources.forEach((s, idx) => {
+                list.push({ id: `src_custom_${idx}`, title: s.title, text: s.text, checked: true });
+            });
+            return list;
+        }
+
+        function syncNotebookSources(notify = false) {
+            const container = document.getElementById('nbSourcesList');
+            const countEl = document.getElementById('nbSourceCount');
+            if (!container) return;
+            const sources = collectAllNotebookSources();
+            if (countEl) countEl.textContent = toKhmerNumerals(sources.length);
+            container.innerHTML = sources.map(s => `
+                <label class="flex items-start gap-2 p-2 rounded-lg bg-white border border-slate-200 text-[11px] cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox" class="nb-source-chk mt-0.5 accent-emerald-600" data-src-id="${escapeHtml(s.id)}" checked>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-bold text-slate-800 truncate">${escapeHtml(s.title)}</div>
+                        <div class="text-[10px] text-slate-500 truncate">${escapeHtml(s.text.slice(0, 90))}</div>
+                    </div>
+                </label>
+            `).join('');
+            if (notify) showToast(`បានទាញប្រភពឯកសារយោងចំនួន ${toKhmerNumerals(sources.length)} រួចរាល់!`, 'success');
+        }
+
+        function addCustomNotebookSource() {
+            const tEl = document.getElementById('nbCustomSourceTitle');
+            const xEl = document.getElementById('nbCustomSourceText');
+            const t = (tEl?.value || '').trim() || `ឯកសារយោងទី ${toKhmerNumerals(notebookCustomSources.length + 1)}`;
+            const x = (xEl?.value || '').trim();
+            if (!x) {
+                showToast('សូមបញ្ចូលខ្លឹមសារឯកសារយោងជាមុនសិន!', 'info');
+                return;
+            }
+            notebookCustomSources.push({ title: t, text: x });
+            if (tEl) tEl.value = '';
+            if (xEl) xEl.value = '';
+            syncNotebookSources(true);
+        }
+
+        function getSelectedNotebookSourceContext() {
+            const sources = collectAllNotebookSources();
+            const checkedIds = new Set(Array.from(document.querySelectorAll('.nb-source-chk:checked')).map(c => c.getAttribute('data-src-id')));
+            const chosen = checkedIds.size > 0 ? sources.filter(s => checkedIds.has(s.id)) : sources;
+            return chosen.map((s, idx) => `[ប្រភពទី ${idx + 1}: ${s.title}]\n${s.text}`).join('\n\n');
+        }
+
+        function copyNotebookSources() {
+            const txt = getSelectedNotebookSourceContext();
+            if (navigator.clipboard && txt) {
+                navigator.clipboard.writeText(txt).then(() => showToast('បានចម្លងប្រភពឯកសារយោងទាំងអស់ទុកប្រើក្នុង Google NotebookLM!', 'success'));
+            }
+        }
+
+        function sendNotebookQuestionsToWorksheet() {
+            if (!lastNotebookGeneratedQuestions) return;
+            const qEl = document.getElementById('taskQuestionsInput');
+            const aEl = document.getElementById('taskAnswerKeyInput');
+            const tEl = document.getElementById('taskTitleInput');
+            const lessonTitle = document.getElementById('lessonTitleInput')?.value || 'មេរៀន';
+            if (tEl) tEl.value = `សំណួរវាយតម្លៃតាមឯកសារយោង៖ ${lessonTitle}`;
+            if (qEl) qEl.value = lastNotebookGeneratedQuestions;
+            if (aEl && lastNotebookGeneratedAnswers) {
+                aEl.value = lastNotebookGeneratedAnswers;
+                const ansChk = document.getElementById('wsShowAnswerKeyCheckbox');
+                if (ansChk) ansChk.checked = true;
+            }
+            switchPreviewMode('worksheet');
+            showToast('បានបញ្ជូនសំណួរពី NotebookLM ទៅកិច្ចការ A4 រួចរាល់!', 'success');
+        }
+
+        async function runNotebookAction(action) {
+            const outBox = document.getElementById('nbOutputBox');
+            const sendBtn = document.getElementById('nbSendToWorksheetBtn');
+            if (!outBox) return;
+            if (sendBtn) sendBtn.classList.add('hidden');
+            const context = getSelectedNotebookSourceContext();
+            const title = document.getElementById('lessonTitleInput')?.value || 'មេរៀន';
+            const userQ = (document.getElementById('nbQuestionInput')?.value || '').trim();
+            if (action === 'qa' && !userQ) {
+                showToast('សូមវាយបញ្ចូលសំណួរជាមុនសិន!', 'info');
+                return;
+            }
+
+            outBox.textContent = `⏳ ${getActiveModelLabel()} កំពុងវិភាគឯកសារយោងក្នុង NotebookLM...`;
+            const apiKey = getActiveApiKey();
+
+            if (action === 'slides') {
+                const extBox = document.getElementById('slideExternalNotesInput');
+                if (extBox) extBox.value = context.slice(0, 3500);
+                await generateSlidesWithAI();
+                outBox.textContent = '✅ បានវិភាគឯកសារយោង និងបង្កើត Slide បង្រៀនរួចរាល់នៅផ្ទាំងខាងស្ដាំ!';
+                return;
+            }
+
+            if (apiKey) {
+                try {
+                    const prompts = {
+                        summary: `ផ្អែកលើឯកសារយោងខាងក្រោម សូមវិភាគ និងសង្ខេបមេរៀន "${title}" ជាភាសាខ្មែរ៖ ១) គោលគំនិតសំខាន់ៗ ២) ចំណុចគន្លឹះត្រូវពន្យល់សិស្ស ៣) ការផ្សារភ្ជាប់នឹងការអនុវត្ត ដោយបញ្ជាក់ [ប្រភពទី ...]។`,
+                        questions: `ផ្អែកលើឯកសារយោងខាងក្រោម សូមបង្កើតសំណួរចំនួន ៥ សំណួរ (សំណួរពហុជ្រើសរើស ៣ និងសំណួរត្រិះរិះ ២) ព្រមទាំងអត្រាកំណែគំរូ ជា JSON: { "questionsText": "...", "answerKeyText": "..." }`,
+                        audio: `ផ្អែកលើឯកសារយោងខាងក្រោម សូមសរសេរស្គ្រីបសន្ទនាពន្យល់មេរៀន "${title}" រវាងគ្រូ និងសិស្ស (Audio Overview) ឱ្យងាយយល់ និងរស់រវើក។`,
+                        qa: `ផ្អែកលើឯកសារយោងខាងក្រោម សូមឆ្លើយសំណួរនេះឱ្យបានច្បាស់លាស់ និងយោង [ប្រភពទី ...]៖ ${userQ}`
+                    };
+                    const isQ = action === 'questions';
+                    const payload = {
+                        systemInstruction: { parts: [{ text: 'អ្នកគឺជា NotebookLM ជំនួយការវិភាគឯកសារយោងសម្រាប់គ្រូបង្រៀនកម្ពុជា។ ឆ្លើយផ្អែកលើប្រភពដែលបានផ្ដល់ឱ្យជាចម្បង។' }] },
+                        contents: [{ role: 'user', parts: [{ text: `${prompts[action]}\n\nឯកសារយោង៖\n${context}` }, ...buildAttachedLessonParts()] }],
+                        generationConfig: {
+                            thinkingConfig: { thinkingLevel: 'LOW' },
+                            ...(isQ ? { responseMimeType: 'application/json' } : {})
+                        }
+                    };
+                    const raw = await callActiveAi(payload);
+                    if (raw) {
+                        if (isQ) {
+                            const parsed = JSON.parse(extractCleanJsonText(raw));
+                            lastNotebookGeneratedQuestions = parsed.questionsText || '';
+                            lastNotebookGeneratedAnswers = parsed.answerKeyText || '';
+                            outBox.textContent = `❓ សំណួរដែលបានបង្កើត៖\n${lastNotebookGeneratedQuestions}\n\n✅ អត្រាកំណែគំរូ៖\n${lastNotebookGeneratedAnswers}`;
+                            if (sendBtn && lastNotebookGeneratedQuestions) sendBtn.classList.remove('hidden');
+                        } else {
+                            outBox.textContent = raw;
+                        }
+                        return;
+                    }
+                } catch (_) {}
+            }
+
+            // Smart Offline / No-Key Fallback grounded in selected sources
+            const subs = getActiveSelectedSubLessonsText().split('\n').map(s => s.replace(/^[០-៩0-9]+\.\s*/, '').trim()).filter(Boolean);
+            const p1 = subs[0] || title;
+            const p2 = subs[1] || title;
+            if (action === 'questions') {
+                lastNotebookGeneratedQuestions = `១. តើ "${p1}" មាននិយមន័យ និងគោលបំណងសំខាន់អ្វីខ្លះ?\n២. ចូររៀបរាប់ពីលក្ខណៈសំខាន់ៗនៃ "${p2}" តាមឯកសារយោង។\n៣. ហេតុអ្វីបានជាមេរៀន "${title}" មានសារៈសំខាន់ក្នុងការអនុវត្តជាក់ស្ដែង?\n៤. ចូរប្រៀបធៀបភាពខុសគ្នារវាង "${p1}" និង "${p2}"។`;
+                lastNotebookGeneratedAnswers = `១. ${p1} គឺជាគោលគំនិតគ្រឹះក្នុងមេរៀន ${title}។\n២. មានលក្ខណៈច្បាស់លាស់ និងងាយស្រួលអនុវត្តតាមជំហាន។\n៣. ជួយបង្កើនប្រសិទ្ធភាពការងារ និងការសិក្សា។\n៤. ខុសគ្នាលើតួនាទី និងរបៀបប្រើប្រាស់។`;
+                outBox.textContent = `❓ សំណួរចេញពីឯកសារយោង៖\n${lastNotebookGeneratedQuestions}\n\n✅ អត្រាកំណែគំរូ៖\n${lastNotebookGeneratedAnswers}`;
+                if (sendBtn) sendBtn.classList.remove('hidden');
+            } else if (action === 'audio') {
+                outBox.textContent = `🎧 ស្គ្រីបសន្ទនាពន្យល់មេរៀន "${title}"៖\n• គ្រូ៖ សួស្ដីប្អូនៗ! ថ្ងៃនេះយើងនឹងសិក្សាអំពី "${title}" ដោយផ្ដោតលើ ${p1} និង ${p2}។\n• សិស្ស៖ តើ "${p1}" ជួយអ្វីខ្លះដល់ការសិក្សាប្រចាំថ្ងៃរបស់ពួកយើងលោកគ្រូ?\n• គ្រូ៖ ល្អណាស់! តាមឯកសារយោង [ប្រភពទី ១] វាជួយឱ្យយើងរៀបចំការងារបានស្អាត ច្បាស់លាស់ និងមានប្រសិទ្ធភាពខ្ពស់...`;
+            } else {
+                outBox.textContent = `📌 សង្ខេបវិភាគតាមឯកសារយោងសម្រាប់ "${title}"៖\n• ប្រធានបទគោល៖ ${p1}${subs[1] ? ' និង ' + p2 : ''}\n• ខ្លឹមសារយោង៖ ${context.slice(0, 450)}...\n(បញ្ចូល API Key Gemini / ChatGPT / Claude AI ដើម្បីវិភាគស៊ីជម្រៅ ១០០% តាមឯកសារ PDF)`;
             }
         }
 
@@ -2922,7 +4165,8 @@
         }
 
         function exportToWord() {
-            const a4El = document.getElementById('a4Document');
+            const targetId = activePreviewMode === 'worksheet' ? 'worksheetDocument' : 'a4Document';
+            const a4El = document.getElementById(targetId);
             let docContent = '';
             if (a4El) {
                 const clone = a4El.cloneNode(true);
@@ -2980,7 +4224,7 @@
             's2Time', 's2Content', 's2Teacher', 's2Student',
             's3Time', 's3Content', 's3Teacher', 's3Student',
             's4Time', 's4Content', 's4Teacher', 's4Student',
-            's5Time', 's5Content', 's5Teacher', 's5Student'
+            's5Time', 's5Content', 's5Teacher', 's5Student', 'taskTypeSelect', 'taskDurationInput', 'taskTitleInput', 'taskInstructionsInput', 'taskQuestionsInput', 'taskAnswerKeyInput'
         ];
 
         function collectFormState() {
@@ -3425,7 +4669,7 @@
 5. អក្ខរាវិរុទ្ធខ្មែរ៖ សរសេរឱ្យត្រូវតាមវចនានុក្រមខ្មែរ ១០០% (ឧ. ឥទ្ធិពល, សេវាកម្ម, បច្ចេកវិទ្យា) ដោយគ្មានដកឃ្លាខុស។
 
 ត្រូវត្រឡប់មកវិញជា JSON ដែលមាន field ទាំងអស់ដូចខាងក្រោម៖
-- recommendedMethodKey: កូដវិធីសាស្ត្រ (demo, inductive, jigsaw, polya, ibl, 5es, active, pbl, tps, gradual, flipped, kwl, conceptmap, gallerywalk)
+- recommendedMethodKey: កូដវិធីសាស្ត្រ (${Object.keys(PEDAGOGICAL_METHODS).join(', ')})
 - methodReason: មូលហេតុគរុកោសល្យដែលគួរប្រើវិធីសាស្ត្រនេះ
 - pacingTitle: ចំណងជើងវិភាគពេលវេលា និងចំនួនចំណុចត្រូវបង្រៀន
 - pacingReason: ការពន្យល់ថាតើក្នុងរយៈពេល ${duration} គួរបង្រៀនប៉ុន្មានចំណុចទើបសមស្របតាមគោលបំណងមេរៀន
@@ -3687,21 +4931,17 @@
             if (sel) sel.value = chosen;
             safeStorageSet(OUTPUT_COLOR_STORAGE, chosen);
 
+            const sheets = [a4, document.getElementById('worksheetDocument')].filter(Boolean);
             if (chosen === 'auto') {
-                a4.style.removeProperty('--out-accent');
-                a4.style.removeProperty('--out-tint');
-                a4.style.removeProperty('--out-text');
+                sheets.forEach(s => { s.style.removeProperty('--out-accent'); s.style.removeProperty('--out-tint'); s.style.removeProperty('--out-text'); });
             } else if (chosen === 'custom') {
                 const hex = picker?.value || safeStorageGet(OUTPUT_CUSTOM_HEX_STORAGE, '#1d4ed8');
                 if (picker) picker.value = hex;
-                a4.style.setProperty('--out-accent', hex);
-                a4.style.setProperty('--out-tint', hexToSoftTint(hex));
-                a4.style.setProperty('--out-text', hex);
+                const tint = hexToSoftTint(hex);
+                sheets.forEach(s => { s.style.setProperty('--out-accent', hex); s.style.setProperty('--out-tint', tint); s.style.setProperty('--out-text', hex); });
             } else {
                 const pal = OUTPUT_COLOR_PALETTES[chosen];
-                a4.style.setProperty('--out-accent', pal.accent);
-                a4.style.setProperty('--out-tint', pal.tint);
-                a4.style.setProperty('--out-text', pal.text);
+                sheets.forEach(s => { s.style.setProperty('--out-accent', pal.accent); s.style.setProperty('--out-tint', pal.tint); s.style.setProperty('--out-text', pal.text); });
                 if (picker) picker.value = pal.accent;
             }
             if (!silent) {
@@ -3718,8 +4958,7 @@
         function applyOutputStyle(styleName, silent = false) {
             const valid = ['modern', 'banner', 'framed', 'academic', 'minimal', 'classic'];
             const chosen = valid.includes(styleName) ? styleName : 'modern';
-            const a4 = document.getElementById('a4Document');
-            if (a4) a4.setAttribute('data-output-style', chosen);
+            ['a4Document', 'worksheetDocument'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('data-output-style', chosen); });
             const sel = document.getElementById('outputStyleSelect');
             if (sel) sel.value = chosen;
             safeStorageSet(OUTPUT_STYLE_STORAGE, chosen);
@@ -3732,8 +4971,7 @@
         function applyOutputFontSize(sizeVal, silent = false) {
             const valid = ['12px', '13px', '14px'];
             const chosen = valid.includes(sizeVal) ? sizeVal : '13px';
-            const a4 = document.getElementById('a4Document');
-            if (a4) a4.style.setProperty('--out-font-size', chosen);
+            ['a4Document', 'worksheetDocument'].forEach(id => { const el = document.getElementById(id); if (el) el.style.setProperty('--out-font-size', chosen); });
             const sel = document.getElementById('outputFontSizeSelect');
             if (sel) sel.value = chosen;
             safeStorageSet(OUTPUT_FONT_STORAGE, chosen);
@@ -3742,7 +4980,155 @@
             }
         }
 
+        // =========================================================================
+        // USER AUTHENTICATION & SESSION MANAGEMENT (CG SYSTEM)
+        // =========================================================================
+        const USERS_STORAGE_KEY = 'cg_system_users_v1';
+        const ACTIVE_USER_SESSION_KEY = 'cg_system_active_user_v1';
+
+        function getRegisteredUsers() {
+            const defaults = [
+                { username: 'kakada', password: 'cg2026', fullName: 'លោកគ្រូ រ៉ាន កក្កដា', school: 'វិទ្យាល័យ ស្រីសន្ធរ' },
+                { username: 'admin', password: 'cg2026', fullName: 'អគ្គនាយក Team CG', school: 'វិទ្យាល័យ ស្រីសន្ធរ' }
+            ];
+            try {
+                const raw = localStorage.getItem(USERS_STORAGE_KEY);
+                if (!raw) return defaults;
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaults;
+            } catch (_) {
+                return defaults;
+            }
+        }
+
+        function saveRegisteredUsers(users) {
+            safeStorageSet(USERS_STORAGE_KEY, JSON.stringify(users));
+        }
+
+        function switchAuthTab(tab) {
+            const loginF = document.getElementById('loginForm');
+            const regF = document.getElementById('registerForm');
+            const btnL = document.getElementById('authTabLoginBtn');
+            const btnR = document.getElementById('authTabRegisterBtn');
+            const err = document.getElementById('authErrorBox');
+            if (err) err.classList.add('hidden');
+            const act = 'py-2 rounded-lg text-xs font-bold bg-indigo-700 text-white shadow-sm transition cursor-pointer';
+            const inact = 'py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer';
+            if (tab === 'register') {
+                if (loginF) loginF.classList.add('hidden');
+                if (regF) regF.classList.remove('hidden');
+                if (btnL) btnL.className = inact;
+                if (btnR) btnR.className = act;
+            } else {
+                if (regF) regF.classList.add('hidden');
+                if (loginF) loginF.classList.remove('hidden');
+                if (btnR) btnR.className = inact;
+                if (btnL) btnL.className = act;
+            }
+        }
+
+        function showAuthError(msg) {
+            const err = document.getElementById('authErrorBox');
+            if (!err) return;
+            err.textContent = msg;
+            err.classList.remove('hidden');
+        }
+
+        function applyLoggedInUser(user, silent = false) {
+            if (!user) return;
+            safeStorageSet(ACTIVE_USER_SESSION_KEY, JSON.stringify(user));
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            const badge = document.getElementById('activeUserBadge');
+            const nameLbl = document.getElementById('activeUserNameLabel');
+            if (badge) {
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+            }
+            if (nameLbl) nameLbl.textContent = user.fullName || user.username;
+
+            const tIn = document.getElementById('teacherInput');
+            const sIn = document.getElementById('schoolInput');
+            if (tIn && user.fullName) tIn.value = user.fullName;
+            if (sIn && user.school) sIn.value = user.school;
+            syncPreview();
+            if (!silent) {
+                showToast(`ស្វាគមន៍ ${user.fullName || user.username} ចូលប្រើ CG System!`, 'success');
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const u = (document.getElementById('loginUsernameInput')?.value || '').trim().toLowerCase();
+            const p = (document.getElementById('loginPasswordInput')?.value || '').trim();
+            const users = getRegisteredUsers();
+            const found = users.find(item => item.username.toLowerCase() === u && item.password === p);
+            if (!found) {
+                showAuthError('ឈ្មោះអ្នកប្រើប្រាស់ ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!');
+                return;
+            }
+            applyLoggedInUser(found, false);
+        }
+
+        function quickDemoLogin() {
+            const users = getRegisteredUsers();
+            const demo = users[0];
+            if (document.getElementById('loginUsernameInput')) document.getElementById('loginUsernameInput').value = demo.username;
+            if (document.getElementById('loginPasswordInput')) document.getElementById('loginPasswordInput').value = demo.password;
+            applyLoggedInUser(demo, false);
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const fullName = (document.getElementById('regFullNameInput')?.value || '').trim();
+            const school = (document.getElementById('regSchoolInput')?.value || '').trim();
+            const username = (document.getElementById('regUsernameInput')?.value || '').trim().toLowerCase();
+            const password = (document.getElementById('regPasswordInput')?.value || '').trim();
+            if (!username || !password || !fullName) {
+                showAuthError('សូមបំពេញព័ត៌មានឱ្យបានគ្រប់គ្រាន់!');
+                return;
+            }
+            const users = getRegisteredUsers();
+            if (users.some(item => item.username.toLowerCase() === username)) {
+                showAuthError('Username នេះមានរួចហើយ! សូមជ្រើសរើស Username ផ្សេង។');
+                return;
+            }
+            const newUser = { username, password, fullName, school };
+            users.push(newUser);
+            saveRegisteredUsers(users);
+            applyLoggedInUser(newUser, false);
+        }
+
+        function logoutUser() {
+            safeStorageRemove(ACTIVE_USER_SESSION_KEY);
+            const badge = document.getElementById('activeUserBadge');
+            if (badge) {
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+            }
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+            switchAuthTab('login');
+            showToast('បានចាកចេញពីគណនីរួចរាល់!', 'info');
+        }
+
+        function initUserSession() {
+            try {
+                const raw = localStorage.getItem(ACTIVE_USER_SESSION_KEY);
+                if (raw) {
+                    const user = JSON.parse(raw);
+                    if (user && user.username) {
+                        applyLoggedInUser(user, true);
+                        return;
+                    }
+                }
+            } catch (_) {}
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            initUserSession();
             applyTheme(safeStorageGet(THEME_STORAGE, 'indigo'), true);
             applyOutputStyle(safeStorageGet(OUTPUT_STYLE_STORAGE, 'modern'), true);
             const savedHex = safeStorageGet(OUTPUT_CUSTOM_HEX_STORAGE, '#1d4ed8');
@@ -3750,7 +5136,8 @@
             if (customPicker) customPicker.value = savedHex;
             applyOutputColor(safeStorageGet(OUTPUT_COLOR_STORAGE, 'auto'), true);
             applyOutputFontSize(safeStorageGet(OUTPUT_FONT_STORAGE, '13px'), true);
-            const savedModel = safeStorageGet(MODEL_STORAGE, 'gemini-4-hydrogen');
+            const rawSavedModel = safeStorageGet(MODEL_STORAGE, 'gemini-4-hydrogen');
+            const savedModel = LEGACY_MODEL_MIGRATION[rawSavedModel] || rawSavedModel;
             const modelSel = document.getElementById('aiModelSelect');
             if (modelSel && AI_MODEL_CATALOG[savedModel]) {
                 modelSel.value = savedModel;
